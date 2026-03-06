@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CloseBot - IC Sales Assistant</title>
+    <style>
+        :root {
+            --square-black: #1a1a1a;
+            --square-blue: #006aff;
+            --square-green: #00d632;
+            --square-gray: #6b7280;
+            --square-light: #f5f5f5;
+            --square-white: #ffffff;
+            --square-red: #ff4d4d;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--square-light);
+            min-height: 100vh;
+        }
+
+        .header {
+            background: var(--square-black);
+            color: var(--square-white);
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header h1 {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .header .badge {
+            background: var(--square-blue);
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        .chat-container {
+            background: var(--square-white);
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        .chat-messages {
+            height: 400px;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .message {
+            margin-bottom: 16px;
+            display: flex;
+            gap: 12px;
+        }
+
+        .message.bot .avatar {
+            background: var(--square-blue);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .message.user {
+            flex-direction: row-reverse;
+        }
+
+        .message.user .avatar {
+            background: var(--square-gray);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .message-content {
+            max-width: 70%;
+        }
+
+        .message.bot .message-content {
+            background: var(--square-light);
+            padding: 12px 16px;
+            border-radius: 12px;
+            border-top-left-radius: 4px;
+        }
+
+        .message.user .message-content {
+            background: var(--square-blue);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 12px;
+            border-top-right-radius: 4px;
+        }
+
+        .input-section {
+            border-top: 1px solid #eee;
+            padding: 16px 20px;
+        }
+
+        .quick-form {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+
+        .form-group label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--square-gray);
+            text-transform: uppercase;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--square-blue);
+        }
+
+        .form-group textarea {
+            resize: none;
+            height: 60px;
+        }
+
+        .btn-row {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--square-blue);
+            color: white;
+            flex: 1;
+        }
+
+        .btn-primary:hover {
+            background: #0052cc;
+        }
+
+        .btn-secondary {
+            background: var(--square-light);
+            color: var(--square-black);
+        }
+
+        .btn-secondary:hover {
+            background: #e5e5e5;
+        }
+
+        .rec-card {
+            background: white;
+            border: 1px solid #e5e5e5;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 12px;
+        }
+
+        .rec-card h4 {
+            font-size: 13px;
+            color: var(--square-blue);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .rec-card p {
+            font-size: 13px;
+            color: var(--square-black);
+            line-height: 1.5;
+        }
+
+        .rec-card.product {
+            border-left: 3px solid var(--square-green);
+        }
+
+        .rec-card.objection {
+            border-left: 3px solid var(--square-blue);
+        }
+
+        .rec-card.close {
+            border-left: 3px solid #ff9500;
+        }
+
+        .tag {
+            display: inline-block;
+            background: var(--square-light);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 500;
+            margin-right: 4px;
+            margin-top: 8px;
+        }
+
+        .tag.saas { background: #e8f5e9; color: #2e7d32; }
+        .tag.payments { background: #e3f2fd; color: #1565c0; }
+        .tag.banking { background: #fff3e0; color: #ef6c00; }
+        .tag.hardware { background: #f3e5f5; color: #7b1fa2; }
+
+        .quick-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
+
+        .quick-action {
+            background: var(--square-light);
+            border: 1px solid #ddd;
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .quick-action:hover {
+            background: var(--square-blue);
+            color: white;
+            border-color: var(--square-blue);
+        }
+
+        .typing {
+            display: flex;
+            gap: 4px;
+            padding: 8px 0;
+        }
+
+        .typing span {
+            width: 8px;
+            height: 8px;
+            background: var(--square-gray);
+            border-radius: 50%;
+            animation: bounce 1.4s infinite ease-in-out;
+        }
+
+        .typing span:nth-child(1) { animation-delay: -0.32s; }
+        .typing span:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+
+        .chat-messages::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chat-messages::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: #ddd;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🤖 CloseBot</h1>
+        <span class="badge">IC Sales Assistant</span>
+    </div>
+
+    <div class="container">
+        <div class="chat-container">
+            <div class="chat-messages" id="chatMessages">
+                <div class="message bot">
+                    <div class="avatar">🤖</div>
+                    <div class="message-content">
+                        <strong>Hey! I'm CloseBot.</strong><br><br>
+                        Tell me about your seller and I'll give you:<br>
+                        • Product recommendations<br>
+                        • Objection handling scripts<br>
+                        • Closing prompts<br><br>
+                        Fill in the details below or just describe the situation.
+                        <div class="quick-actions">
+                            <span class="quick-action" onclick="quickFill('restaurant')">🍽️ Restaurant</span>
+                            <span class="quick-action" onclick="quickFill('retail')">🛍️ Retail</span>
+                            <span class="quick-action" onclick="quickFill('services')">💈 Services</span>
+                            <span class="quick-action" onclick="quickFill('health')">💪 Health & Wellness</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="input-section">
+                <div class="quick-form">
+                    <div class="form-group">
+                        <label>ICP / Vertical</label>
+                        <select id="icp">
+                            <option value="">Select vertical...</option>
+                            <option value="restaurant">Restaurant / QSR</option>
+                            <option value="retail">Retail</option>
+                            <option value="services">Professional Services</option>
+                            <option value="health">Health & Wellness</option>
+                            <option value="beauty">Beauty & Personal Care</option>
+                            <option value="home">Home & Repair</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Est. Monthly GPV</label>
+                        <select id="gpv">
+                            <option value="">Select range...</option>
+                            <option value="micro">&lt; £5k</option>
+                            <option value="small">£5k - £20k</option>
+                            <option value="medium">£20k - £50k</option>
+                            <option value="large">£50k - £100k</option>
+                            <option value="enterprise">&gt; £100k</option>
+                        </select>
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Current Pain Points / Situation</label>
+                        <textarea id="painpoints" placeholder="e.g., Frustrated with current POS fees, slow settlement, poor support..."></textarea>
+                    </div>
+                </div>
+                <div class="btn-row">
+                    <button class="btn btn-secondary" onclick="clearForm()">Clear</button>
+                    <button class="btn btn-primary" onclick="getRecommendations()">Get Recommendations →</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const products = {
+            payments: {
+                name: "Square Payments",
+                tags: ["payments"],
+                pitch: "Transparent pricing with no hidden fees. Next-day deposits as standard. One flat rate so sellers always know what they're paying.",
+                objections: {
+                    "fees": "Our pricing is transparent - 1.75% for chip & PIN. No monthly fees, no hidden charges. Compare that to your current statement line by line.",
+                    "switching": "We handle the switch. Sellers can be live in minutes, not days. We'll help migrate their customer data too."
+                }
+            },
+            pos: {
+                name: "Square POS",
+                tags: ["saas"],
+                pitch: "Free POS software that grows with the business. Real-time sales data, inventory management, and staff tools all in one place.",
+                objections: {
+                    "complexity": "It's designed to be simple. Most sellers are taking payments within 10 minutes of setup.",
+                    "features": "Square POS includes inventory, staff management, customer directory, and reporting - all free."
+                }
+            },
+            terminal: {
+                name: "Square Terminal",
+                tags: ["hardware"],
+                pitch: "All-in-one device. Takes payments, prints receipts, no phone needed. Perfect for counter service or tableside.",
+                objections: {
+                    "cost": "£149 + VAT one-time. No rental fees, no contracts. They own it outright.",
+                    "reliability": "Built-in 4G backup. If WiFi drops, it keeps working."
+                }
+            },
+            register: {
+                name: "Square Register",
+                tags: ["hardware"],
+                pitch: "Purpose-built POS with customer-facing display. Premium look, built-in payments, no tablet needed.",
+                objections: {
+                    "price": "It's an investment that pays for itself. No monthly hardware rental like competitors charge."
+                }
+            },
+            appointments: {
+                name: "Square Appointments",
+                tags: ["saas"],
+                pitch: "Online booking, automated reminders, no-show protection. Reduces admin time and fills the calendar.",
+                objections: {
+                    "existing_system": "Square Appointments integrates with their existing calendar and syncs automatically."
+                }
+            },
+            invoices: {
+                name: "Square Invoices",
+                tags: ["saas"],
+                pitch: "Send professional invoices, get paid online. Automatic reminders chase late payments.",
+                objections: {
+                    "cash_flow": "Sellers get paid faster. Customers can pay instantly by card."
+                }
+            },
+            loyalty: {
+                name: "Square Loyalty",
+                tags: ["saas"],
+                pitch: "Built-in loyalty program. Customers earn points automatically, no punch cards needed.",
+                objections: {
+                    "cost": "Starts at £45/month. Typically pays for itself with 2-3 extra visits per customer."
+                }
+            },
+            banking: {
+                name: "Square Banking",
+                tags: ["banking"],
+                pitch: "Business savings and loans. Instant access to funds, no credit checks for loans based on sales history.",
+                objections: {
+                    "trust": "It's backed by Square. Loans are based on their actual sales, not credit scores."
+                }
+            },
+            kds: {
+                name: "Kitchen Display System",
+                tags: ["saas", "hardware"],
+                pitch: "Digital ticket management for kitchens. Orders flow straight from POS, no lost tickets.",
+                objections: {
+                    "training": "Staff pick it up in minutes. Colour-coded, simple interface."
+                }
+            },
+            online: {
+                name: "Square Online",
+                tags: ["saas"],
+                pitch: "Free online store or ordering site. Syncs with in-store inventory and POS.",
+                objections: {
+                    "existing_website": "Can embed checkout into their existing site, or use Square Online alongside it."
+                }
+            }
+        };
+
+        const verticalRecommendations = {
+            restaurant: {
+                primary: ["pos", "terminal", "kds"],
+                secondary: ["online", "loyalty"],
+                painPointMap: {
+                    "fees": ["payments"],
+                    "slow": ["terminal", "kds"],
+                    "online": ["online"],
+                    "staff": ["pos"],
+                    "inventory": ["pos"]
+                }
+            },
+            retail: {
+                primary: ["pos", "terminal", "register"],
+                secondary: ["online", "loyalty", "invoices"],
+                painPointMap: {
+                    "fees": ["payments"],
+                    "inventory": ["pos"],
+                    "online": ["online"],
+                    "loyalty": ["loyalty"]
+                }
+            },
+            services: {
+                primary: ["appointments", "invoices", "terminal"],
+                secondary: ["pos", "online"],
+                painPointMap: {
+                    "bookings": ["appointments"],
+                    "no-shows": ["appointments"],
+                    "invoicing": ["invoices"],
+                    "fees": ["payments"]
+                }
+            },
+            health: {
+                primary: ["appointments", "terminal", "pos"],
+                secondary: ["invoices", "loyalty"],
+                painPointMap: {
+                    "bookings": ["appointments"],
+                    "no-shows": ["appointments"],
+                    "fees": ["payments"]
+                }
+            },
+            beauty: {
+                primary: ["appointments", "pos", "terminal"],
+                secondary: ["loyalty", "online"],
+                painPointMap: {
+                    "bookings": ["appointments"],
+                    "no-shows": ["appointments"],
+                    "fees": ["payments"],
+                    "loyalty": ["loyalty"]
+                }
+            },
+            home: {
+                primary: ["invoices", "terminal", "pos"],
+                secondary: ["appointments", "banking"],
+                painPointMap: {
+                    "invoicing": ["invoices"],
+                    "cash_flow": ["banking", "invoices"],
+                    "fees": ["payments"]
+                }
+            }
+        };
+
+        const commonObjections = {
+            "too expensive": {
+                response: "Let's look at total cost of ownership. What are you paying now in monthly fees, terminal rental, and per-transaction? Square has no monthly fees, no rental - just a flat 1.75% per transaction.",
+                followUp: "Can I show you a quick comparison?"
+            },
+            "happy with current provider": {
+                response: "That's great they're working for you. Out of curiosity, when did you last review your statement? Many sellers find hidden fees they weren't aware of. What's your current rate?",
+                followUp: "Would you be open to a quick rate comparison? No obligation."
+            },
+            "need to think about it": {
+                response: "Absolutely, it's a business decision. What specific concerns would you want to think through? I can address those now so you have all the info.",
+                followUp: "What would need to be true for this to be a yes today?"
+            },
+            "locked in contract": {
+                response: "When does your contract end? Let's get you set up now so you're ready to switch the day it expires. Some sellers find the savings cover any exit fees.",
+                followUp: "Do you know what your exit fee would be? Often it's less than expected."
+            },
+            "don't have time": {
+                response: "I get it, you're busy. The good news is setup takes about 10 minutes. I can walk you through it right now, or leave you the kit to do when it suits.",
+                followUp: "What if we just got you set up to try? No commitment to switch fully yet."
+            },
+            "need to check with partner/accountant": {
+                response: "Smart to involve them. What questions do you think they'd have? I can give you the answers now, or I'm happy to speak with them directly.",
+                followUp: "Would a quick call with them help move this forward?"
+            }
+        };
+
+        const closingTechniques = {
+            assumptive: {
+                name: "Assumptive Close",
+                script: "So, shall we get you set up with the Terminal today? I can have you taking payments before I leave.",
+                when: "When seller is engaged and has no major objections"
+            },
+            alternative: {
+                name: "Alternative Close", 
+                script: "Would you prefer the Terminal for counter service, or the Register for the premium setup?",
+                when: "When seller is comparing options"
+            },
+            urgency: {
+                name: "Urgency Close",
+                script: "If we get you live today, you'll have next-day deposits starting tomorrow. That's cash in your account by [day after tomorrow].",
+                when: "When cash flow is a pain point"
+            },
+            trial: {
+                name: "Trial Close",
+                script: "Why don't we get you set up to try it? Run it alongside your current system for a week. If it's not working, no harm done.",
+                when: "When seller is hesitant to commit"
+            },
+            summary: {
+                name: "Summary Close",
+                script: "So to recap: you're getting [products], which solves [pain points], at [price]. You'll be live today with next-day deposits. Ready to go?",
+                when: "After addressing all objections"
+            }
+        };
+
+        function quickFill(vertical) {
+            document.getElementById('icp').value = vertical;
+        }
+
+        function clearForm() {
+            document.getElementById('icp').value = '';
+            document.getElementById('gpv').value = '';
+            document.getElementById('painpoints').value = '';
+        }
+
+        function addMessage(content, isBot) {
+            var messagesDiv = document.getElementById('chatMessages');
+            var messageDiv = document.createElement('div');
+            messageDiv.className = 'message ' + (isBot ? 'bot' : 'user');
+            messageDiv.innerHTML = '<div class="avatar">' + (isBot ? '🤖' : '👤') + '</div><div class="message-content">' + content + '</div>';
+            messagesDiv.appendChild(messageDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        function showTyping() {
+            var messagesDiv = document.getElementById('chatMessages');
+            var typingDiv = document.createElement('div');
+            typingDiv.className = 'message bot';
+            typingDiv.id = 'typing';
+            typingDiv.innerHTML = '<div class="avatar">🤖</div><div class="message-content"><div class="typing"><span></span><span></span><span></span></div></div>';
+            messagesDiv.appendChild(typingDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        function hideTyping() {
+            var typing = document.getElementById('typing');
+            if (typing) typing.remove();
+        }
+
+        function getRecommendations() {
+            var icp = document.getElementById('icp').value;
+            var gpv = document.getElementById('gpv').value;
+            var painpoints = document.getElementById('painpoints').value.toLowerCase();
+
+            if (!icp) {
+                addMessage("Please select a vertical/ICP first so I can give you relevant recommendations.", true);
+                return;
+            }
+
+            var userMsg = '<strong>Vertical:</strong> ' + icp + '<br>';
+            if (gpv) userMsg += '<strong>GPV:</strong> ' + gpv + '<br>';
+            if (painpoints) userMsg += '<strong>Pain points:</strong> ' + painpoints;
+            addMessage(userMsg, false);
+
+            showTyping();
+
+            setTimeout(function() {
+                hideTyping();
+                generateRecommendations(icp, gpv, painpoints);
+            }, 800);
+        }
+
+        function generateRecommendations(icp, gpv, painpoints) {
+            var verticalRecs = verticalRecommendations[icp] || verticalRecommendations.retail;
+            var recommendedProducts = verticalRecs.primary.slice();
+
+            if (painpoints) {
+                Object.keys(verticalRecs.painPointMap).forEach(function(keyword) {
+                    if (painpoints.includes(keyword)) {
+                        verticalRecs.painPointMap[keyword].forEach(function(prod) {
+                            if (recommendedProducts.indexOf(prod) === -1) {
+                                recommendedProducts.push(prod);
+                            }
+                        });
+                    }
+                });
+            }
+
+            var response = '<strong>📦 Recommended Products</strong>';
+            
+            recommendedProducts.slice(0, 4).forEach(function(prodKey) {
+                var prod = products[prodKey];
+                if (prod) {
+                    var tagsHtml = prod.tags.map(function(t) { return '<span class="tag ' + t + '">' + t + '</span>'; }).join('');
+                    response += '<div class="rec-card product"><h4>' + prod.name + '</h4><p>' + prod.pitch + '</p>' + tagsHtml + '</div>';
+                }
+            });
+
+            addMessage(response, true);
+
+            setTimeout(function() {
+                var objectionResponse = '<strong>🛡️ Objection Handling</strong>';
+                
+                var relevantObjections = ["too expensive", "need to think about it"];
+                if (painpoints.includes("contract")) relevantObjections.unshift("locked in contract");
+                if (painpoints.includes("happy") || painpoints.includes("current")) relevantObjections.unshift("happy with current provider");
+                if (painpoints.includes("busy") || painpoints.includes("time")) relevantObjections.unshift("don't have time");
+
+                relevantObjections.slice(0, 3).forEach(function(objKey) {
+                    var handler = commonObjections[objKey];
+                    var title = objKey.charAt(0).toUpperCase() + objKey.slice(1);
+                    objectionResponse += '<div class="rec-card objection"><h4>"' + title + '"</h4><p><strong>Say:</strong> "' + handler.response + '"</p><p style="margin-top:8px;color:#666;"><strong>Follow-up:</strong> "' + handler.followUp + '"</p></div>';
+                });
+
+                addMessage(objectionResponse, true);
+            }, 600);
+
+            setTimeout(function() {
+                var closeResponse = '<strong>🎯 Close the Deal</strong>';
+                
+                var closes = (gpv === 'micro' || gpv === 'small') 
+                    ? ['trial', 'assumptive', 'urgency']
+                    : ['summary', 'assumptive', 'alternative'];
+
+                closes.forEach(function(closeKey) {
+                    var close = closingTechniques[closeKey];
+                    closeResponse += '<div class="rec-card close"><h4>' + close.name + '</h4><p><strong>Say:</strong> "' + close.script + '"</p><p style="margin-top:8px;color:#666;font-size:12px;"><em>Use when: ' + close.when + '</em></p></div>';
+                });
+
+                closeResponse += '<div class="quick-actions" style="margin-top:16px;"><span class="quick-action" onclick="handleObjection()">Handle another objection</span><span class="quick-action" onclick="clearForm()">New seller</span></div>';
+
+                addMessage(closeResponse, true);
+            }, 1200);
+        }
+
+        function handleObjection() {
+            var objections = Object.keys(commonObjections);
+            var response = '<strong>Common Objections - Pick one:</strong><div class="quick-actions" style="margin-top:12px;">';
+            objections.forEach(function(objKey) {
+                response += '<span class="quick-action" onclick="showObjectionHandler(\'' + objKey + '\')">' + objKey + '</span>';
+            });
+            response += '</div>';
+            addMessage(response, true);
+        }
+
+        function showObjectionHandler(objection) {
+            addMessage('How do I handle: "' + objection + '"?', false);
+            
+            showTyping();
+            setTimeout(function() {
+                hideTyping();
+                var handler = commonObjections[objection];
+                var response = '<div class="rec-card objection"><h4>"' + objection + '"</h4><p><strong>Say:</strong> "' + handler.response + '"</p><p style="margin-top:8px;color:#666;"><strong>Follow-up:</strong> "' + handler.followUp + '"</p></div>';
+                addMessage(response, true);
+            }, 500);
+        }
+    </script>
+</body>
+</html>
