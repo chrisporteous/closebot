@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CloseBot - IC Sales Assistant</title>
+    <style>
+        :root{--sq-black:#000;--sq-white:#fff;--sq-green:#00D632;--sq-gray-100:#F7F7F7;--sq-gray-200:#E6E6E6;--sq-gray-300:#CCC;--sq-gray-500:#787878;--sq-gray-700:#3D3D3D;--sq-blue:#006AFF;--sq-red:#C00;--sq-orange:#FF9500}
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:var(--sq-gray-100);min-height:100vh}
+        .header{background:var(--sq-black);color:var(--sq-white);padding:14px 20px;display:flex;align-items:center;justify-content:space-between}
+        .header h1{font-size:20px;font-weight:600}
+        .badge{background:var(--sq-green);color:var(--sq-black);padding:4px 10px;border-radius:4px;font-size:11px;font-weight:700;margin-left:10px}
+        .main{display:flex;height:calc(100vh - 52px);max-width:1400px;margin:0 auto}
+        .panel{width:300px;background:var(--sq-white);border-right:1px solid var(--sq-gray-200);padding:20px;overflow-y:auto}
+        .label{font-size:11px;font-weight:700;color:var(--sq-gray-500);text-transform:uppercase;margin-bottom:10px}
+        .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:20px}
+        .vbtn{padding:12px 8px;border:2px solid var(--sq-gray-200);border-radius:8px;background:var(--sq-white);font-size:12px;font-weight:600;cursor:pointer;text-align:center}
+        .vbtn:hover{border-color:var(--sq-gray-300);background:var(--sq-gray-100)}
+        .vbtn.on{background:var(--sq-black);color:var(--sq-white);border-color:var(--sq-black)}
+        .vbtn .ico{font-size:18px;display:block;margin-bottom:4px}
+        .fg{margin-bottom:16px}
+        .fg label{display:block;font-size:12px;font-weight:600;margin-bottom:6px}
+        .fg select,.fg textarea{width:100%;padding:12px;border:2px solid var(--sq-gray-200);border-radius:8px;font-size:14px;font-family:inherit}
+        .fg select:focus,.fg textarea:focus{outline:none;border-color:var(--sq-black)}
+        .fg textarea{resize:none;height:80px}
+        .gobtn{width:100%;padding:14px;background:var(--sq-black);color:var(--sq-white);border:none;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer}
+        .gobtn:hover{background:var(--sq-gray-700)}
+        .chat{flex:1;display:flex;flex-direction:column;background:var(--sq-white)}
+        .msgs{flex:1;overflow-y:auto;padding:24px}
+        .msg{margin-bottom:16px;display:flex;gap:10px}
+        .msg.usr{flex-direction:row-reverse}
+        .av{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:bold;flex-shrink:0}
+        .msg.bot .av{background:var(--sq-black);color:var(--sq-white)}
+        .msg.usr .av{background:var(--sq-gray-200)}
+        .mc{max-width:85%;font-size:14px;line-height:1.5}
+        .msg.bot .mc{background:var(--sq-gray-100);padding:14px 18px;border-radius:16px;border-top-left-radius:4px}
+        .msg.usr .mc{background:var(--sq-black);color:var(--sq-white);padding:14px 18px;border-radius:16px;border-top-right-radius:4px}
+        .pcard{background:var(--sq-white);border:1px solid var(--sq-gray-200);border-left:4px solid var(--sq-green);border-radius:8px;padding:12px 14px;margin:8px 0}
+        .pcard h4{font-size:14px;font-weight:700;margin-bottom:4px}
+        .pcard p{font-size:13px;color:var(--sq-gray-700)}
+        .ptag{display:inline-block;font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px;margin-left:8px}
+        .tag-saas{background:#E8F5E9;color:#2E7D32}
+        .tag-hardware{background:#F3E5F5;color:#7B1FA2}
+        .tag-payments{background:#E3F2FD;color:#1565C0}
+        .wlist{margin:12px 0;padding:0;list-style:none}
+        .wlist li{font-size:13px;padding:6px 0 6px 20px;position:relative;color:var(--sq-gray-700)}
+        .wlist li::before{content:"✓";position:absolute;left:0;color:var(--sq-green);font-weight:bold}
+        .tabs{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
+        .tab{padding:10px 18px;background:var(--sq-white);border:2px solid var(--sq-black);border-radius:24px;font-size:13px;font-weight:600;cursor:pointer}
+        .tab:hover{background:var(--sq-black);color:var(--sq-white)}
+        .tab.sec{border-color:var(--sq-gray-300);color:var(--sq-gray-700)}
+        .scard{background:var(--sq-white);border:1px solid var(--sq-gray-200);border-radius:8px;padding:14px;margin:8px 0}
+        .scard.obj{border-left:4px solid var(--sq-blue)}
+        .scard.cls{border-left:4px solid var(--sq-orange)}
+        .scard.cmp{border-left:4px solid var(--sq-red)}
+        .scard h4{font-size:13px;font-weight:700;margin-bottom:8px;color:var(--sq-gray-700)}
+        .sbox{background:var(--sq-gray-100);padding:10px 12px;border-radius:6px;font-size:14px;line-height:1.5}
+        .sfu{font-size:12px;color:var(--sq-gray-500);margin-top:8px;font-style:italic}
+        .help-link{display:inline-block;margin-top:8px;color:var(--sq-blue);font-size:12px;text-decoration:none}
+        .help-link:hover{text-decoration:underline}
+        .video-section{margin-top:16px}
+        .video-section h4{font-size:13px;font-weight:700;color:var(--sq-gray-700);margin-bottom:12px}
+        .video-grid{display:flex;gap:12px;flex-wrap:wrap}
+        .video-card{background:var(--sq-white);border:1px solid var(--sq-gray-200);border-radius:8px;overflow:hidden;width:280px;cursor:pointer;transition:all 0.2s;position:relative}
+        .video-card:hover{border-color:var(--sq-black);transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,0.1)}
+        .video-card img{width:100%;height:157px;object-fit:cover;background:#000}
+        .video-card .play-icon{position:absolute;top:50%;left:50%;transform:translate(-50%,-80%);width:50px;height:50px;background:rgba(0,0,0,0.7);border-radius:50%;display:flex;align-items:center;justify-content:center}
+        .video-card .play-icon::after{content:"";border-style:solid;border-width:10px 0 10px 18px;border-color:transparent transparent transparent white;margin-left:4px}
+        .video-card .vinfo{padding:10px 12px}
+        .video-card .vinfo h5{font-size:13px;font-weight:600;margin-bottom:4px}
+        .video-card .vinfo span{font-size:11px;color:var(--sq-gray-500)}
+        .video-modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);z-index:1000;align-items:center;justify-content:center}
+        .video-modal.show{display:flex}
+        .video-modal-content{width:90%;max-width:900px;position:relative}
+        .video-modal-close{position:absolute;top:-40px;right:0;color:white;font-size:24px;cursor:pointer;padding:8px}
+        .video-modal iframe{width:100%;height:506px;border:none;border-radius:8px}
+        @media(max-width:900px){.main{flex-direction:column;height:auto}.panel{width:100%;border-right:none;border-bottom:1px solid var(--sq-gray-200)}.chat{min-height:70vh}.grid{grid-template-columns:repeat(3,1fr)}.video-card{width:100%}.video-modal iframe{height:300px}}
+    </style>
+</head>
+<body>
+<div class="header"><div style="display:flex;align-items:center"><h1>CloseBot</h1><span class="badge">BETA</span></div><div style="font-size:12px;color:#999">Partner Portal</div></div>
+<div class="main">
+    <div class="panel">
+        <div class="label">Vertical</div>
+        <div class="grid">
+            <button class="vbtn" onclick="pick(this,'fsr')"><span class="ico">🍽️</span>FSR</button>
+            <button class="vbtn" onclick="pick(this,'qsr')"><span class="ico">🍔</span>QSR</button>
+            <button class="vbtn" onclick="pick(this,'retail')"><span class="ico">🛍️</span>Retail</button>
+            <button class="vbtn" onclick="pick(this,'services')"><span class="ico">💼</span>Services</button>
+            <button class="vbtn" onclick="pick(this,'beauty')"><span class="ico">💇</span>Beauty</button>
+            <button class="vbtn" onclick="pick(this,'health')"><span class="ico">💪</span>Health</button>
+        </div>
+        <div class="fg"><label>Annual GPV</label><select id="gpv"><option value="">Select...</option><option value="Under £50k">Under £50k</option><option value="£50k-£100k">£50k-£100k</option><option value="£100k-£250k">£100k-£250k</option><option value="£250k-£500k">£250k-£500k</option><option value="£500k+">£500k+</option></select></div>
+        <div class="fg"><label>Pain Points</label><textarea id="pain" placeholder="High fees, slow deposits, using Zettle..."></textarea></div>
+        <button class="gobtn" onclick="run()">Get Recommendations →</button>
+    </div>
+    <div class="chat"><div class="msgs" id="out"><div class="msg bot"><div class="av">CB</div><div class="mc"><b>Hey!</b> Select a vertical and pain points. I will give you product recs, demo videos, objection handling, and closing scripts.</div></div></div></div>
+</div>
+<div class="video-modal" id="vmodal" onclick="closeVideo()">
+    <div class="video-modal-content" onclick="event.stopPropagation()">
+        <div class="video-modal-close" onclick="closeVideo()">✕</div>
+        <iframe id="vframe" src="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+</div>
+<script>
+var defined = true;
+</script>
+</body>
+</html>

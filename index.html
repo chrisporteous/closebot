@@ -43,7 +43,6 @@
         .tag-saas{background:#E8F5E9;color:#2E7D32}
         .tag-hardware{background:#F3E5F5;color:#7B1FA2}
         .tag-payments{background:#E3F2FD;color:#1565C0}
-        .tag-banking{background:#FFF3E0;color:#EF6C00}
         .wlist{margin:12px 0;padding:0;list-style:none}
         .wlist li{font-size:13px;padding:6px 0 6px 20px;position:relative;color:var(--sq-gray-700)}
         .wlist li::before{content:"✓";position:absolute;left:0;color:var(--sq-green);font-weight:bold}
@@ -58,8 +57,10 @@
         .scard h4{font-size:13px;font-weight:700;margin-bottom:8px;color:var(--sq-gray-700)}
         .sbox{background:var(--sq-gray-100);padding:10px 12px;border-radius:6px;font-size:14px;line-height:1.5}
         .sfu{font-size:12px;color:var(--sq-gray-500);margin-top:8px;font-style:italic}
+        .help-link{display:inline-block;margin-top:6px;color:var(--sq-blue);font-size:11px;text-decoration:none}
+        .help-link:hover{text-decoration:underline}
         .video-section{margin-top:16px}
-        .video-section h4{font-size:13px;font-weight:700;color:var(--sq-gray-700);margin-bottom:12px;display:flex;align-items:center;gap:6px}
+        .video-section h4{font-size:13px;font-weight:700;color:var(--sq-gray-700);margin-bottom:12px}
         .video-grid{display:flex;gap:12px;flex-wrap:wrap}
         .video-card{background:var(--sq-white);border:1px solid var(--sq-gray-200);border-radius:8px;overflow:hidden;width:280px;cursor:pointer;transition:all 0.2s;position:relative}
         .video-card:hover{border-color:var(--sq-black);transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,0.1)}
@@ -67,7 +68,7 @@
         .video-card .play-icon{position:absolute;top:50%;left:50%;transform:translate(-50%,-80%);width:50px;height:50px;background:rgba(0,0,0,0.7);border-radius:50%;display:flex;align-items:center;justify-content:center}
         .video-card .play-icon::after{content:"";border-style:solid;border-width:10px 0 10px 18px;border-color:transparent transparent transparent white;margin-left:4px}
         .video-card .vinfo{padding:10px 12px}
-        .video-card .vinfo h5{font-size:13px;font-weight:600;margin-bottom:4px;line-height:1.3}
+        .video-card .vinfo h5{font-size:13px;font-weight:600;margin-bottom:4px}
         .video-card .vinfo span{font-size:11px;color:var(--sq-gray-500)}
         .video-modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);z-index:1000;align-items:center;justify-content:center}
         .video-modal.show{display:flex}
@@ -104,82 +105,60 @@
 </div>
 <script>
 var V={
-fsr:{n:"Full Service Restaurant",i:"🍽️",p:["Square for Restaurants","Square Terminal","Kitchen Display"],w:["Tableside ordering AND payments in one device","Gift cards built-in","Tip pooling automated","KDS eliminates lost tickets"],
-videos:[
-{title:"Square for Restaurants",vid:"LXb3EKWsInQ"},
-{title:"Square Terminal",vid:"kfLVpnbCLfw"},
-{title:"Getting Started with Square",vid:"YQHsXMglC9A"}
-]},
-qsr:{n:"Quick Service Restaurant",i:"🍔",p:["Square POS","Square Register","Kitchen Display"],w:["Fastest card transaction time","Customer display for loyalty/tipping","Online ordering syncs inventory"],
-videos:[
-{title:"Square Register",vid:"LXb3EKWsInQ"},
-{title:"Square POS App",vid:"YQHsXMglC9A"},
-{title:"Square Terminal",vid:"kfLVpnbCLfw"}
-]},
-retail:{n:"Retail",i:"🛍️",p:["Square for Retail","Square Register","Square Terminal"],w:["Advanced inventory with alerts","Online store syncs with in-store","Barcode scanning built-in"],
-videos:[
-{title:"Square for Retail",vid:"LXb3EKWsInQ"},
-{title:"Square Register",vid:"YQHsXMglC9A"},
-{title:"Inventory Management",vid:"kfLVpnbCLfw"}
-]},
-services:{n:"Professional Services",i:"💼",p:["Square Appointments","Square Invoices","Square Terminal"],w:["Online booking reduces admin","No-show protection","Professional invoices"],
-videos:[
-{title:"Square Appointments",vid:"LXb3EKWsInQ"},
-{title:"Square Invoices",vid:"YQHsXMglC9A"},
-{title:"Square Terminal",vid:"kfLVpnbCLfw"}
-]},
-beauty:{n:"Beauty",i:"💇",p:["Square Appointments","Square POS","Square Terminal"],w:["24/7 online booking","No-show protection","Loyalty brings them back"],
-videos:[
-{title:"Square Appointments",vid:"LXb3EKWsInQ"},
-{title:"Square POS",vid:"YQHsXMglC9A"},
-{title:"Square Terminal",vid:"kfLVpnbCLfw"}
-]},
-health:{n:"Health & Wellness",i:"💪",p:["Square Appointments","Square Terminal","Square POS"],w:["Automated reminders","Client history","Recurring appointments"],
-videos:[
-{title:"Square Appointments",vid:"LXb3EKWsInQ"},
-{title:"Square Terminal",vid:"kfLVpnbCLfw"},
-{title:"Getting Started",vid:"YQHsXMglC9A"}
-]}
+fsr:{n:"Full Service Restaurant",i:"🍽️",p:["Square for Restaurants","Square Terminal","Kitchen Display"],w:["Tableside ordering AND payments in one device","Gift cards built-in - no 3rd party needed","Tip pooling automated to staff","KDS eliminates lost tickets","Next-day deposits including weekends"],
+help:[{t:"Set up Square for Restaurants",u:"https://squareup.com/help/gb/en/article/6312"},{t:"Square Terminal setup",u:"https://squareup.com/help/gb/en/article/5583"},{t:"Kitchen Display System",u:"https://squareup.com/help/gb/en/article/6054"}],
+videos:[{title:"Square for Restaurants",vid:"LXb3EKWsInQ"},{title:"Square Terminal",vid:"kfLVpnbCLfw"},{title:"Getting Started",vid:"YQHsXMglC9A"}]},
+qsr:{n:"Quick Service Restaurant",i:"🍔",p:["Square POS","Square Register","Kitchen Display"],w:["Fastest card transaction time in market","Customer-facing display for loyalty/tips","Online ordering syncs with inventory","Next-day deposits including weekends"],
+help:[{t:"Square Register setup",u:"https://squareup.com/help/gb/en/article/5661"},{t:"Square Online ordering",u:"https://squareup.com/help/gb/en/article/6852"},{t:"Deposit options",u:"https://squareup.com/help/gb/en/article/3807"}],
+videos:[{title:"Square Register",vid:"LXb3EKWsInQ"},{title:"Square POS",vid:"YQHsXMglC9A"},{title:"Square Terminal",vid:"kfLVpnbCLfw"}]},
+retail:{n:"Retail",i:"🛍️",p:["Square for Retail","Square Register","Square Terminal"],w:["Advanced inventory with low stock alerts","Online store syncs with in-store stock","Barcode scanning built-in","Purchase orders and vendor management"],
+help:[{t:"Square for Retail setup",u:"https://squareup.com/help/gb/en/article/5762"},{t:"Inventory management",u:"https://squareup.com/help/gb/en/article/5059"},{t:"Barcode scanning",u:"https://squareup.com/help/gb/en/article/5195"}],
+videos:[{title:"Square for Retail",vid:"LXb3EKWsInQ"},{title:"Square Register",vid:"YQHsXMglC9A"},{title:"Inventory",vid:"kfLVpnbCLfw"}]},
+services:{n:"Professional Services",i:"💼",p:["Square Appointments","Square Invoices","Square Terminal"],w:["Online booking reduces admin time","No-show protection with card on file","Professional invoices with online payment","Google Calendar sync"],
+help:[{t:"Square Appointments setup",u:"https://squareup.com/help/gb/en/article/6173"},{t:"Square Invoices",u:"https://squareup.com/help/gb/en/article/5067"},{t:"Online booking",u:"https://squareup.com/help/gb/en/article/6236"}],
+videos:[{title:"Square Appointments",vid:"LXb3EKWsInQ"},{title:"Square Invoices",vid:"YQHsXMglC9A"},{title:"Square Terminal",vid:"kfLVpnbCLfw"}]},
+beauty:{n:"Beauty & Salons",i:"💇",p:["Square Appointments","Square POS","Square Terminal"],w:["24/7 online booking via website/Instagram/Google","No-show protection with deposits","Loyalty program brings clients back","Automated appointment reminders"],
+help:[{t:"Square Appointments",u:"https://squareup.com/help/gb/en/article/6173"},{t:"Reserve with Google",u:"https://squareup.com/help/gb/en/article/6458"},{t:"Instagram booking",u:"https://squareup.com/help/gb/en/article/6459"}],
+videos:[{title:"Square Appointments",vid:"LXb3EKWsInQ"},{title:"Square POS",vid:"YQHsXMglC9A"},{title:"Square Terminal",vid:"kfLVpnbCLfw"}]},
+health:{n:"Health & Wellness",i:"💪",p:["Square Appointments","Square Terminal","Square POS"],w:["Automated reminders reduce no-shows","Client history and notes","Recurring appointments","Class scheduling for groups"],
+help:[{t:"Square Appointments",u:"https://squareup.com/help/gb/en/article/6173"},{t:"Schedule classes",u:"https://squareup.com/help/gb/en/article/6489"},{t:"Client management",u:"https://squareup.com/help/gb/en/article/6241"}],
+videos:[{title:"Square Appointments",vid:"LXb3EKWsInQ"},{title:"Square Terminal",vid:"kfLVpnbCLfw"},{title:"Getting Started",vid:"YQHsXMglC9A"}]}
 };
 var P={
-"Square Payments":{c:"payments",d:"1.75% chip & PIN. No monthly fees. Next-day deposits."},
-"Square POS":{c:"saas",d:"Free POS. Sales data, inventory, staff tools included."},
-"Square Terminal":{c:"hardware",d:"All-in-one: payments + receipts + POS. £149, no rental."},
-"Square Register":{c:"hardware",d:"Premium countertop POS with customer display."},
-"Square Appointments":{c:"saas",d:"Online booking, reminders, no-show protection."},
-"Square Invoices":{c:"saas",d:"Professional invoices with online payment."},
-"Square for Restaurants":{c:"saas",d:"Table management, coursing, KDS integration."},
-"Square for Retail":{c:"saas",d:"Advanced inventory, purchase orders, barcode scanning."},
-"Kitchen Display":{c:"saas",d:"Digital tickets. No lost orders, track prep times."}
+"Square Payments":{c:"payments",d:"1.75% chip & PIN, 2.5% keyed. No monthly fees. Next-day deposits incl weekends.",h:"https://squareup.com/help/gb/en/article/3807"},
+"Square POS":{c:"saas",d:"Free POS app. Sales tracking, inventory, staff management included.",h:"https://squareup.com/help/gb/en/article/5062"},
+"Square Terminal":{c:"hardware",d:"All-in-one payments + receipts + POS. £149 one-off, no rental fees.",h:"https://squareup.com/help/gb/en/article/5583"},
+"Square Register":{c:"hardware",d:"Premium countertop POS with built-in customer display for tips/loyalty.",h:"https://squareup.com/help/gb/en/article/5661"},
+"Square Appointments":{c:"saas",d:"Online booking, automated reminders, no-show protection, Google/Instagram integration.",h:"https://squareup.com/help/gb/en/article/6173"},
+"Square Invoices":{c:"saas",d:"Professional invoices with online payment. Track and send reminders.",h:"https://squareup.com/help/gb/en/article/5067"},
+"Square for Restaurants":{c:"saas",d:"Table management, coursing, floor plans, KDS integration, tip pooling.",h:"https://squareup.com/help/gb/en/article/6312"},
+"Square for Retail":{c:"saas",d:"Advanced inventory, purchase orders, vendor management, barcode scanning.",h:"https://squareup.com/help/gb/en/article/5762"},
+"Kitchen Display":{c:"saas",d:"Digital tickets replace paper. Track prep times, never lose an order.",h:"https://squareup.com/help/gb/en/article/6054"}
 };
 var C={
-lightspeed:{n:"Lightspeed",t:"POS",w:["White-labeled Stripe payments","Per-device fees","6-7 screens to pay"],s:"They charge per device, we charge per location. Their payments is Stripe - two companies when things break."},
-sumup:{n:"SumUp",t:"Payments",w:["3-day settlement","No invoices from POS","Basic POS"],s:"3 days for your money vs our next-day. Their free POS is too basic for real business."},
-zettle:{n:"Zettle",t:"Payments",w:["3-day settlement","Discontinued apps","Limited POS"],s:"Zettle pulled back from POS. Like SumUp, 3-day settlement. We are UK-based, next-day."},
-dojo:{n:"Dojo",t:"Payments",w:["Payments only","Need separate POS","Multiple providers"],s:"Rates look good but payments only. You need separate POS, loyalty, online - hope they talk to each other."},
-toast:{n:"Toast",t:"Restaurant POS",w:["More expensive","WorldPay underneath","No offline guarantee"],s:"Solid but pricier. Payments is WorldPay - cannot guarantee offline like we can."}
+lightspeed:{n:"Lightspeed",t:"POS",w:["White-labeled Stripe payments - 2 companies","Per-device fees vs our per-location","6-7 screens to complete payment","No ecommerce integration"],s:"They charge per device, we charge per location. Their payments is actually Stripe underneath - two companies when things go wrong."},
+sumup:{n:"SumUp",t:"Payments",w:["3-day settlement vs our next-day","Cannot do invoices from POS","Basic POS not fit for real business","Germany-based support"],s:"3 days to get your money vs our next-day including weekends. Their free POS is too basic for any serious business."},
+zettle:{n:"Zettle",t:"Payments",w:["3-day settlement","Discontinued several apps","Essentially payments-only now","Sweden-based - slower support"],s:"Zettle pulled back from POS - they discontinued apps. Like SumUp, 3-day settlement. We are UK-based with next-day deposits."},
+dojo:{n:"Dojo",t:"Payments",w:["Payments only - need separate POS","Multiple providers to manage","Integration issues between systems","Higher total cost of ownership"],s:"Rates look good but it is payments only. You need separate POS, loyalty, online ordering - and hope they all talk to each other."},
+toast:{n:"Toast",t:"Restaurant POS",w:["More expensive than Square","WorldPay underneath for payments","Cannot guarantee offline payments","US-focused support"],s:"Solid product but pricier. Their payments is actually WorldPay - they cannot guarantee offline payments like we can."}
 };
 var O={
-"too expensive":{r:"What do you pay in monthly fees, terminal rental, per-transaction? We have no monthly fees, no rental - just 1.75%.",f:"Can I see your statement?"},
-"happy with current":{r:"When did you last review your statement? Many find hidden fees - PCI charges, minimums.",f:"Quick comparison? No obligation."},
-"need to think":{r:"What concerns? I can address them now.",f:"What would make it a yes today?"},
-"locked in contract":{r:"When does it end? Get set up now, switch that day. Savings often cover exit fees.",f:"Know your exit fee?"},
-"no time":{r:"Setup takes 10 minutes. I can do it now or leave the kit.",f:"Just try it alongside current system?"}
+"too expensive":{r:"What do you currently pay in monthly fees, terminal rental, and per-transaction? We have no monthly fees, no rental - just 1.75% per transaction.",f:"Can I see a recent statement? Often find hidden fees."},
+"happy with current":{r:"When did you last review your statement? Many sellers find hidden fees they did not know about - PCI charges, statement fees, minimums.",f:"Quick comparison takes 2 mins - no obligation."},
+"need to think":{r:"Completely understand. What specific concerns do you have? I can address them now.",f:"What would make this a yes today?"},
+"locked in contract":{r:"When does it end? We can get you set up now and switch the day it ends. Often the savings cover any exit fees.",f:"Do you know your exit fee? Often less than you think."},
+"no time":{r:"Setup takes 10 minutes. I can do it now while we chat, or leave the kit for you to try.",f:"What if you just tried it alongside your current system?"}
 };
 var CL={
-assumptive:{n:"Assumptive",i:"✅",s:"Shall we get you set up today? Taking payments before I leave.",w:"No major objections"},
-trial:{n:"Trial",i:"🧪",s:"Try it alongside current system for a week. No harm if not.",w:"Hesitant to commit"},
-urgency:{n:"Urgency",i:"⚡",s:"Go live today = next-day deposits tomorrow.",w:"Cash flow pain"},
-summary:{n:"Summary",i:"📋",s:"To recap: [products] solving [pains] for [price]. Ready?",w:"After objections handled"}
+assumptive:{n:"Assumptive Close",i:"✅",s:"Shall we get you set up today? You could be taking payments before I leave.",w:"Use when no major objections remain"},
+trial:{n:"Trial Close",i:"🧪",s:"Why not try it alongside your current system for a week? No risk, no commitment.",w:"Use when they are hesitant to fully commit"},
+urgency:{n:"Urgency Close",i:"⚡",s:"If we go live today, you will have next-day deposits tomorrow morning.",w:"Use when cash flow is a pain point"},
+summary:{n:"Summary Close",i:"📋",s:"So to recap: [products] solving [pain points] for [price]. Shall we proceed?",w:"Use after handling all objections"}
 };
 var sel=null;
 function pick(b,v){document.querySelectorAll(".vbtn").forEach(function(x){x.classList.remove("on")});b.classList.add("on");sel=v;}
 function say(h,bot){var o=document.getElementById("out"),d=document.createElement("div");d.className="msg "+(bot?"bot":"usr");d.innerHTML='<div class="av">'+(bot?"CB":"You")+'</div><div class="mc">'+h+'</div>';o.appendChild(d);o.scrollTop=o.scrollHeight;}
-function playVideo(vid){
-    var iframe=document.getElementById("vframe");
-    iframe.src="https://www.youtube-nocookie.com/embed/"+vid+"?autoplay=1&rel=0";
-    document.getElementById("vmodal").classList.add("show");
-}
+function playVideo(vid){var iframe=document.getElementById("vframe");iframe.src="https://www.youtube-nocookie.com/embed/"+vid+"?autoplay=1&rel=0";document.getElementById("vmodal").classList.add("show");}
 function closeVideo(){document.getElementById("vmodal").classList.remove("show");document.getElementById("vframe").src="";}
 function run(){
 if(!sel){say("Pick a vertical first 👆",true);return;}
@@ -188,12 +167,17 @@ say("<b>"+v.i+" "+v.n+"</b>"+(g?" · "+g:"")+(pa?"<br><i>"+pa+"</i>":""),false);
 var h="<b>Recommended:</b><ul class='wlist'>";
 v.w.forEach(function(x){h+="<li>"+x+"</li>";});
 h+="</ul>";
-v.p.forEach(function(x){var pr=P[x];if(pr)h+='<div class="pcard"><h4>'+x+'<span class="ptag tag-'+pr.c+'">'+pr.c+'</span></h4><p>'+pr.d+'</p></div>';});
+v.p.forEach(function(x){var pr=P[x];if(pr)h+='<div class="pcard"><h4>'+x+'<span class="ptag tag-'+pr.c+'">'+pr.c+'</span></h4><p>'+pr.d+'</p><a class="help-link" href="'+pr.h+'" target="_blank">📖 Help article →</a></div>';});
+if(v.help&&v.help.length>0){
+h+='<div style="margin-top:12px;padding:10px;background:#f0f7ff;border-radius:6px;font-size:12px"><b>📚 Setup Guides:</b> ';
+v.help.forEach(function(link,i){h+=(i>0?' · ':'')+'<a href="'+link.u+'" target="_blank" style="color:#006AFF">'+link.t+'</a>';});
+h+='</div>';
+}
 if(v.videos&&v.videos.length>0){
 h+='<div class="video-section"><h4>🎬 Show them a demo</h4><div class="video-grid">';
 for(var i=0;i<v.videos.length;i++){
 var vid=v.videos[i];
-h+='<div class="video-card" data-vid="'+vid.vid+'"><img src="https://img.youtube.com/vi/'+vid.vid+'/mqdefault.jpg" onerror="this.src=\'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22320%22 height=%22180%22><rect fill=%22%23000%22 width=%22320%22 height=%22180%22/><text x=%2250%25%22 y=%2250%25%22 fill=%22%23fff%22 text-anchor=%22middle%22>Video</text></svg>\'"><div class="play-icon"></div><div class="vinfo"><h5>'+vid.title+'</h5><span>Square Official</span></div></div>';
+h+='<div class="video-card" data-vid="'+vid.vid+'"><img src="https://img.youtube.com/vi/'+vid.vid+'/mqdefault.jpg"><div class="play-icon"></div><div class="vinfo"><h5>'+vid.title+'</h5><span>Square Official</span></div></div>';
 }
 h+='</div></div>';
 }
