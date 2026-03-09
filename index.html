@@ -2,286 +2,406 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>CloseBot - IC Sales Assistant</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Square+Sans+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --square-black: #1a1a1a;
-            --square-blue: #006aff;
-            --square-green: #00d632;
-            --square-gray: #6b7280;
-            --square-light: #f5f5f5;
-            --square-white: #ffffff;
-            --square-red: #ff4d4d;
+            --sq-black: #000000;
+            --sq-white: #FFFFFF;
+            --sq-green: #00D632;
+            --sq-green-dark: #00A627;
+            --sq-gray-100: #F7F7F7;
+            --sq-gray-200: #E6E6E6;
+            --sq-gray-300: #CCCCCC;
+            --sq-gray-500: #787878;
+            --sq-gray-700: #3D3D3D;
+            --sq-blue: #006AFF;
+            --sq-red: #FF4136;
+            --sq-orange: #FF9500;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: var(--square-light);
+            font-family: 'Square Sans Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--sq-gray-100);
             min-height: 100vh;
+            min-height: -webkit-fill-available;
         }
 
+        /* Header */
         .header {
-            background: var(--square-black);
-            color: var(--square-white);
+            background: var(--sq-black);
+            color: var(--sq-white);
             padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-left {
             display: flex;
             align-items: center;
             gap: 12px;
         }
 
         .header h1 {
-            font-size: 20px;
+            font-size: 22px;
             font-weight: 600;
+            letter-spacing: -0.5px;
         }
 
         .header .badge {
-            background: var(--square-blue);
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 11px;
-            font-weight: 500;
+            background: var(--sq-green);
+            color: var(--sq-black);
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
         }
 
-        .container {
-            max-width: 900px;
+        .header-right {
+            font-size: 13px;
+            color: var(--sq-gray-300);
+        }
+
+        /* Main Layout - iPad optimized */
+        .main-container {
+            display: flex;
+            height: calc(100vh - 60px);
+            max-width: 1400px;
             margin: 0 auto;
-            padding: 24px;
         }
 
-        .chat-container {
-            background: var(--square-white);
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            overflow: hidden;
+        /* Input Panel */
+        .input-panel {
+            width: 340px;
+            background: var(--sq-white);
+            border-right: 1px solid var(--sq-gray-200);
+            padding: 24px;
+            overflow-y: auto;
+            flex-shrink: 0;
+        }
+
+        .panel-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--sq-gray-500);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--sq-black);
+            margin-bottom: 8px;
+        }
+
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid var(--sq-gray-200);
+            border-radius: 8px;
+            font-size: 15px;
+            font-family: inherit;
+            transition: border-color 0.2s;
+            background: var(--sq-white);
+        }
+
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--sq-black);
+        }
+
+        .form-group textarea {
+            resize: none;
+            height: 100px;
+        }
+
+        /* Quick Select Buttons */
+        .quick-select {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 24px;
+        }
+
+        .quick-btn {
+            padding: 10px 16px;
+            border: 2px solid var(--sq-gray-200);
+            border-radius: 8px;
+            background: var(--sq-white);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .quick-btn:hover {
+            border-color: var(--sq-black);
+        }
+
+        .quick-btn.active {
+            background: var(--sq-black);
+            color: var(--sq-white);
+            border-color: var(--sq-black);
+        }
+
+        /* Primary Button */
+        .btn-primary {
+            width: 100%;
+            padding: 16px 24px;
+            background: var(--sq-black);
+            color: var(--sq-white);
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-primary:hover {
+            background: var(--sq-gray-700);
+        }
+
+        .btn-primary:active {
+            transform: scale(0.98);
+        }
+
+        .btn-secondary {
+            width: 100%;
+            padding: 12px 24px;
+            background: var(--sq-white);
+            color: var(--sq-black);
+            border: 2px solid var(--sq-gray-200);
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            margin-top: 12px;
+        }
+
+        /* Chat Panel - Main area, larger */
+        .chat-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: var(--sq-white);
+            min-width: 0;
         }
 
         .chat-messages {
-            height: 400px;
+            flex: 1;
             overflow-y: auto;
-            padding: 20px;
+            padding: 24px;
+            scroll-behavior: smooth;
         }
 
         .message {
-            margin-bottom: 16px;
+            margin-bottom: 20px;
             display: flex;
             gap: 12px;
+            animation: fadeIn 0.3s ease;
         }
 
-        .message.bot .avatar {
-            background: var(--square-blue);
-            color: white;
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            flex-shrink: 0;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .message.user {
             flex-direction: row-reverse;
         }
 
-        .message.user .avatar {
-            background: var(--square-gray);
-            color: white;
-            width: 32px;
-            height: 32px;
+        .avatar {
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 14px;
+            font-size: 18px;
             flex-shrink: 0;
         }
 
+        .message.bot .avatar {
+            background: var(--sq-black);
+            color: var(--sq-white);
+        }
+
+        .message.user .avatar {
+            background: var(--sq-gray-200);
+        }
+
         .message-content {
-            max-width: 70%;
+            max-width: 85%;
+            font-size: 15px;
+            line-height: 1.6;
         }
 
         .message.bot .message-content {
-            background: var(--square-light);
-            padding: 12px 16px;
-            border-radius: 12px;
+            background: var(--sq-gray-100);
+            padding: 16px 20px;
+            border-radius: 16px;
             border-top-left-radius: 4px;
         }
 
         .message.user .message-content {
-            background: var(--square-blue);
-            color: white;
-            padding: 12px 16px;
-            border-radius: 12px;
+            background: var(--sq-black);
+            color: var(--sq-white);
+            padding: 16px 20px;
+            border-radius: 16px;
             border-top-right-radius: 4px;
         }
 
-        .input-section {
-            border-top: 1px solid #eee;
-            padding: 16px 20px;
+        /* Recommendation Cards - Cleaner design */
+        .rec-section {
+            margin-top: 16px;
         }
 
-        .quick-form {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            margin-bottom: 16px;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
-        .form-group.full-width {
-            grid-column: span 2;
-        }
-
-        .form-group label {
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--square-gray);
+        .rec-section-title {
+            font-size: 13px;
+            font-weight: 700;
             text-transform: uppercase;
-        }
-
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            padding: 10px 12px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 14px;
-            transition: border-color 0.2s;
-        }
-
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: var(--square-blue);
-        }
-
-        .form-group textarea {
-            resize: none;
-            height: 60px;
-        }
-
-        .btn-row {
+            letter-spacing: 0.5px;
+            color: var(--sq-gray-500);
+            margin-bottom: 12px;
             display: flex;
+            align-items: center;
             gap: 8px;
-        }
-
-        .btn {
-            padding: 12px 20px;
-            border: none;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .btn-primary {
-            background: var(--square-blue);
-            color: white;
-            flex: 1;
-        }
-
-        .btn-primary:hover {
-            background: #0052cc;
-        }
-
-        .btn-secondary {
-            background: var(--square-light);
-            color: var(--square-black);
-        }
-
-        .btn-secondary:hover {
-            background: #e5e5e5;
         }
 
         .rec-card {
-            background: white;
-            border: 1px solid #e5e5e5;
-            border-radius: 8px;
-            padding: 12px;
-            margin-top: 12px;
+            background: var(--sq-white);
+            border: 2px solid var(--sq-gray-200);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            transition: border-color 0.2s;
         }
 
-        .rec-card h4 {
-            font-size: 13px;
-            color: var(--square-blue);
-            margin-bottom: 6px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .rec-card p {
-            font-size: 13px;
-            color: var(--square-black);
-            line-height: 1.5;
+        .rec-card:hover {
+            border-color: var(--sq-gray-300);
         }
 
         .rec-card.product {
-            border-left: 3px solid var(--square-green);
+            border-left: 4px solid var(--sq-green);
         }
 
         .rec-card.objection {
-            border-left: 3px solid var(--square-blue);
+            border-left: 4px solid var(--sq-blue);
         }
 
         .rec-card.close {
-            border-left: 3px solid #ff9500;
+            border-left: 4px solid var(--sq-orange);
         }
 
-        .tag {
-            display: inline-block;
-            background: var(--square-light);
-            padding: 2px 8px;
-            border-radius: 4px;
+        .rec-card.competitor {
+            border-left: 4px solid var(--sq-red);
+        }
+
+        .rec-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
+        }
+
+        .rec-card h4 {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--sq-black);
+        }
+
+        .rec-card-category {
             font-size: 11px;
-            font-weight: 500;
-            margin-right: 4px;
+            font-weight: 600;
+            padding: 3px 8px;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+
+        .cat-saas { background: #E8F5E9; color: #2E7D32; }
+        .cat-payments { background: #E3F2FD; color: #1565C0; }
+        .cat-banking { background: #FFF3E0; color: #EF6C00; }
+        .cat-hardware { background: #F3E5F5; color: #7B1FA2; }
+
+        .rec-card p {
+            font-size: 14px;
+            color: var(--sq-gray-700);
+            line-height: 1.5;
+        }
+
+        .rec-card .script {
+            background: var(--sq-gray-100);
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 8px;
+            font-size: 14px;
+            color: var(--sq-black);
+            border-left: 3px solid var(--sq-green);
+        }
+
+        .rec-card .followup {
+            font-size: 13px;
+            color: var(--sq-gray-500);
+            margin-top: 8px;
+            font-style: italic;
+        }
+
+        .rec-card .when {
+            font-size: 12px;
+            color: var(--sq-gray-500);
             margin-top: 8px;
         }
 
-        .tag.saas { background: #e8f5e9; color: #2e7d32; }
-        .tag.payments { background: #e3f2fd; color: #1565c0; }
-        .tag.banking { background: #fff3e0; color: #ef6c00; }
-        .tag.hardware { background: #f3e5f5; color: #7b1fa2; }
-
-        .quick-actions {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin-top: 12px;
+        /* Key Benefits List */
+        .benefits-list {
+            margin-top: 8px;
+            padding-left: 0;
+            list-style: none;
         }
 
-        .quick-action {
-            background: var(--square-light);
-            border: 1px solid #ddd;
-            padding: 6px 12px;
-            border-radius: 16px;
-            font-size: 12px;
-            cursor: pointer;
-            transition: all 0.2s;
+        .benefits-list li {
+            font-size: 13px;
+            color: var(--sq-gray-700);
+            padding: 4px 0;
+            padding-left: 20px;
+            position: relative;
         }
 
-        .quick-action:hover {
-            background: var(--square-blue);
-            color: white;
-            border-color: var(--square-blue);
+        .benefits-list li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--sq-green);
+            font-weight: bold;
         }
 
+        /* Typing indicator */
         .typing {
             display: flex;
             gap: 4px;
@@ -291,7 +411,7 @@
         .typing span {
             width: 8px;
             height: 8px;
-            background: var(--square-gray);
+            background: var(--sq-gray-500);
             border-radius: 50%;
             animation: bounce 1.4s infinite ease-in-out;
         }
@@ -304,305 +424,184 @@
             40% { transform: scale(1); }
         }
 
-        .chat-messages::-webkit-scrollbar {
-            width: 6px;
+        /* Quick Actions */
+        .quick-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 16px;
         }
 
-        .chat-messages::-webkit-scrollbar-track {
+        .quick-action {
+            background: var(--sq-white);
+            border: 2px solid var(--sq-gray-200);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .quick-action:hover {
+            background: var(--sq-black);
+            color: var(--sq-white);
+            border-color: var(--sq-black);
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
             background: transparent;
         }
 
-        .chat-messages::-webkit-scrollbar-thumb {
-            background: #ddd;
-            border-radius: 3px;
+        ::-webkit-scrollbar-thumb {
+            background: var(--sq-gray-300);
+            border-radius: 4px;
+        }
+
+        /* iPad responsive */
+        @media (max-width: 1024px) {
+            .main-container {
+                flex-direction: column;
+                height: auto;
+            }
+
+            .input-panel {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid var(--sq-gray-200);
+                max-height: 40vh;
+            }
+
+            .chat-panel {
+                height: 60vh;
+            }
+
+            .quick-select {
+                overflow-x: auto;
+                flex-wrap: nowrap;
+                padding-bottom: 8px;
+            }
+
+            .quick-btn {
+                flex-shrink: 0;
+            }
+        }
+
+        @media (min-width: 1025px) {
+            .chat-messages {
+                padding: 32px 48px;
+            }
+
+            .message-content {
+                max-width: 75%;
+            }
         }
     </style>
 </head>
 <body>
     <div class="header">
-        <h1>🤖 CloseBot</h1>
-        <span class="badge">IC Sales Assistant</span>
+        <div class="header-left">
+            <h1>CloseBot</h1>
+            <span class="badge">IC Sales Assistant</span>
+        </div>
+        <div class="header-right">
+            Partner Portal
+        </div>
     </div>
 
-    <div class="container">
-        <div class="chat-container">
-            <div class="chat-messages" id="chatMessages">
-                <div class="message bot">
-                    <div class="avatar">🤖</div>
-                    <div class="message-content">
-                        <strong>Hey! I'm CloseBot.</strong><br><br>
-                        Tell me about your seller and I'll give you:<br>
-                        • Product recommendations<br>
-                        • Objection handling scripts<br>
-                        • Closing prompts<br><br>
-                        Fill in the details below or just describe the situation.
-                        <div class="quick-actions">
-                            <span class="quick-action" onclick="quickFill('restaurant')">🍽️ Restaurant</span>
-                            <span class="quick-action" onclick="quickFill('retail')">🛍️ Retail</span>
-                            <span class="quick-action" onclick="quickFill('services')">💈 Services</span>
-                            <span class="quick-action" onclick="quickFill('health')">💪 Health & Wellness</span>
-                        </div>
-                    </div>
-                </div>
+    <div class="main-container">
+        <div class="input-panel">
+            <div class="panel-title">Seller Details</div>
+            
+            <div class="quick-select" id="verticalButtons">
+                <button class="quick-btn" data-vertical="restaurant_fsr">🍽️ FSR</button>
+                <button class="quick-btn" data-vertical="restaurant_qsr">🍔 QSR</button>
+                <button class="quick-btn" data-vertical="retail">🛍️ Retail</button>
+                <button class="quick-btn" data-vertical="services">💼 Services</button>
+                <button class="quick-btn" data-vertical="beauty">💇 Beauty</button>
+                <button class="quick-btn" data-vertical="health">💪 Health</button>
+                <button class="quick-btn" data-vertical="home">🔧 Home</button>
             </div>
 
-            <div class="input-section">
-                <div class="quick-form">
-                    <div class="form-group">
-                        <label>ICP / Vertical</label>
-                        <select id="icp">
-                            <option value="">Select vertical...</option>
-                            <option value="restaurant">Restaurant / QSR</option>
-                            <option value="retail">Retail</option>
-                            <option value="services">Professional Services</option>
-                            <option value="health">Health & Wellness</option>
-                            <option value="beauty">Beauty & Personal Care</option>
-                            <option value="home">Home & Repair</option>
-                        </select>
+            <div class="form-group">
+                <label>Annual Card Volume (GPV)</label>
+                <select id="gpv">
+                    <option value="">Select range...</option>
+                    <option value="tier1">Under £50k</option>
+                    <option value="tier2">£50k - £100k</option>
+                    <option value="tier3">£100k - £250k</option>
+                    <option value="tier4">£250k - £500k</option>
+                    <option value="tier5">£500k - £1m</option>
+                    <option value="tier6">Over £1m</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Pain Points / Current Situation</label>
+                <textarea id="painpoints" placeholder="e.g., High fees, slow deposits, poor support, locked in contract, using Zettle..."></textarea>
+            </div>
+
+            <button class="btn-primary" onclick="getRecommendations()">
+                Get Recommendations →
+            </button>
+            <button class="btn-secondary" onclick="clearAll()">
+                Clear & Start New
+            </button>
+        </div>
+
+        <div class="chat-panel">
+            <div class="chat-messages" id="chatMessages">
+                <div class="message bot">
+                    <div class="avatar">⬛</div>
+                    <div class="message-content">
+                        <strong>Hey! I'm CloseBot.</strong><br><br>
+                        Select a vertical, add their GPV and pain points, and I'll give you:<br><br>
+                        📦 <strong>Product recommendations</strong> tailored to their business<br>
+                        🛡️ <strong>Objection handling</strong> scripts ready to use<br>
+                        ⚔️ <strong>Competitor battlecards</strong> if they mention one<br>
+                        🎯 <strong>Closing techniques</strong> to get the deal done<br><br>
+                        <em>Tip: Mention their current provider in pain points for specific battlecard info.</em>
                     </div>
-                    <div class="form-group">
-                        <label>Est. Monthly GPV</label>
-                        <select id="gpv">
-                            <option value="">Select range...</option>
-                            <option value="micro">&lt; £5k</option>
-                            <option value="small">£5k - £20k</option>
-                            <option value="medium">£20k - £50k</option>
-                            <option value="large">£50k - £100k</option>
-                            <option value="enterprise">&gt; £100k</option>
-                        </select>
-                    </div>
-                    <div class="form-group full-width">
-                        <label>Current Pain Points / Situation</label>
-                        <textarea id="painpoints" placeholder="e.g., Frustrated with current POS fees, slow settlement, poor support..."></textarea>
-                    </div>
-                </div>
-                <div class="btn-row">
-                    <button class="btn btn-secondary" onclick="clearForm()">Clear</button>
-                    <button class="btn btn-primary" onclick="getRecommendations()">Get Recommendations →</button>
                 </div>
             </div>
         </div>
     </div>
 
+    <script src="knowledge.js"></script>
     <script>
-        const products = {
-            payments: {
-                name: "Square Payments",
-                tags: ["payments"],
-                pitch: "Transparent pricing with no hidden fees. Next-day deposits as standard. One flat rate so sellers always know what they're paying.",
-                objections: {
-                    "fees": "Our pricing is transparent - 1.75% for chip & PIN. No monthly fees, no hidden charges. Compare that to your current statement line by line.",
-                    "switching": "We handle the switch. Sellers can be live in minutes, not days. We'll help migrate their customer data too."
-                }
-            },
-            pos: {
-                name: "Square POS",
-                tags: ["saas"],
-                pitch: "Free POS software that grows with the business. Real-time sales data, inventory management, and staff tools all in one place.",
-                objections: {
-                    "complexity": "It's designed to be simple. Most sellers are taking payments within 10 minutes of setup.",
-                    "features": "Square POS includes inventory, staff management, customer directory, and reporting - all free."
-                }
-            },
-            terminal: {
-                name: "Square Terminal",
-                tags: ["hardware"],
-                pitch: "All-in-one device. Takes payments, prints receipts, no phone needed. Perfect for counter service or tableside.",
-                objections: {
-                    "cost": "£149 + VAT one-time. No rental fees, no contracts. They own it outright.",
-                    "reliability": "Built-in 4G backup. If WiFi drops, it keeps working."
-                }
-            },
-            register: {
-                name: "Square Register",
-                tags: ["hardware"],
-                pitch: "Purpose-built POS with customer-facing display. Premium look, built-in payments, no tablet needed.",
-                objections: {
-                    "price": "It's an investment that pays for itself. No monthly hardware rental like competitors charge."
-                }
-            },
-            appointments: {
-                name: "Square Appointments",
-                tags: ["saas"],
-                pitch: "Online booking, automated reminders, no-show protection. Reduces admin time and fills the calendar.",
-                objections: {
-                    "existing_system": "Square Appointments integrates with their existing calendar and syncs automatically."
-                }
-            },
-            invoices: {
-                name: "Square Invoices",
-                tags: ["saas"],
-                pitch: "Send professional invoices, get paid online. Automatic reminders chase late payments.",
-                objections: {
-                    "cash_flow": "Sellers get paid faster. Customers can pay instantly by card."
-                }
-            },
-            loyalty: {
-                name: "Square Loyalty",
-                tags: ["saas"],
-                pitch: "Built-in loyalty program. Customers earn points automatically, no punch cards needed.",
-                objections: {
-                    "cost": "Starts at £45/month. Typically pays for itself with 2-3 extra visits per customer."
-                }
-            },
-            banking: {
-                name: "Square Banking",
-                tags: ["banking"],
-                pitch: "Business savings and loans. Instant access to funds, no credit checks for loans based on sales history.",
-                objections: {
-                    "trust": "It's backed by Square. Loans are based on their actual sales, not credit scores."
-                }
-            },
-            kds: {
-                name: "Kitchen Display System",
-                tags: ["saas", "hardware"],
-                pitch: "Digital ticket management for kitchens. Orders flow straight from POS, no lost tickets.",
-                objections: {
-                    "training": "Staff pick it up in minutes. Colour-coded, simple interface."
-                }
-            },
-            online: {
-                name: "Square Online",
-                tags: ["saas"],
-                pitch: "Free online store or ordering site. Syncs with in-store inventory and POS.",
-                objections: {
-                    "existing_website": "Can embed checkout into their existing site, or use Square Online alongside it."
-                }
-            }
-        };
+        let selectedVertical = null;
 
-        const verticalRecommendations = {
-            restaurant: {
-                primary: ["pos", "terminal", "kds"],
-                secondary: ["online", "loyalty"],
-                painPointMap: {
-                    "fees": ["payments"],
-                    "slow": ["terminal", "kds"],
-                    "online": ["online"],
-                    "staff": ["pos"],
-                    "inventory": ["pos"]
-                }
-            },
-            retail: {
-                primary: ["pos", "terminal", "register"],
-                secondary: ["online", "loyalty", "invoices"],
-                painPointMap: {
-                    "fees": ["payments"],
-                    "inventory": ["pos"],
-                    "online": ["online"],
-                    "loyalty": ["loyalty"]
-                }
-            },
-            services: {
-                primary: ["appointments", "invoices", "terminal"],
-                secondary: ["pos", "online"],
-                painPointMap: {
-                    "bookings": ["appointments"],
-                    "no-shows": ["appointments"],
-                    "invoicing": ["invoices"],
-                    "fees": ["payments"]
-                }
-            },
-            health: {
-                primary: ["appointments", "terminal", "pos"],
-                secondary: ["invoices", "loyalty"],
-                painPointMap: {
-                    "bookings": ["appointments"],
-                    "no-shows": ["appointments"],
-                    "fees": ["payments"]
-                }
-            },
-            beauty: {
-                primary: ["appointments", "pos", "terminal"],
-                secondary: ["loyalty", "online"],
-                painPointMap: {
-                    "bookings": ["appointments"],
-                    "no-shows": ["appointments"],
-                    "fees": ["payments"],
-                    "loyalty": ["loyalty"]
-                }
-            },
-            home: {
-                primary: ["invoices", "terminal", "pos"],
-                secondary: ["appointments", "banking"],
-                painPointMap: {
-                    "invoicing": ["invoices"],
-                    "cash_flow": ["banking", "invoices"],
-                    "fees": ["payments"]
-                }
-            }
-        };
+        // Vertical button selection
+        document.querySelectorAll('.quick-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.quick-btn').forEach(function(b) { 
+                    b.classList.remove('active'); 
+                });
+                this.classList.add('active');
+                selectedVertical = this.dataset.vertical;
+            });
+        });
 
-        const commonObjections = {
-            "too expensive": {
-                response: "Let's look at total cost of ownership. What are you paying now in monthly fees, terminal rental, and per-transaction? Square has no monthly fees, no rental - just a flat 1.75% per transaction.",
-                followUp: "Can I show you a quick comparison?"
-            },
-            "happy with current provider": {
-                response: "That's great they're working for you. Out of curiosity, when did you last review your statement? Many sellers find hidden fees they weren't aware of. What's your current rate?",
-                followUp: "Would you be open to a quick rate comparison? No obligation."
-            },
-            "need to think about it": {
-                response: "Absolutely, it's a business decision. What specific concerns would you want to think through? I can address those now so you have all the info.",
-                followUp: "What would need to be true for this to be a yes today?"
-            },
-            "locked in contract": {
-                response: "When does your contract end? Let's get you set up now so you're ready to switch the day it expires. Some sellers find the savings cover any exit fees.",
-                followUp: "Do you know what your exit fee would be? Often it's less than expected."
-            },
-            "don't have time": {
-                response: "I get it, you're busy. The good news is setup takes about 10 minutes. I can walk you through it right now, or leave you the kit to do when it suits.",
-                followUp: "What if we just got you set up to try? No commitment to switch fully yet."
-            },
-            "need to check with partner/accountant": {
-                response: "Smart to involve them. What questions do you think they'd have? I can give you the answers now, or I'm happy to speak with them directly.",
-                followUp: "Would a quick call with them help move this forward?"
-            }
-        };
-
-        const closingTechniques = {
-            assumptive: {
-                name: "Assumptive Close",
-                script: "So, shall we get you set up with the Terminal today? I can have you taking payments before I leave.",
-                when: "When seller is engaged and has no major objections"
-            },
-            alternative: {
-                name: "Alternative Close", 
-                script: "Would you prefer the Terminal for counter service, or the Register for the premium setup?",
-                when: "When seller is comparing options"
-            },
-            urgency: {
-                name: "Urgency Close",
-                script: "If we get you live today, you'll have next-day deposits starting tomorrow. That's cash in your account by [day after tomorrow].",
-                when: "When cash flow is a pain point"
-            },
-            trial: {
-                name: "Trial Close",
-                script: "Why don't we get you set up to try it? Run it alongside your current system for a week. If it's not working, no harm done.",
-                when: "When seller is hesitant to commit"
-            },
-            summary: {
-                name: "Summary Close",
-                script: "So to recap: you're getting [products], which solves [pain points], at [price]. You'll be live today with next-day deposits. Ready to go?",
-                when: "After addressing all objections"
-            }
-        };
-
-        function quickFill(vertical) {
-            document.getElementById('icp').value = vertical;
-        }
-
-        function clearForm() {
-            document.getElementById('icp').value = '';
+        function clearAll() {
+            selectedVertical = null;
+            document.querySelectorAll('.quick-btn').forEach(function(b) { 
+                b.classList.remove('active'); 
+            });
             document.getElementById('gpv').value = '';
             document.getElementById('painpoints').value = '';
+            document.getElementById('chatMessages').innerHTML = '<div class="message bot"><div class="avatar">⬛</div><div class="message-content"><strong>Ready for a new seller.</strong> Select their vertical to get started.</div></div>';
         }
 
         function addMessage(content, isBot) {
             var messagesDiv = document.getElementById('chatMessages');
             var messageDiv = document.createElement('div');
             messageDiv.className = 'message ' + (isBot ? 'bot' : 'user');
-            messageDiv.innerHTML = '<div class="avatar">' + (isBot ? '🤖' : '👤') + '</div><div class="message-content">' + content + '</div>';
+            messageDiv.innerHTML = '<div class="avatar">' + (isBot ? '⬛' : '👤') + '</div><div class="message-content">' + content + '</div>';
             messagesDiv.appendChild(messageDiv);
             messagesDiv.scrollTop = messagesDiv.scrollHeight;
         }
@@ -612,7 +611,7 @@
             var typingDiv = document.createElement('div');
             typingDiv.className = 'message bot';
             typingDiv.id = 'typing';
-            typingDiv.innerHTML = '<div class="avatar">🤖</div><div class="message-content"><div class="typing"><span></span><span></span><span></span></div></div>';
+            typingDiv.innerHTML = '<div class="avatar">⬛</div><div class="message-content"><div class="typing"><span></span><span></span><span></span></div></div>';
             messagesDiv.appendChild(typingDiv);
             messagesDiv.scrollTop = messagesDiv.scrollHeight;
         }
@@ -623,111 +622,159 @@
         }
 
         function getRecommendations() {
-            var icp = document.getElementById('icp').value;
-            var gpv = document.getElementById('gpv').value;
-            var painpoints = document.getElementById('painpoints').value.toLowerCase();
-
-            if (!icp) {
-                addMessage("Please select a vertical/ICP first so I can give you relevant recommendations.", true);
+            if (!selectedVertical) {
+                addMessage("Please select a vertical first (FSR, QSR, Retail, etc.)", true);
                 return;
             }
 
-            var userMsg = '<strong>Vertical:</strong> ' + icp + '<br>';
-            if (gpv) userMsg += '<strong>GPV:</strong> ' + gpv + '<br>';
-            if (painpoints) userMsg += '<strong>Pain points:</strong> ' + painpoints;
+            var gpv = document.getElementById('gpv').value;
+            var painpoints = document.getElementById('painpoints').value.toLowerCase();
+            var vertical = KNOWLEDGE.verticals[selectedVertical];
+
+            // Show user input
+            var userMsg = '<strong>' + vertical.icon + ' ' + vertical.name + '</strong>';
+            if (gpv) {
+                var gpvLabel = KNOWLEDGE.gpvTiers.find(function(t) { return t.value === gpv; });
+                userMsg += '<br>GPV: ' + (gpvLabel ? gpvLabel.label + '/year' : gpv);
+            }
+            if (painpoints) userMsg += '<br>Pain points: ' + painpoints;
             addMessage(userMsg, false);
 
             showTyping();
 
             setTimeout(function() {
                 hideTyping();
-                generateRecommendations(icp, gpv, painpoints);
-            }, 800);
+                generateResponse(vertical, gpv, painpoints);
+            }, 600);
         }
 
-        function generateRecommendations(icp, gpv, painpoints) {
-            var verticalRecs = verticalRecommendations[icp] || verticalRecommendations.retail;
-            var recommendedProducts = verticalRecs.primary.slice();
-
-            if (painpoints) {
-                Object.keys(verticalRecs.painPointMap).forEach(function(keyword) {
-                    if (painpoints.includes(keyword)) {
-                        verticalRecs.painPointMap[keyword].forEach(function(prod) {
-                            if (recommendedProducts.indexOf(prod) === -1) {
-                                recommendedProducts.push(prod);
-                            }
-                        });
-                    }
-                });
-            }
-
-            var response = '<strong>📦 Recommended Products</strong>';
+        function generateResponse(vertical, gpv, painpoints) {
+            // 1. PRODUCT RECOMMENDATIONS
+            var productHTML = '<div class="rec-section"><div class="rec-section-title">📦 Recommended Products</div>';
             
-            recommendedProducts.slice(0, 4).forEach(function(prodKey) {
-                var prod = products[prodKey];
+            // Key wins for this vertical
+            productHTML += '<div class="rec-card product"><h4>Why Square Wins for ' + vertical.name + '</h4><ul class="benefits-list">';
+            vertical.keyWins.forEach(function(win) {
+                productHTML += '<li>' + win + '</li>';
+            });
+            productHTML += '</ul></div>';
+
+            // Primary products
+            vertical.primary.forEach(function(prodKey) {
+                var prod = KNOWLEDGE.products[prodKey];
                 if (prod) {
-                    var tagsHtml = prod.tags.map(function(t) { return '<span class="tag ' + t + '">' + t + '</span>'; }).join('');
-                    response += '<div class="rec-card product"><h4>' + prod.name + '</h4><p>' + prod.pitch + '</p>' + tagsHtml + '</div>';
+                    var catClass = 'cat-' + prod.category;
+                    productHTML += '<div class="rec-card product">';
+                    productHTML += '<div class="rec-card-header"><h4>' + prod.name + '</h4><span class="rec-card-category ' + catClass + '">' + prod.category + '</span></div>';
+                    productHTML += '<p>' + prod.pitch + '</p>';
+                    if (prod.price) productHTML += '<p style="margin-top:8px;font-weight:600;">' + prod.price + '</p>';
+                    productHTML += '</div>';
                 }
             });
+            productHTML += '</div>';
+            addMessage(productHTML, true);
 
-            addMessage(response, true);
-
+            // 2. COMPETITOR BATTLECARD (if mentioned)
             setTimeout(function() {
-                var objectionResponse = '<strong>🛡️ Objection Handling</strong>';
+                var competitorFound = null;
+                Object.keys(KNOWLEDGE.competitors).forEach(function(compKey) {
+                    if (painpoints.includes(compKey) || painpoints.includes(KNOWLEDGE.competitors[compKey].name.toLowerCase())) {
+                        competitorFound = KNOWLEDGE.competitors[compKey];
+                    }
+                });
+
+                if (competitorFound) {
+                    var compHTML = '<div class="rec-section"><div class="rec-section-title">⚔️ vs ' + competitorFound.name + '</div>';
+                    compHTML += '<div class="rec-card competitor">';
+                    compHTML += '<h4>' + competitorFound.name + ' (' + competitorFound.type + ')</h4>';
+                    compHTML += '<p><strong>Their weaknesses:</strong></p><ul class="benefits-list">';
+                    competitorFound.weaknesses.forEach(function(w) {
+                        compHTML += '<li>' + w + '</li>';
+                    });
+                    compHTML += '</ul>';
+                    compHTML += '<div class="script"><strong>Say this:</strong> "' + competitorFound.winningScript + '"</div>';
+                    compHTML += '</div></div>';
+                    addMessage(compHTML, true);
+                }
+            }, 400);
+
+            // 3. OBJECTION HANDLING
+            setTimeout(function() {
+                var objHTML = '<div class="rec-section"><div class="rec-section-title">🛡️ Objection Handling</div>';
                 
                 var relevantObjections = ["too expensive", "need to think about it"];
-                if (painpoints.includes("contract")) relevantObjections.unshift("locked in contract");
+                if (painpoints.includes("contract") || painpoints.includes("locked")) relevantObjections.unshift("locked in contract");
                 if (painpoints.includes("happy") || painpoints.includes("current")) relevantObjections.unshift("happy with current provider");
                 if (painpoints.includes("busy") || painpoints.includes("time")) relevantObjections.unshift("don't have time");
+                if (painpoints.includes("rate") || painpoints.includes("1.75")) relevantObjections.unshift("rates are too high");
 
                 relevantObjections.slice(0, 3).forEach(function(objKey) {
-                    var handler = commonObjections[objKey];
-                    var title = objKey.charAt(0).toUpperCase() + objKey.slice(1);
-                    objectionResponse += '<div class="rec-card objection"><h4>"' + title + '"</h4><p><strong>Say:</strong> "' + handler.response + '"</p><p style="margin-top:8px;color:#666;"><strong>Follow-up:</strong> "' + handler.followUp + '"</p></div>';
+                    var obj = KNOWLEDGE.objections[objKey];
+                    if (obj) {
+                        objHTML += '<div class="rec-card objection">';
+                        objHTML += '<h4>"' + objKey.charAt(0).toUpperCase() + objKey.slice(1) + '"</h4>';
+                        objHTML += '<div class="script">' + obj.response + '</div>';
+                        objHTML += '<p class="followup"><strong>Follow-up:</strong> "' + obj.followUp + '"</p>';
+                        objHTML += '</div>';
+                    }
                 });
+                objHTML += '</div>';
+                addMessage(objHTML, true);
+            }, 800);
 
-                addMessage(objectionResponse, true);
-            }, 600);
-
+            // 4. CLOSING TECHNIQUES
             setTimeout(function() {
-                var closeResponse = '<strong>🎯 Close the Deal</strong>';
+                var closeHTML = '<div class="rec-section"><div class="rec-section-title">🎯 Close the Deal</div>';
                 
-                var closes = (gpv === 'micro' || gpv === 'small') 
+                var closes = (gpv === 'tier1' || gpv === 'tier2') 
                     ? ['trial', 'assumptive', 'urgency']
-                    : ['summary', 'assumptive', 'alternative'];
+                    : ['summary', 'calculator', 'assumptive'];
 
                 closes.forEach(function(closeKey) {
-                    var close = closingTechniques[closeKey];
-                    closeResponse += '<div class="rec-card close"><h4>' + close.name + '</h4><p><strong>Say:</strong> "' + close.script + '"</p><p style="margin-top:8px;color:#666;font-size:12px;"><em>Use when: ' + close.when + '</em></p></div>';
+                    var close = KNOWLEDGE.closingTechniques[closeKey];
+                    if (close) {
+                        closeHTML += '<div class="rec-card close">';
+                        closeHTML += '<h4>' + close.icon + ' ' + close.name + '</h4>';
+                        closeHTML += '<div class="script">' + close.script + '</div>';
+                        closeHTML += '<p class="when"><strong>Use when:</strong> ' + close.when + '</p>';
+                        closeHTML += '</div>';
+                    }
                 });
 
-                closeResponse += '<div class="quick-actions" style="margin-top:16px;"><span class="quick-action" onclick="handleObjection()">Handle another objection</span><span class="quick-action" onclick="clearForm()">New seller</span></div>';
-
-                addMessage(closeResponse, true);
+                closeHTML += '<div class="quick-actions">';
+                closeHTML += '<span class="quick-action" onclick="showAllObjections()">See all objections</span>';
+                closeHTML += '<span class="quick-action" onclick="showCompetitors()">Competitor list</span>';
+                closeHTML += '<span class="quick-action" onclick="clearAll()">New seller</span>';
+                closeHTML += '</div></div>';
+                addMessage(closeHTML, true);
             }, 1200);
         }
 
-        function handleObjection() {
-            var objections = Object.keys(commonObjections);
-            var response = '<strong>Common Objections - Pick one:</strong><div class="quick-actions" style="margin-top:12px;">';
-            objections.forEach(function(objKey) {
-                response += '<span class="quick-action" onclick="showObjectionHandler(\'' + objKey + '\')">' + objKey + '</span>';
+        function showAllObjections() {
+            var objHTML = '<div class="rec-section"><div class="rec-section-title">🛡️ All Objection Handlers</div>';
+            Object.keys(KNOWLEDGE.objections).forEach(function(objKey) {
+                var obj = KNOWLEDGE.objections[objKey];
+                objHTML += '<div class="rec-card objection">';
+                objHTML += '<h4>"' + objKey.charAt(0).toUpperCase() + objKey.slice(1) + '"</h4>';
+                objHTML += '<div class="script">' + obj.response + '</div>';
+                objHTML += '<p class="followup"><strong>Follow-up:</strong> "' + obj.followUp + '"</p>';
+                objHTML += '</div>';
             });
-            response += '</div>';
-            addMessage(response, true);
+            objHTML += '</div>';
+            addMessage(objHTML, true);
         }
 
-        function showObjectionHandler(objection) {
-            addMessage('How do I handle: "' + objection + '"?', false);
-            
-            showTyping();
-            setTimeout(function() {
-                hideTyping();
-                var handler = commonObjections[objection];
-                var response = '<div class="rec-card objection"><h4>"' + objection + '"</h4><p><strong>Say:</strong> "' + handler.response + '"</p><p style="margin-top:8px;color:#666;"><strong>Follow-up:</strong> "' + handler.followUp + '"</p></div>';
-                addMessage(response, true);
-            }, 500);
+        function showCompetitors() {
+            var compHTML = '<div class="rec-section"><div class="rec-section-title">⚔️ Competitor Battlecards</div>';
+            Object.keys(KNOWLEDGE.competitors).forEach(function(compKey) {
+                var comp = KNOWLEDGE.competitors[compKey];
+                compHTML += '<div class="rec-card competitor">';
+                compHTML += '<h4>' + comp.name + ' <span style="font-weight:normal;color:#787878;">(' + comp.type + ')</span></h4>';
+                compHTML += '<div class="script">' + comp.winningScript + '</div>';
+                compHTML += '</div>';
+            });
+            compHTML += '</div>';
+            addMessage(compHTML, true);
         }
     </script>
 </body>
