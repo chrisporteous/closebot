@@ -104,39 +104,39 @@
 var V={
 fsr:{n:"Full Service Restaurant",i:"🍽️",p:["Square for Restaurants","Square Terminal","Kitchen Display"],w:["Tableside ordering AND payments in one device","Gift cards built-in","Tip pooling automated","KDS eliminates lost tickets"],
 videos:[
-{id:"dQw4w9WgXcQ",title:"Square for Restaurants Overview",duration:"3:45",thumb:"https://img.youtube.com/vi/7i2SE0DaVug/mqdefault.jpg",vid:"7i2SE0DaVug"},
-{id:"abc123",title:"Square Terminal - Tableside Demo",duration:"2:30",thumb:"https://img.youtube.com/vi/kfLVpnbCLfw/mqdefault.jpg",vid:"kfLVpnbCLfw"},
-{id:"def456",title:"Kitchen Display System",duration:"2:15",thumb:"https://img.youtube.com/vi/H6vkBqXOGhE/mqdefault.jpg",vid:"H6vkBqXOGhE"}
+{title:"Square for Restaurants",vid:"5AMjTpDP-fk"},
+{title:"Square Terminal Demo",vid:"6WUabw7MjVQ"},
+{title:"Square POS Overview",vid:"aJvoY25CtWw"}
 ]},
 qsr:{n:"Quick Service Restaurant",i:"🍔",p:["Square POS","Square Register","Kitchen Display"],w:["Fastest card transaction time","Customer display for loyalty/tipping","Online ordering syncs inventory"],
 videos:[
-{title:"Square Register Overview",duration:"2:45",thumb:"https://img.youtube.com/vi/Rn2-v4gg9TY/mqdefault.jpg",vid:"Rn2-v4gg9TY"},
-{title:"Speed Up Service with Square",duration:"3:00",thumb:"https://img.youtube.com/vi/7i2SE0DaVug/mqdefault.jpg",vid:"7i2SE0DaVug"},
-{title:"Square Online Ordering",duration:"2:30",thumb:"https://img.youtube.com/vi/xPVIhL0gUqc/mqdefault.jpg",vid:"xPVIhL0gUqc"}
+{title:"Square Register Overview",vid:"8wDoB1ZIPYI"},
+{title:"Square POS Demo",vid:"bM-AEPQloGM"},
+{title:"Square Terminal",vid:"6WUabw7MjVQ"}
 ]},
 retail:{n:"Retail",i:"🛍️",p:["Square for Retail","Square Register","Square Terminal"],w:["Advanced inventory with alerts","Online store syncs with in-store","Barcode scanning built-in"],
 videos:[
-{title:"Square for Retail Overview",duration:"3:15",thumb:"https://img.youtube.com/vi/MkrLUFAcjH0/mqdefault.jpg",vid:"MkrLUFAcjH0"},
-{title:"Inventory Management",duration:"2:45",thumb:"https://img.youtube.com/vi/gMaDvSfHock/mqdefault.jpg",vid:"gMaDvSfHock"},
-{title:"Square Online Store",duration:"3:00",thumb:"https://img.youtube.com/vi/xPVIhL0gUqc/mqdefault.jpg",vid:"xPVIhL0gUqc"}
+{title:"Square for Retail",vid:"yrYBJZvi0Hs"},
+{title:"Square Register",vid:"8wDoB1ZIPYI"},
+{title:"Square Overview",vid:"bM-AEPQloGM"}
 ]},
 services:{n:"Professional Services",i:"💼",p:["Square Appointments","Square Invoices","Square Terminal"],w:["Online booking reduces admin","No-show protection","Professional invoices"],
 videos:[
-{title:"Square Appointments Overview",duration:"2:30",thumb:"https://img.youtube.com/vi/qIoGsHMRf9c/mqdefault.jpg",vid:"qIoGsHMRf9c"},
-{title:"Square Invoices Demo",duration:"2:15",thumb:"https://img.youtube.com/vi/Rn2-v4gg9TY/mqdefault.jpg",vid:"Rn2-v4gg9TY"},
-{title:"Getting Paid Faster",duration:"3:00",thumb:"https://img.youtube.com/vi/kfLVpnbCLfw/mqdefault.jpg",vid:"kfLVpnbCLfw"}
+{title:"Square Appointments",vid:"qOuCvwvslho"},
+{title:"Square Invoices",vid:"wj1zU2zLI4s"},
+{title:"Square Terminal",vid:"6WUabw7MjVQ"}
 ]},
 beauty:{n:"Beauty",i:"💇",p:["Square Appointments","Square POS","Square Terminal"],w:["24/7 online booking","No-show protection","Loyalty brings them back"],
 videos:[
-{title:"Square for Beauty & Salons",duration:"3:00",thumb:"https://img.youtube.com/vi/qIoGsHMRf9c/mqdefault.jpg",vid:"qIoGsHMRf9c"},
-{title:"Online Booking Demo",duration:"2:30",thumb:"https://img.youtube.com/vi/MkrLUFAcjH0/mqdefault.jpg",vid:"MkrLUFAcjH0"},
-{title:"Square Loyalty Program",duration:"2:45",thumb:"https://img.youtube.com/vi/gMaDvSfHock/mqdefault.jpg",vid:"gMaDvSfHock"}
+{title:"Square Appointments",vid:"qOuCvwvslho"},
+{title:"Square POS Overview",vid:"aJvoY25CtWw"},
+{title:"Square Terminal",vid:"6WUabw7MjVQ"}
 ]},
 health:{n:"Health & Wellness",i:"💪",p:["Square Appointments","Square Terminal","Square POS"],w:["Automated reminders","Client history","Recurring appointments"],
 videos:[
-{title:"Square Appointments Overview",duration:"2:30",thumb:"https://img.youtube.com/vi/qIoGsHMRf9c/mqdefault.jpg",vid:"qIoGsHMRf9c"},
-{title:"Square Terminal Demo",duration:"2:15",thumb:"https://img.youtube.com/vi/kfLVpnbCLfw/mqdefault.jpg",vid:"kfLVpnbCLfw"},
-{title:"Client Management",duration:"3:00",thumb:"https://img.youtube.com/vi/MkrLUFAcjH0/mqdefault.jpg",vid:"MkrLUFAcjH0"}
+{title:"Square Appointments",vid:"qOuCvwvslho"},
+{title:"Square Terminal Demo",vid:"6WUabw7MjVQ"},
+{title:"Square Overview",vid:"bM-AEPQloGM"}
 ]}
 };
 var P={
@@ -186,7 +186,7 @@ v.p.forEach(function(x){var pr=P[x];if(pr)h+='<div class="pcard"><h4>'+x+'<span 
 if(v.videos&&v.videos.length>0){
 h+='<div class="video-section"><h4>🎬 Show them a demo</h4><div class="video-grid">';
 v.videos.forEach(function(vid){
-h+='<div class="video-card" onclick="playVideo(\''+vid.vid+'\')"><img src="'+vid.thumb+'" alt="'+vid.title+'"><div class="vinfo"><h5>'+vid.title+'</h5><span>'+vid.duration+'</span></div></div>';
+h+='<div class="video-card" onclick="playVideo(\''+vid.vid+'\')"><img src="https://img.youtube.com/vi/'+vid.vid+'/mqdefault.jpg" alt="'+vid.title+'"><div class="vinfo"><h5>'+vid.title+'</h5><span>Square</span></div></div>';
 });
 h+='</div></div>';
 }
