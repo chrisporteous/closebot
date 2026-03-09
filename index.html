@@ -2,247 +2,176 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CloseBot - IC Sales Assistant</title>
     <style>
-        :root { --sq-black: #000000; --sq-white: #FFFFFF; --sq-green: #00D632; --sq-gray-100: #F7F7F7; --sq-gray-200: #E6E6E6; --sq-gray-300: #CCCCCC; --sq-gray-500: #787878; --sq-gray-700: #3D3D3D; --sq-blue: #006AFF; --sq-red: #CC0000; --sq-orange: #FF9500; }
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; background: var(--sq-gray-100); min-height: 100vh; }
-        .header { background: var(--sq-black); color: var(--sq-white); padding: 14px 20px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
-        .header h1 { font-size: 20px; font-weight: 600; }
-        .header .badge { background: var(--sq-green); color: var(--sq-black); padding: 4px 10px; border-radius: 4px; font-size: 11px; font-weight: 700; margin-left: 10px; }
-        .main-container { display: flex; height: calc(100vh - 52px); max-width: 1400px; margin: 0 auto; }
-        .input-panel { width: 300px; background: var(--sq-white); border-right: 1px solid var(--sq-gray-200); padding: 20px; overflow-y: auto; flex-shrink: 0; }
-        .section-label { font-size: 11px; font-weight: 700; color: var(--sq-gray-500); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
-        .vertical-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 20px; }
-        .v-btn { padding: 12px 8px; border: 2px solid var(--sq-gray-200); border-radius: 8px; background: var(--sq-white); font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.15s; text-align: center; }
-        .v-btn:hover { border-color: var(--sq-gray-300); background: var(--sq-gray-100); }
-        .v-btn.active { background: var(--sq-black); color: var(--sq-white); border-color: var(--sq-black); }
-        .v-btn .icon { font-size: 18px; display: block; margin-bottom: 4px; }
-        .form-group { margin-bottom: 16px; }
-        .form-group label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 6px; }
-        .form-group select, .form-group textarea { width: 100%; padding: 12px; border: 2px solid var(--sq-gray-200); border-radius: 8px; font-size: 14px; font-family: inherit; }
-        .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--sq-black); }
-        .form-group textarea { resize: none; height: 80px; }
-        .btn-go { width: 100%; padding: 14px; background: var(--sq-black); color: var(--sq-white); border: none; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; }
-        .btn-go:hover { background: var(--sq-gray-700); }
-        .btn-go:active { transform: scale(0.98); }
-        .chat-panel { flex: 1; display: flex; flex-direction: column; background: var(--sq-white); }
-        .chat-messages { flex: 1; overflow-y: auto; padding: 24px; }
-        .message { margin-bottom: 16px; display: flex; gap: 10px; animation: fadeIn 0.25s ease; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-        .message.user { flex-direction: row-reverse; }
-        .avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; font-weight: bold; }
-        .message.bot .avatar { background: var(--sq-black); color: var(--sq-white); }
-        .message.user .avatar { background: var(--sq-gray-200); }
-        .message-content { max-width: 80%; font-size: 14px; line-height: 1.5; }
-        .message.bot .message-content { background: var(--sq-gray-100); padding: 14px 18px; border-radius: 16px; border-top-left-radius: 4px; }
-        .message.user .message-content { background: var(--sq-black); color: var(--sq-white); padding: 14px 18px; border-radius: 16px; border-top-right-radius: 4px; }
-        .product-card { background: var(--sq-white); border: 1px solid var(--sq-gray-200); border-left: 4px solid var(--sq-green); border-radius: 8px; padding: 12px 14px; margin: 8px 0; }
-        .product-card h4 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
-        .product-card p { font-size: 13px; color: var(--sq-gray-700); }
-        .product-tag { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 3px; margin-left: 8px; vertical-align: middle; }
-        .tag-saas { background: #E8F5E9; color: #2E7D32; }
-        .tag-hardware { background: #F3E5F5; color: #7B1FA2; }
-        .tag-payments { background: #E3F2FD; color: #1565C0; }
-        .tag-banking { background: #FFF3E0; color: #EF6C00; }
-        .wins-list { margin: 12px 0; padding: 0; list-style: none; }
-        .wins-list li { font-size: 13px; padding: 6px 0; padding-left: 20px; position: relative; color: var(--sq-gray-700); }
-        .wins-list li::before { content: "✓"; position: absolute; left: 0; color: var(--sq-green); font-weight: bold; }
-        .action-tabs { display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap; }
-        .action-tab { padding: 10px 18px; background: var(--sq-white); border: 2px solid var(--sq-black); border-radius: 24px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s; }
-        .action-tab:hover { background: var(--sq-black); color: var(--sq-white); }
-        .action-tab.secondary { border-color: var(--sq-gray-300); color: var(--sq-gray-700); }
-        .action-tab.secondary:hover { border-color: var(--sq-gray-500); background: var(--sq-gray-100); color: var(--sq-black); }
-        .script-card { background: var(--sq-white); border: 1px solid var(--sq-gray-200); border-radius: 8px; padding: 14px; margin: 8px 0; }
-        .script-card.objection { border-left: 4px solid var(--sq-blue); }
-        .script-card.close { border-left: 4px solid var(--sq-orange); }
-        .script-card.competitor { border-left: 4px solid var(--sq-red); }
-        .script-card h4 { font-size: 13px; font-weight: 700; margin-bottom: 8px; color: var(--sq-gray-700); }
-        .script-box { background: var(--sq-gray-100); padding: 10px 12px; border-radius: 6px; font-size: 14px; line-height: 1.5; color: var(--sq-black); }
-        .script-followup { font-size: 12px; color: var(--sq-gray-500); margin-top: 8px; font-style: italic; }
-        .typing { display: flex; gap: 4px; padding: 8px 0; }
-        .typing span { width: 8px; height: 8px; background: var(--sq-gray-500); border-radius: 50%; animation: bounce 1.4s infinite ease-in-out; }
-        .typing span:nth-child(1) { animation-delay: -0.32s; }
-        .typing span:nth-child(2) { animation-delay: -0.16s; }
-        @keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
-        @media (max-width: 900px) { .main-container { flex-direction: column; height: auto; } .input-panel { width: 100%; border-right: none; border-bottom: 1px solid var(--sq-gray-200); } .chat-panel { min-height: 70vh; } .vertical-grid { grid-template-columns: repeat(3, 1fr); } }
+        :root{--sq-black:#000;--sq-white:#fff;--sq-green:#00D632;--sq-gray-100:#F7F7F7;--sq-gray-200:#E6E6E6;--sq-gray-300:#CCC;--sq-gray-500:#787878;--sq-gray-700:#3D3D3D;--sq-blue:#006AFF;--sq-red:#C00;--sq-orange:#FF9500}
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:var(--sq-gray-100);min-height:100vh}
+        .header{background:var(--sq-black);color:var(--sq-white);padding:14px 20px;display:flex;align-items:center;justify-content:space-between}
+        .header h1{font-size:20px;font-weight:600}
+        .badge{background:var(--sq-green);color:var(--sq-black);padding:4px 10px;border-radius:4px;font-size:11px;font-weight:700;margin-left:10px}
+        .main{display:flex;height:calc(100vh - 52px);max-width:1400px;margin:0 auto}
+        .panel{width:300px;background:var(--sq-white);border-right:1px solid var(--sq-gray-200);padding:20px;overflow-y:auto}
+        .label{font-size:11px;font-weight:700;color:var(--sq-gray-500);text-transform:uppercase;margin-bottom:10px}
+        .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:20px}
+        .vbtn{padding:12px 8px;border:2px solid var(--sq-gray-200);border-radius:8px;background:var(--sq-white);font-size:12px;font-weight:600;cursor:pointer;text-align:center}
+        .vbtn:hover{border-color:var(--sq-gray-300);background:var(--sq-gray-100)}
+        .vbtn.on{background:var(--sq-black);color:var(--sq-white);border-color:var(--sq-black)}
+        .vbtn .ico{font-size:18px;display:block;margin-bottom:4px}
+        .fg{margin-bottom:16px}
+        .fg label{display:block;font-size:12px;font-weight:600;margin-bottom:6px}
+        .fg select,.fg textarea{width:100%;padding:12px;border:2px solid var(--sq-gray-200);border-radius:8px;font-size:14px;font-family:inherit}
+        .fg select:focus,.fg textarea:focus{outline:none;border-color:var(--sq-black)}
+        .fg textarea{resize:none;height:80px}
+        .gobtn{width:100%;padding:14px;background:var(--sq-black);color:var(--sq-white);border:none;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer}
+        .gobtn:hover{background:var(--sq-gray-700)}
+        .chat{flex:1;display:flex;flex-direction:column;background:var(--sq-white)}
+        .msgs{flex:1;overflow-y:auto;padding:24px}
+        .msg{margin-bottom:16px;display:flex;gap:10px}
+        .msg.usr{flex-direction:row-reverse}
+        .av{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:bold;flex-shrink:0}
+        .msg.bot .av{background:var(--sq-black);color:var(--sq-white)}
+        .msg.usr .av{background:var(--sq-gray-200)}
+        .mc{max-width:80%;font-size:14px;line-height:1.5}
+        .msg.bot .mc{background:var(--sq-gray-100);padding:14px 18px;border-radius:16px;border-top-left-radius:4px}
+        .msg.usr .mc{background:var(--sq-black);color:var(--sq-white);padding:14px 18px;border-radius:16px;border-top-right-radius:4px}
+        .pcard{background:var(--sq-white);border:1px solid var(--sq-gray-200);border-left:4px solid var(--sq-green);border-radius:8px;padding:12px 14px;margin:8px 0}
+        .pcard h4{font-size:14px;font-weight:700;margin-bottom:4px}
+        .pcard p{font-size:13px;color:var(--sq-gray-700)}
+        .ptag{display:inline-block;font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px;margin-left:8px}
+        .tag-saas{background:#E8F5E9;color:#2E7D32}
+        .tag-hardware{background:#F3E5F5;color:#7B1FA2}
+        .tag-payments{background:#E3F2FD;color:#1565C0}
+        .tag-banking{background:#FFF3E0;color:#EF6C00}
+        .wlist{margin:12px 0;padding:0;list-style:none}
+        .wlist li{font-size:13px;padding:6px 0 6px 20px;position:relative;color:var(--sq-gray-700)}
+        .wlist li::before{content:"✓";position:absolute;left:0;color:var(--sq-green);font-weight:bold}
+        .tabs{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
+        .tab{padding:10px 18px;background:var(--sq-white);border:2px solid var(--sq-black);border-radius:24px;font-size:13px;font-weight:600;cursor:pointer}
+        .tab:hover{background:var(--sq-black);color:var(--sq-white)}
+        .tab.sec{border-color:var(--sq-gray-300);color:var(--sq-gray-700)}
+        .scard{background:var(--sq-white);border:1px solid var(--sq-gray-200);border-radius:8px;padding:14px;margin:8px 0}
+        .scard.obj{border-left:4px solid var(--sq-blue)}
+        .scard.cls{border-left:4px solid var(--sq-orange)}
+        .scard.cmp{border-left:4px solid var(--sq-red)}
+        .scard h4{font-size:13px;font-weight:700;margin-bottom:8px;color:var(--sq-gray-700)}
+        .sbox{background:var(--sq-gray-100);padding:10px 12px;border-radius:6px;font-size:14px;line-height:1.5}
+        .sfu{font-size:12px;color:var(--sq-gray-500);margin-top:8px;font-style:italic}
+        @media(max-width:900px){.main{flex-direction:column;height:auto}.panel{width:100%;border-right:none;border-bottom:1px solid var(--sq-gray-200)}.chat{min-height:70vh}.grid{grid-template-columns:repeat(3,1fr)}}
     </style>
 </head>
 <body>
-    <div class="header">
-        <div style="display:flex;align-items:center;"><h1>CloseBot</h1><span class="badge">BETA</span></div>
-        <div style="font-size:12px;color:var(--sq-gray-300);">Partner Portal</div>
-    </div>
-    <div class="main-container">
-        <div class="input-panel">
-            <div class="section-label">Vertical</div>
-            <div class="vertical-grid" id="verticalGrid">
-                <button type="button" class="v-btn" onclick="selectV(this,'restaurant_fsr')"><span class="icon">🍽️</span><span>FSR</span></button>
-                <button type="button" class="v-btn" onclick="selectV(this,'restaurant_qsr')"><span class="icon">🍔</span><span>QSR</span></button>
-                <button type="button" class="v-btn" onclick="selectV(this,'retail')"><span class="icon">🛍️</span><span>Retail</span></button>
-                <button type="button" class="v-btn" onclick="selectV(this,'services')"><span class="icon">💼</span><span>Services</span></button>
-                <button type="button" class="v-btn" onclick="selectV(this,'beauty')"><span class="icon">💇</span><span>Beauty</span></button>
-                <button type="button" class="v-btn" onclick="selectV(this,'health')"><span class="icon">💪</span><span>Health</span></button>
-            </div>
-            <div class="form-group">
-                <label>Annual GPV</label>
-                <select id="gpv">
-                    <option value="">Select...</option>
-                    <option value="tier1">Under £50k</option>
-                    <option value="tier2">£50k - £100k</option>
-                    <option value="tier3">£100k - £250k</option>
-                    <option value="tier4">£250k - £500k</option>
-                    <option value="tier5">£500k+</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Pain Points</label>
-                <textarea id="pain" placeholder="High fees, slow deposits, using Zettle, locked in contract..."></textarea>
-            </div>
-            <button type="button" class="btn-go" onclick="go()">Get Recommendations →</button>
+<div class="header"><div style="display:flex;align-items:center"><h1>CloseBot</h1><span class="badge">BETA</span></div><div style="font-size:12px;color:#999">Partner Portal</div></div>
+<div class="main">
+    <div class="panel">
+        <div class="label">Vertical</div>
+        <div class="grid">
+            <button class="vbtn" onclick="pick(this,'fsr')"><span class="ico">🍽️</span>FSR</button>
+            <button class="vbtn" onclick="pick(this,'qsr')"><span class="ico">🍔</span>QSR</button>
+            <button class="vbtn" onclick="pick(this,'retail')"><span class="ico">🛍️</span>Retail</button>
+            <button class="vbtn" onclick="pick(this,'services')"><span class="ico">💼</span>Services</button>
+            <button class="vbtn" onclick="pick(this,'beauty')"><span class="ico">💇</span>Beauty</button>
+            <button class="vbtn" onclick="pick(this,'health')"><span class="ico">💪</span>Health</button>
         </div>
-        <div class="chat-panel">
-            <div class="chat-messages" id="chat">
-                <div class="message bot">
-                    <div class="avatar">CB</div>
-                    <div class="message-content"><strong>Hey!</strong> Select a vertical, add pain points, and I will give you product recs. Then tap for objection handling or closing scripts.</div>
-                </div>
-            </div>
-        </div>
+        <div class="fg"><label>Annual GPV</label><select id="gpv"><option value="">Select...</option><option value="Under £50k">Under £50k</option><option value="£50k-£100k">£50k-£100k</option><option value="£100k-£250k">£100k-£250k</option><option value="£250k-£500k">£250k-£500k</option><option value="£500k+">£500k+</option></select></div>
+        <div class="fg"><label>Pain Points</label><textarea id="pain" placeholder="High fees, slow deposits, using Zettle..."></textarea></div>
+        <button class="gobtn" onclick="run()">Get Recommendations →</button>
     </div>
+    <div class="chat"><div class="msgs" id="out"><div class="msg bot"><div class="av">CB</div><div class="mc"><b>Hey!</b> Select a vertical and pain points. I will give you product recs, objection handling, and closing scripts.</div></div></div></div>
+</div>
 <script>
-var KNOWLEDGE={products:{payments:{name:"Square Payments",category:"payments",pitch:"Transparent pricing - 1.75% chip & PIN. No monthly fees, no hidden charges. Next-day deposits as standard."},pos:{name:"Square POS",category:"saas",pitch:"Free POS software. Real-time sales data, inventory management, staff tools - all included."},terminal:{name:"Square Terminal",category:"hardware",pitch:"All-in-one device: payments + receipts + POS. No phone needed. £149 one-time, no rental."},register:{name:"Square Register",category:"hardware",pitch:"Premium countertop POS with customer display. Built-in payments. Perfect for QSR."},appointments:{name:"Square Appointments",category:"saas",pitch:"Online booking, automated reminders, no-show protection. Free for individuals."},invoices:{name:"Square Invoices",category:"saas",pitch:"Professional invoices, online payment, automatic reminders for late payers."},loyalty:{name:"Square Loyalty",category:"saas",pitch:"Built-in loyalty program. Customers earn points automatically at checkout."},kds:{name:"Kitchen Display",category:"saas",pitch:"Digital tickets for kitchen. No lost orders, track prep times, communicate with FOH."},online:{name:"Square Online",category:"saas",pitch:"Free online store. Syncs with in-store inventory. Click & collect built-in."},banking:{name:"Square Banking",category:"banking",pitch:"Business loans based on sales history - no credit checks. Instant access to funds."},restaurantPos:{name:"Square for Restaurants",category:"saas",pitch:"Table management, coursing, floor plans, KDS integration. Free plan available."},retailPos:{name:"Square for Retail",category:"saas",pitch:"Advanced inventory, purchase orders, barcode scanning, low stock alerts."}},verticals:{restaurant_fsr:{name:"Full Service Restaurant",icon:"🍽️",primary:["restaurantPos","terminal","kds"],keyWins:["Tableside ordering AND payments in one device","Gift cards built-in, not third-party","Tip pooling automated","KDS eliminates lost tickets"]},restaurant_qsr:{name:"Quick Service Restaurant",icon:"🍔",primary:["pos","register","kds"],keyWins:["Fastest card transaction time in market","Customer display speeds up loyalty/tipping","Online ordering syncs with inventory"]},retail:{name:"Retail",icon:"🛍️",primary:["retailPos","register","terminal"],keyWins:["Advanced inventory with low stock alerts","Online store syncs with in-store stock","Barcode scanning built-in"]},services:{name:"Professional Services",icon:"💼",primary:["appointments","invoices","terminal"],keyWins:["Online booking reduces admin","No-show protection with card-on-file","Professional invoices with online payment"]},beauty:{name:"Beauty & Personal Care",icon:"💇",primary:["appointments","pos","terminal"],keyWins:["24/7 online booking fills quiet times","No-show protection saves revenue","Loyalty brings customers back"]},health:{name:"Health & Wellness",icon:"💪",primary:["appointments","terminal","pos"],keyWins:["Online booking with automated reminders","Client history and notes","Recurring appointments for regulars"]}},competitors:{lightspeed:{name:"Lightspeed",type:"POS company",weaknesses:["Payments is white-labeled Stripe","Per-device license fees","6-7 screens to take payment"],winningScript:"Lightspeed charges per device, we charge per location. Their payments is actually Stripe - two companies to deal with when things go wrong."},sumup:{name:"SumUp",type:"Payments",weaknesses:["3-day settlement (Germany-based)","No card-not-present from POS","Basic POS not fit for real business"],winningScript:"SumUp is 3 days for your money because they are based in Germany. We do next-day. And their free POS is really basic."},zettle:{name:"Zettle",type:"Payments",weaknesses:["3-day settlement (Sweden-based)","Discontinued apps - payments only now","POS lacks functionality"],winningScript:"Zettle pulled back from POS - discontinued several apps. And like SumUp, 3-day settlement. We are UK-based, next-day deposits."},dojo:{name:"Dojo",type:"Payments",weaknesses:["Payments only - need separate POS","Total cost higher with multiple providers","Reliant on integrations"],winningScript:"Dojo rates look good but they are payments only. You need separate POS, online ordering, loyalty - and hope they talk to each other. Square is all one system."},toast:{name:"Toast",type:"Restaurant POS",weaknesses:["More expensive than Square","Payments is white-labeled WorldPay","Cannot guarantee offline payments"],winningScript:"Toast is solid but more expensive, and their payments is actually WorldPay underneath. They cannot make the same guarantees on offline payments."},eposnow:{name:"EPOS Now",type:"POS company",weaknesses:["White-labels payments and loyalty","Terminal equivalent is clunky","Poor support reputation"],winningScript:"EPOS Now looks all-in-one but they white-label other products. When something breaks, providers point fingers at each other."},goodtill:{name:"Goodtill",type:"POS (SumUp)",weaknesses:["Bolted together with SumUp","Need separate POS and card reader","Integration creates errors"],winningScript:"Goodtill was bought by SumUp and bolted together. You need a tablet AND a card reader. Square Terminal is all-in-one."}},objections:{"too expensive":{response:"Let us look at total cost. What do you pay in monthly fees, terminal rental, per-transaction? Square has no monthly fees, no rental - just 1.75% per tap.",followUp:"Can I see your current statement? I will show you side-by-side."},"happy with current provider":{response:"Great they work for you. When did you last review your statement? Many sellers find hidden fees - PCI charges, statement fees, minimums. What is your current rate?",followUp:"Quick rate comparison? No obligation."},"need to think about it":{response:"Absolutely. What specific concerns? I can address them now so you have all the info.",followUp:"What would need to be true for a yes today?"},"locked in contract":{response:"When does it end? Let us get you set up now, ready to switch that day. Often the savings cover exit fees.",followUp:"Do you know your exit fee? Usually less than expected."},"rates are too high":{response:"1.75% with no monthly fees. Factor in the £20-30/month others charge plus terminal rental - we are often cheaper overall.",followUp:"Let me show you total cost comparison."},"dont have time":{response:"Setup takes 10 minutes. I can walk you through now, or leave the kit for when it suits.",followUp:"What if we just get you set up to try? No commitment yet."},"need to check with partner":{response:"Smart to involve them. What questions would they have? I can answer now or speak with them directly.",followUp:"Would a quick call with them help?"},"what if it breaks":{response:"2-year warranty. If anything goes wrong, we replace it. And Terminal has built-in 4G backup - keeps working if WiFi drops.",followUp:"You own it outright, no rental company to deal with."}},closingTechniques:{assumptive:{name:"Assumptive Close",icon:"✅",script:"So, shall we get you set up with the Terminal today? I can have you taking payments before I leave.",when:"Seller engaged, no major objections"},trial:{name:"Trial Close",icon:"🧪",script:"Why not try it? Run alongside your current system for a week. If it does not work, no harm done.",when:"Seller hesitant to commit"},urgency:{name:"Urgency Close",icon:"⚡",script:"If we go live today, you will have next-day deposits starting tomorrow. Cash in your account by Wednesday.",when:"Cash flow is a pain point"},summary:{name:"Summary Close",icon:"📋",script:"To recap: you get [products], solving [pain points], for [price]. Live today, next-day deposits. Ready?",when:"After addressing objections"}}};
-
-var selectedV=null;
-
-function selectV(btn,v){
-    var btns=document.querySelectorAll(".v-btn");
-    for(var i=0;i<btns.length;i++){btns[i].classList.remove("active");}
-    btn.classList.add("active");
-    selectedV=v;
+var V={
+fsr:{n:"Full Service Restaurant",i:"🍽️",p:["Square for Restaurants","Square Terminal","Kitchen Display"],w:["Tableside ordering AND payments in one device","Gift cards built-in","Tip pooling automated","KDS eliminates lost tickets"]},
+qsr:{n:"Quick Service Restaurant",i:"🍔",p:["Square POS","Square Register","Kitchen Display"],w:["Fastest card transaction time","Customer display for loyalty/tipping","Online ordering syncs inventory"]},
+retail:{n:"Retail",i:"🛍️",p:["Square for Retail","Square Register","Square Terminal"],w:["Advanced inventory with alerts","Online store syncs with in-store","Barcode scanning built-in"]},
+services:{n:"Professional Services",i:"💼",p:["Square Appointments","Square Invoices","Square Terminal"],w:["Online booking reduces admin","No-show protection","Professional invoices"]},
+beauty:{n:"Beauty",i:"💇",p:["Square Appointments","Square POS","Square Terminal"],w:["24/7 online booking","No-show protection","Loyalty brings them back"]},
+health:{n:"Health & Wellness",i:"💪",p:["Square Appointments","Square Terminal","Square POS"],w:["Automated reminders","Client history","Recurring appointments"]}
+};
+var P={
+"Square Payments":{c:"payments",d:"1.75% chip & PIN. No monthly fees. Next-day deposits."},
+"Square POS":{c:"saas",d:"Free POS. Sales data, inventory, staff tools included."},
+"Square Terminal":{c:"hardware",d:"All-in-one: payments + receipts + POS. £149, no rental."},
+"Square Register":{c:"hardware",d:"Premium countertop POS with customer display."},
+"Square Appointments":{c:"saas",d:"Online booking, reminders, no-show protection."},
+"Square Invoices":{c:"saas",d:"Professional invoices with online payment."},
+"Square for Restaurants":{c:"saas",d:"Table management, coursing, KDS integration."},
+"Square for Retail":{c:"saas",d:"Advanced inventory, purchase orders, barcode scanning."},
+"Kitchen Display":{c:"saas",d:"Digital tickets. No lost orders, track prep times."}
+};
+var C={
+lightspeed:{n:"Lightspeed",t:"POS",w:["White-labeled Stripe payments","Per-device fees","6-7 screens to pay"],s:"They charge per device, we charge per location. Their payments is Stripe - two companies when things break."},
+sumup:{n:"SumUp",t:"Payments",w:["3-day settlement","No invoices from POS","Basic POS"],s:"3 days for your money vs our next-day. Their free POS is too basic for real business."},
+zettle:{n:"Zettle",t:"Payments",w:["3-day settlement","Discontinued apps","Limited POS"],s:"Zettle pulled back from POS. Like SumUp, 3-day settlement. We are UK-based, next-day."},
+dojo:{n:"Dojo",t:"Payments",w:["Payments only","Need separate POS","Multiple providers"],s:"Rates look good but payments only. You need separate POS, loyalty, online - hope they talk to each other."},
+toast:{n:"Toast",t:"Restaurant POS",w:["More expensive","WorldPay underneath","No offline guarantee"],s:"Solid but pricier. Payments is WorldPay - cannot guarantee offline like we can."}
+};
+var O={
+"too expensive":{r:"What do you pay in monthly fees, terminal rental, per-transaction? We have no monthly fees, no rental - just 1.75%.",f:"Can I see your statement?"},
+"happy with current":{r:"When did you last review your statement? Many find hidden fees - PCI charges, minimums.",f:"Quick comparison? No obligation."},
+"need to think":{r:"What concerns? I can address them now.",f:"What would make it a yes today?"},
+"locked in contract":{r:"When does it end? Get set up now, switch that day. Savings often cover exit fees.",f:"Know your exit fee?"},
+"no time":{r:"Setup takes 10 minutes. I can do it now or leave the kit.",f:"Just try it alongside current system?"}
+};
+var CL={
+assumptive:{n:"Assumptive",i:"✅",s:"Shall we get you set up today? Taking payments before I leave.",w:"No major objections"},
+trial:{n:"Trial",i:"🧪",s:"Try it alongside current system for a week. No harm if not.",w:"Hesitant to commit"},
+urgency:{n:"Urgency",i:"⚡",s:"Go live today = next-day deposits tomorrow.",w:"Cash flow pain"},
+summary:{n:"Summary",i:"📋",s:"To recap: [products] solving [pains] for [price]. Ready?",w:"After objections handled"}
+};
+var sel=null;
+function pick(b,v){document.querySelectorAll(".vbtn").forEach(function(x){x.classList.remove("on")});b.classList.add("on");sel=v;}
+function say(h,bot){var o=document.getElementById("out"),d=document.createElement("div");d.className="msg "+(bot?"bot":"usr");d.innerHTML='<div class="av">'+(bot?"CB":"You")+'</div><div class="mc">'+h+'</div>';o.appendChild(d);o.scrollTop=o.scrollHeight;}
+function run(){
+if(!sel){say("Pick a vertical first 👆",true);return;}
+var v=V[sel],g=document.getElementById("gpv").value,pa=document.getElementById("pain").value.toLowerCase();
+say("<b>"+v.i+" "+v.n+"</b>"+(g?" · "+g:"")+(pa?"<br><i>"+pa+"</i>":""),false);
+var h="<b>Recommended:</b><ul class='wlist'>";
+v.w.forEach(function(x){h+="<li>"+x+"</li>";});
+h+="</ul>";
+v.p.forEach(function(x){var pr=P[x];if(pr)h+='<div class="pcard"><h4>'+x+'<span class="ptag tag-'+pr.c+'">'+pr.c+'</span></h4><p>'+pr.d+'</p></div>';});
+var cp=null;
+Object.keys(C).forEach(function(k){if(pa.indexOf(k)>-1)cp=C[k];});
+h+='<div class="tabs">';
+h+='<div class="tab" onclick="objections()">🛡️ Objections</div>';
+h+='<div class="tab" onclick="closes()">🎯 Close</div>';
+if(cp)h+='<div class="tab" onclick="battle(\''+cp.n+'\')">⚔️ vs '+cp.n+'</div>';
+h+='<div class="tab sec" onclick="reset()">↺ New</div></div>';
+say(h,true);
 }
-
-function msg(html,isBot){
-    var c=document.getElementById("chat");
-    var d=document.createElement("div");
-    d.className="message "+(isBot?"bot":"user");
-    d.innerHTML='<div class="avatar">'+(isBot?"CB":"You")+'</div><div class="message-content">'+html+'</div>';
-    c.appendChild(d);
-    c.scrollTop=c.scrollHeight;
+function objections(){
+say("Objections?",false);
+var h="<b>Handle these:</b>";
+Object.keys(O).forEach(function(k){var o=O[k];h+='<div class="scard obj"><h4>"'+k+'"</h4><div class="sbox">'+o.r+'</div><div class="sfu">↳ '+o.f+'</div></div>';});
+h+='<div class="tabs"><div class="tab" onclick="closes()">🎯 Close</div></div>';
+say(h,true);
 }
-
-function typing(show){
-    var ex=document.getElementById("typing");
-    if(ex)ex.remove();
-    if(show){
-        var c=document.getElementById("chat");
-        var d=document.createElement("div");
-        d.className="message bot";d.id="typing";
-        d.innerHTML='<div class="avatar">CB</div><div class="message-content"><div class="typing"><span></span><span></span><span></span></div></div>';
-        c.appendChild(d);
-        c.scrollTop=c.scrollHeight;
-    }
+function closes(){
+say("Ready to close?",false);
+var h="<b>Pick your close:</b>";
+Object.keys(CL).forEach(function(k){var c=CL[k];h+='<div class="scard cls"><h4>'+c.i+' '+c.n+'</h4><div class="sbox">'+c.s+'</div><div class="sfu">When: '+c.w+'</div></div>';});
+h+='<div class="tabs"><div class="tab sec" onclick="reset()">↺ New</div></div>';
+say(h,true);
 }
-
-function go(){
-    if(!selectedV){msg("Pick a vertical first 👆",true);return;}
-    var gpv=document.getElementById("gpv").value;
-    var pain=document.getElementById("pain").value.toLowerCase();
-    var v=KNOWLEDGE.verticals[selectedV];
-    msg("<strong>"+v.icon+" "+v.name+"</strong>"+(gpv?" · "+gpv:"")+(pain?"<br><em>"+pain+"</em>":""),false);
-    typing(true);
-    setTimeout(function(){typing(false);showProducts(v,pain);},400);
+function battle(n){
+say("vs "+n,false);
+var cp=null;Object.keys(C).forEach(function(k){if(C[k].n===n)cp=C[k];});
+if(cp){
+var h="<b>vs "+cp.n+"</b> ("+cp.t+")<div class='scard cmp'><h4>Weaknesses:</h4><ul class='wlist'>";
+cp.w.forEach(function(x){h+="<li>"+x+"</li>";});
+h+='</ul><div class="sbox"><b>Say:</b> "'+cp.s+'"</div></div>';
+h+='<div class="tabs"><div class="tab" onclick="closes()">🎯 Close</div></div>';
+say(h,true);
 }
-
-function showProducts(v,pain){
-    var html="<strong>Here is what I recommend:</strong><ul class='wins-list'>";
-    for(var i=0;i<Math.min(3,v.keyWins.length);i++){html+="<li>"+v.keyWins[i]+"</li>";}
-    html+="</ul>";
-    for(var j=0;j<Math.min(3,v.primary.length);j++){
-        var p=KNOWLEDGE.products[v.primary[j]];
-        if(p){html+='<div class="product-card"><h4>'+p.name+'<span class="product-tag tag-'+p.category+'">'+p.category+'</span></h4><p>'+p.pitch+'</p></div>';}
-    }
-    var comp=null;
-    var cKeys=Object.keys(KNOWLEDGE.competitors);
-    for(var k=0;k<cKeys.length;k++){if(pain.indexOf(cKeys[k])!==-1){comp=KNOWLEDGE.competitors[cKeys[k]];break;}}
-    html+='<div class="action-tabs">';
-    html+='<div class="action-tab" onclick="showObjections()">🛡️ Handle Objections</div>';
-    html+='<div class="action-tab" onclick="showClose()">🎯 Close the Deal</div>';
-    if(comp){html+='<div class="action-tab" onclick="showBattlecard(''+comp.name+'')">⚔️ vs '+comp.name+'</div>';}
-    html+='<div class="action-tab secondary" onclick="reset()">↺ New</div></div>';
-    msg(html,true);
 }
-
-function showObjections(){
-    msg("Objections?",false);
-    typing(true);
-    setTimeout(function(){
-        typing(false);
-        var html="<strong>Common objections:</strong>";
-        var top=["too expensive","happy with current provider","need to think about it","locked in contract"];
-        for(var i=0;i<top.length;i++){
-            var o=KNOWLEDGE.objections[top[i]];
-            if(o){html+='<div class="script-card objection"><h4>"'+top[i]+'"</h4><div class="script-box">'+o.response+'</div><div class="script-followup">↳ '+o.followUp+'</div></div>';}
-        }
-        html+='<div class="action-tabs"><div class="action-tab" onclick="showMoreObj()">More</div><div class="action-tab" onclick="showClose()">🎯 Close</div></div>';
-        msg(html,true);
-    },300);
-}
-
-function showMoreObj(){
-    var html="";
-    var more=["rates are too high","dont have time","need to check with partner","what if it breaks"];
-    for(var i=0;i<more.length;i++){
-        var o=KNOWLEDGE.objections[more[i]];
-        if(o){html+='<div class="script-card objection"><h4>"'+more[i]+'"</h4><div class="script-box">'+o.response+'</div><div class="script-followup">↳ '+o.followUp+'</div></div>';}
-    }
-    msg(html,true);
-}
-
-function showClose(){
-    msg("Ready to close?",false);
-    typing(true);
-    setTimeout(function(){
-        typing(false);
-        var html="<strong>Pick your close:</strong>";
-        var cls=["assumptive","trial","urgency","summary"];
-        for(var i=0;i<cls.length;i++){
-            var c=KNOWLEDGE.closingTechniques[cls[i]];
-            if(c){html+='<div class="script-card close"><h4>'+c.icon+' '+c.name+'</h4><div class="script-box">'+c.script+'</div><div class="script-followup">When: '+c.when+'</div></div>';}
-        }
-        html+='<div class="action-tabs"><div class="action-tab secondary" onclick="reset()">↺ New Seller</div></div>';
-        msg(html,true);
-    },300);
-}
-
-function showBattlecard(name){
-    msg("vs "+name,false);
-    typing(true);
-    setTimeout(function(){
-        typing(false);
-        var comp=null;
-        var cKeys=Object.keys(KNOWLEDGE.competitors);
-        for(var i=0;i<cKeys.length;i++){if(KNOWLEDGE.competitors[cKeys[i]].name===name){comp=KNOWLEDGE.competitors[cKeys[i]];break;}}
-        if(comp){
-            var html="<strong>vs "+comp.name+"</strong> <em>("+comp.type+")</em>";
-            html+='<div class="script-card competitor"><h4>Weaknesses:</h4><ul class="wins-list">';
-            for(var j=0;j<Math.min(4,comp.weaknesses.length);j++){html+="<li>"+comp.weaknesses[j]+"</li>";}
-            html+='</ul><div class="script-box"><strong>Say:</strong> "'+comp.winningScript+'"</div></div>';
-            html+='<div class="action-tabs"><div class="action-tab" onclick="showClose()">🎯 Close</div></div>';
-            msg(html,true);
-        }
-    },300);
-}
-
 function reset(){
-    selectedV=null;
-    var btns=document.querySelectorAll(".v-btn");
-    for(var i=0;i<btns.length;i++){btns[i].classList.remove("active");}
-    document.getElementById("gpv").value="";
-    document.getElementById("pain").value="";
-    document.getElementById("chat").innerHTML="";
-    msg("<strong>Ready.</strong> Select a vertical to start.",true);
+sel=null;
+document.querySelectorAll(".vbtn").forEach(function(x){x.classList.remove("on")});
+document.getElementById("gpv").value="";
+document.getElementById("pain").value="";
+document.getElementById("out").innerHTML="";
+say("<b>Ready.</b> Select a vertical.",true);
 }
 </script>
 </body>
