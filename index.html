@@ -11,8 +11,8 @@
         .header{background:var(--sq-black);color:var(--sq-white);padding:14px 20px;display:flex;align-items:center;justify-content:space-between}
         .header h1{font-size:20px;font-weight:600}
         .badge{background:var(--sq-green);color:var(--sq-black);padding:4px 10px;border-radius:4px;font-size:11px;font-weight:700;margin-left:10px}
-        .container{max-width:800px;margin:0 auto;padding:20px}
-        .chat{background:var(--sq-white);border-radius:16px;min-height:calc(100vh - 120px);display:flex;flex-direction:column}
+        .container{max-width:800px;margin:0 auto;padding:20px;padding-bottom:100px}
+        .chat{background:var(--sq-white);border-radius:16px;min-height:calc(100vh - 180px);display:flex;flex-direction:column}
         .msgs{flex:1;padding:24px;overflow-y:auto}
         .msg{margin-bottom:20px;display:flex;gap:12px}
         .msg.usr{flex-direction:row-reverse}
@@ -30,6 +30,11 @@
         .opt.secondary:hover{border-color:var(--sq-black);background:var(--sq-gray-100);color:var(--sq-black)}
         .opt .ico{margin-right:6px}
         .section-title{font-size:13px;font-weight:700;color:var(--sq-gray-500);text-transform:uppercase;margin-bottom:12px;margin-top:8px}
+        .input-bar{position:fixed;bottom:0;left:0;right:0;background:var(--sq-white);border-top:1px solid var(--sq-gray-200);padding:16px 20px;display:flex;gap:12px;align-items:center}
+        .input-bar input{flex:1;padding:14px 18px;border:2px solid var(--sq-gray-200);border-radius:30px;font-size:15px;font-family:inherit}
+        .input-bar input:focus{outline:none;border-color:var(--sq-black)}
+        .input-bar button{padding:14px 24px;background:var(--sq-black);color:var(--sq-white);border:none;border-radius:30px;font-size:15px;font-weight:600;cursor:pointer}
+        .input-bar button:hover{background:var(--sq-gray-700)}
         .pcard{background:var(--sq-white);border:1px solid var(--sq-gray-200);border-left:4px solid var(--sq-green);border-radius:8px;padding:14px 16px;margin:10px 0}
         .pcard h4{font-size:15px;font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:8px}
         .pcard p{font-size:14px;color:var(--sq-gray-700);line-height:1.5}
@@ -44,6 +49,7 @@
         .scard.obj{border-left:4px solid var(--sq-blue)}
         .scard.cls{border-left:4px solid var(--sq-orange)}
         .scard.cmp{border-left:4px solid var(--sq-red)}
+        .scard.ctx{border-left:4px solid var(--sq-green)}
         .scard h4{font-size:14px;font-weight:700;margin-bottom:10px;color:var(--sq-gray-700)}
         .sbox{background:var(--sq-gray-100);padding:12px 14px;border-radius:8px;font-size:14px;line-height:1.5}
         .sfu{font-size:12px;color:var(--sq-gray-500);margin-top:10px;font-style:italic}
@@ -61,19 +67,16 @@
         .video-modal-content{width:90%;max-width:800px;position:relative}
         .video-modal-close{position:absolute;top:-45px;right:0;color:white;font-size:28px;cursor:pointer;padding:10px}
         .video-modal iframe{width:100%;height:450px;border:none;border-radius:12px}
-        .progress{display:flex;gap:8px;margin-bottom:20px}
-        .progress-dot{width:10px;height:10px;border-radius:50%;background:var(--sq-gray-300)}
-        .progress-dot.active{background:var(--sq-green)}
-        .progress-dot.done{background:var(--sq-black)}
         .summary-box{background:linear-gradient(135deg,#f8f8f8,#fff);border:2px solid var(--sq-green);border-radius:12px;padding:20px;margin:16px 0}
         .summary-box h3{font-size:16px;margin-bottom:12px;color:var(--sq-black)}
         .summary-item{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--sq-gray-200);font-size:14px}
         .summary-item:last-child{border-bottom:none}
         .summary-item .label{color:var(--sq-gray-500)}
         .summary-item .value{font-weight:600}
-        .restart-btn{position:fixed;bottom:20px;right:20px;padding:12px 20px;background:var(--sq-gray-700);color:white;border:none;border-radius:25px;font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,0.2)}
-        .restart-btn:hover{background:var(--sq-black)}
-        @media(max-width:600px){.container{padding:10px}.video-card{width:100%}.video-modal iframe{height:250px}.options{gap:8px}.opt{padding:10px 16px;font-size:13px}}
+        .restart-btn{position:fixed;bottom:80px;right:20px;padding:10px 16px;background:var(--sq-gray-200);color:var(--sq-gray-700);border:none;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer}
+        .restart-btn:hover{background:var(--sq-gray-300)}
+        .typing{display:inline-block;padding:8px 16px;background:var(--sq-gray-200);border-radius:20px;font-size:13px;color:var(--sq-gray-500)}
+        @media(max-width:600px){.container{padding:10px;padding-bottom:90px}.video-card{width:100%}.video-modal iframe{height:250px}.options{gap:8px}.opt{padding:10px 16px;font-size:13px}.input-bar{padding:12px 16px}.input-bar input{padding:12px 16px;font-size:14px}.input-bar button{padding:12px 20px;font-size:14px}}
     </style>
 </head>
 <body>
@@ -90,6 +93,10 @@
     </div>
 </div>
 <button class="restart-btn" onclick="restart()">↺ Start Over</button>
+<div class="input-bar">
+    <input type="text" id="userInput" placeholder="Type what the merchant said..." onkeypress="if(event.key==='Enter')sendMessage()">
+    <button onclick="sendMessage()">Send</button>
+</div>
 <div class="video-modal" id="vmodal" onclick="closeVideo()">
     <div class="video-modal-content" onclick="event.stopPropagation()">
         <div class="video-modal-close" onclick="closeVideo()">✕</div>
@@ -97,7 +104,8 @@
     </div>
 </div>
 <script>
-var state = {step:0, vertical:null, gpv:null, locations:null, staff:null, pain:null};
+var state = {step:0, vertical:null, gpv:null, locations:null, staff:null, pain:null, notes:[]};
+
 var VERTICALS = {
     qsr:{name:"Quick Service",icon:"🍔",discovery:["What POS are you using today?","How do you handle busy periods?","Do you offer online ordering?"]},
     fsr:{name:"Full Service Restaurant",icon:"🍽️",discovery:["How do you manage table service?","Do staff take orders at the table?","How do you split bills currently?"]},
@@ -106,26 +114,29 @@ var VERTICALS = {
     health:{name:"Health & Fitness",icon:"💪",discovery:["How do clients book sessions?","Do you sell memberships?","How do you manage recurring clients?"]},
     services:{name:"Professional Services",icon:"💼",discovery:["How do you invoice clients?","Do clients book online?","How do you handle deposits?"]}
 };
+
 var PRODUCTS = {
-    "Square Terminal":{cat:"hardware",desc:"All-in-one card machine with built-in POS, receipts, and next-day deposits. £149 + VAT, no rental fees.",price:"£149 + VAT",link:"https://squareup.com/help/gb/en/article/5583-square-terminal-overview"},
-    "Square Register":{cat:"hardware",desc:"Premium countertop POS with customer-facing display. Perfect for high-volume locations.",price:"£599 + VAT",link:"https://squareup.com/help/gb/en/article/7631-square-register-overview"},
-    "Square Reader":{cat:"hardware",desc:"Compact card reader that pairs with your phone or tablet. Great for mobile or low-volume.",price:"£19 + VAT",link:"https://squareup.com/help/gb/en/article/5087-square-reader-overview"},
-    "Square for Restaurants":{cat:"saas",desc:"Purpose-built restaurant POS with table management, coursing, KDS integration, and tip pooling.",price:"Free-£69/mo",link:"https://squareup.com/help/gb/en/article/6238-square-for-restaurants-overview"},
-    "Square for Retail":{cat:"saas",desc:"Advanced inventory management, purchase orders, barcode scanning, and vendor management.",price:"Free-£60/mo",link:"https://squareup.com/help/gb/en/article/5061-square-for-retail-overview"},
-    "Square Appointments":{cat:"saas",desc:"Online booking, automated reminders, no-show protection, and Google Calendar sync.",price:"Free-£69/mo",link:"https://squareup.com/help/gb/en/article/6238-square-appointments-overview"},
-    "Square Invoices":{cat:"saas",desc:"Professional invoices with online payment, automatic reminders, and milestone billing.",price:"Free",link:"https://squareup.com/help/gb/en/article/5103-square-invoices-overview"},
-    "Square Online":{cat:"saas",desc:"Free online store that syncs with your in-store inventory. Pickup, delivery, or shipping.",price:"Free-£64/mo",link:"https://squareup.com/help/gb/en/article/5652-square-online-overview"},
-    "Kitchen Display System":{cat:"saas",desc:"Digital ticket management for kitchens. No lost tickets, track prep times, improve speed.",price:"£15/mo",link:"https://squareup.com/help/gb/en/article/7653-kds-overview"},
-    "Square Loyalty":{cat:"saas",desc:"Digital loyalty program. Customers earn points, you get repeat visits.",price:"£45/mo",link:"https://squareup.com/help/gb/en/article/5048-square-loyalty-overview"}
+    "Square Terminal":{cat:"hardware",desc:"All-in-one card machine with built-in POS, receipts, and next-day deposits. £149 + VAT, no rental fees.",price:"£149 + VAT",link:"https://squareup.com/help/gb/en/article/5583"},
+    "Square Register":{cat:"hardware",desc:"Premium countertop POS with customer-facing display. Perfect for high-volume locations.",price:"£599 + VAT",link:"https://squareup.com/help/gb/en/article/7631"},
+    "Square Reader":{cat:"hardware",desc:"Compact card reader that pairs with your phone or tablet. Great for mobile or low-volume.",price:"£19 + VAT",link:"https://squareup.com/help/gb/en/article/5087"},
+    "Square for Restaurants":{cat:"saas",desc:"Purpose-built restaurant POS with table management, coursing, KDS integration, and tip pooling.",price:"Free-£69/mo",link:"https://squareup.com/help/gb/en/article/6238"},
+    "Square for Retail":{cat:"saas",desc:"Advanced inventory management, purchase orders, barcode scanning, and vendor management.",price:"Free-£60/mo",link:"https://squareup.com/help/gb/en/article/5061"},
+    "Square Appointments":{cat:"saas",desc:"Online booking, automated reminders, no-show protection, and Google Calendar sync.",price:"Free-£69/mo",link:"https://squareup.com/help/gb/en/article/6996"},
+    "Square Invoices":{cat:"saas",desc:"Professional invoices with online payment, automatic reminders, and milestone billing.",price:"Free",link:"https://squareup.com/help/gb/en/article/5103"},
+    "Square Online":{cat:"saas",desc:"Free online store that syncs with your in-store inventory. Pickup, delivery, or shipping.",price:"Free-£64/mo",link:"https://squareup.com/help/gb/en/article/5652"},
+    "Kitchen Display System":{cat:"saas",desc:"Digital ticket management for kitchens. No lost tickets, track prep times, improve speed.",price:"£15/mo",link:"https://squareup.com/help/gb/en/article/7653"},
+    "Square Loyalty":{cat:"saas",desc:"Digital loyalty program. Customers earn points, you get repeat visits.",price:"£45/mo",link:"https://squareup.com/help/gb/en/article/5048"}
 };
+
 var RECOMMENDATIONS = {
-    qsr:{products:["Square Terminal","Square Register","Kitchen Display System","Square Online"],wins:["Fastest transaction time in the industry","Online ordering syncs with in-store inventory","KDS eliminates lost tickets and speeds up service","Next-day deposits including weekends"]},
-    fsr:{products:["Square for Restaurants","Square Terminal","Kitchen Display System","Square Loyalty"],wins:["Tableside ordering AND payments on one device","Table management with visual floor plan","Automatic tip pooling saves hours weekly","Course firing keeps kitchen in sync"]},
-    retail:{products:["Square for Retail","Square Register","Square Terminal","Square Online"],wins:["Real-time inventory across all channels","Low stock alerts prevent missed sales","Barcode scanning built-in, no extra hardware","Sell online and in-store from one system"]},
-    beauty:{products:["Square Appointments","Square Terminal","Square Loyalty"],wins:["24/7 online booking reduces phone time","No-show protection with card-on-file","Automated reminders cut no-shows by 30%","Client notes and history at your fingertips"]},
+    qsr:{products:["Square Terminal","Square Register","Kitchen Display System","Square Online"],wins:["Fastest transaction time in the industry","Online ordering syncs with in-store inventory","KDS eliminates lost tickets","Next-day deposits including weekends"]},
+    fsr:{products:["Square for Restaurants","Square Terminal","Kitchen Display System","Square Loyalty"],wins:["Tableside ordering AND payments on one device","Table management with visual floor plan","Automatic tip pooling saves hours","Course firing keeps kitchen in sync"]},
+    retail:{products:["Square for Retail","Square Register","Square Terminal","Square Online"],wins:["Real-time inventory across all channels","Low stock alerts prevent missed sales","Barcode scanning built-in","Sell online and in-store from one system"]},
+    beauty:{products:["Square Appointments","Square Terminal","Square Loyalty"],wins:["24/7 online booking reduces phone time","No-show protection with card-on-file","Automated reminders cut no-shows by 30%","Client notes and history at fingertips"]},
     health:{products:["Square Appointments","Square Terminal","Square Invoices"],wins:["Recurring appointments for regular clients","Class and session booking built-in","Automated reminders reduce no-shows","Professional invoices for corporate clients"]},
     services:{products:["Square Appointments","Square Invoices","Square Terminal"],wins:["Online booking frees up your time","Deposits protect against cancellations","Professional invoices with online payment","Milestone billing for larger projects"]}
 };
+
 var VIDEOS = {
     qsr:[{title:"Square Register",vid:"yrYBJZvi0Hs"},{title:"Getting Started",vid:"aJvoY25CtWw"}],
     fsr:[{title:"Square for Restaurants",vid:"5AMjTpDP-fk"},{title:"Square Terminal",vid:"6WUabw7MjVQ"}],
@@ -134,22 +145,43 @@ var VIDEOS = {
     health:[{title:"Square Appointments",vid:"EuZu25DifQY"},{title:"Square Terminal",vid:"6WUabw7MjVQ"}],
     services:[{title:"Square Invoices",vid:"GmE9I6yl_Ro"},{title:"Square Appointments",vid:"EuZu25DifQY"}]
 };
+var PAIN_RESPONSES = {
+    "fee":{keywords:["fee","expensive","cost","price","rate","percent","charge","paying too much"],response:"Square is 1.75% for chip & PIN - no monthly fees, no terminal rental, no hidden charges. Most merchants switching from traditional providers save 20-30%.",product:"Square Terminal",action:"Show them a rate comparison - ask to see their current statement"},
+    "deposit":{keywords:["deposit","settlement","money","cash flow","wait","days","slow"],response:"Square offers next-day deposits including weekends and bank holidays. Payments before midnight hit your account the next day. Competitors like SumUp and Zettle are 3 days.",product:"Square Terminal",action:"Emphasise: money tomorrow vs 3 days with others"},
+    "pos":{keywords:["pos","till","system","software","clunky","old","outdated","slow system"],response:"Square POS is free and runs on iPad or our dedicated hardware. It's intuitive - most staff learn it in minutes. Plus inventory, reporting, and staff management built-in.",product:"Square Register",action:"Offer a quick demo on your device"},
+    "online":{keywords:["online","website","ecommerce","delivery","click and collect","pickup"],response:"Square Online is free to start and syncs automatically with your in-store inventory. Customers can order for pickup, delivery, or shipping - all managed from one dashboard.",product:"Square Online",action:"Show them the online store builder"},
+    "inventory":{keywords:["inventory","stock","sku","product","track","counting","ordering"],response:"Square for Retail has advanced inventory with low stock alerts, purchase orders, and vendor management. Barcode scanning is built-in - no extra hardware needed.",product:"Square for Retail",action:"Demo the inventory management features"},
+    "booking":{keywords:["booking","appointment","schedule","calendar","no-show","cancel"],response:"Square Appointments lets clients book 24/7 online. Automated reminders cut no-shows by 30%. You can require card-on-file for no-show protection.",product:"Square Appointments",action:"Show them the online booking page"},
+    "staff":{keywords:["staff","employee","team","permission","clock","payroll","tip"],response:"Square has built-in team management - permissions, time tracking, and tip pooling. Staff can clock in/out on the POS. Reports show sales by employee.",product:"Square for Restaurants",action:"Demo the staff management features"},
+    "table":{keywords:["table","tableside","floor","seat","course","kitchen"],response:"Square for Restaurants has visual table management, tableside ordering on Terminal, course firing, and KDS integration. Tips are automatically pooled or split.",product:"Square for Restaurants",action:"Show the floor plan and table management"},
+    "invoice":{keywords:["invoice","bill","quote","estimate","payment terms"],response:"Square Invoices is free - create professional invoices with your branding, set payment terms, and get paid online. Automatic reminders chase late payers for you.",product:"Square Invoices",action:"Create a sample invoice to show them"},
+    "loyalty":{keywords:["loyalty","reward","repeat","customer","retention","points"],response:"Square Loyalty is a digital points program - customers earn automatically when they pay. No paper cards to lose. You see who your best customers are.",product:"Square Loyalty",action:"Explain the loyalty program setup"},
+    "sumup":{keywords:["sumup","sum up"],response:"SumUp is 3-day settlement vs our next-day. Their free POS is very basic - no real inventory, no invoicing. Fine for a market stall, but you need more.",product:"Square Terminal",action:"Highlight: next-day deposits, proper POS, all-in-one ecosystem"},
+    "zettle":{keywords:["zettle","izettle","paypal"],response:"Zettle pulled back from POS - they discontinued apps and focused on payments only. Same 3-day settlement as SumUp. Square is next-day, UK-based support.",product:"Square Terminal",action:"Emphasise: we're committed to POS, they're not"},
+    "dojo":{keywords:["dojo"],response:"Dojo rates look good but it's payments only. You need separate POS, loyalty, online ordering - and hope they all talk to each other. Square is one ecosystem.",product:"Square Terminal",action:"Show the integrated ecosystem advantage"},
+    "clover":{keywords:["clover"],response:"Clover is US-owned by Fiserv. Monthly fees plus terminal rental. When something breaks, you're calling America. Square is simpler pricing, UK support.",product:"Square Register",action:"Compare total cost of ownership"},
+    "worldpay":{keywords:["worldpay","world pay"],response:"WorldPay means contracts, monthly fees, PCI charges, terminal rental. Square is 1.75%, no monthly fees, no rental. Most WorldPay merchants save money switching.",product:"Square Terminal",action:"Ask to see their WorldPay statement for comparison"},
+    "contract":{keywords:["contract","locked","term","cancel","exit"],response:"Square has no contracts - use it as long as it works for you. If they're locked in elsewhere, we can get them set up ready to switch the day it ends.",product:"Square Terminal",action:"Find out when their contract ends"}
+};
+
 var OBJECTIONS = {
     "Too expensive":{response:"What are you paying now in monthly fees, terminal rental, and per-transaction? With Square: no monthly fees, no rental, just 1.75% per tap. Most merchants save money.",followup:"Can I see a recent statement? I can do a quick comparison."},
-    "Happy with current provider":{response:"When did you last review your statement? Many merchants find hidden fees they didn't know about - PCI charges, statement fees, minimum fees.",followup:"A quick 2-minute comparison costs nothing. What if you're overpaying?"},
+    "Happy with current provider":{response:"When did you last review your statement? Many merchants find hidden fees - PCI charges, statement fees, minimum fees.",followup:"A quick 2-minute comparison costs nothing. What if you're overpaying?"},
     "Need to think about it":{response:"Totally understand. What specific concerns do you have? I might be able to address them right now.",followup:"What would need to be true for this to be a yes today?"},
     "Locked into a contract":{response:"When does your contract end? We can get you set up now so you switch the day it ends. Often the savings cover any exit fees.",followup:"Do you know your exit fee? Sometimes it's less than people think."},
-    "Don't have time right now":{response:"Setup takes literally 10 minutes. I can do it right now, or leave the kit and you can activate when ready.",followup:"What if you just tried it alongside your current system? No commitment."}
+    "Don't have time":{response:"Setup takes literally 10 minutes. I can do it right now, or leave the kit and you can activate when ready.",followup:"What if you just tried it alongside your current system? No commitment."}
 };
+
 var CLOSES = {
     assumptive:{name:"Assumptive Close",icon:"✅",script:"Let's get you set up. You'll be taking payments before I leave - takes about 10 minutes.",when:"No major objections, positive signals"},
     trial:{name:"Trial Close",icon:"🧪",script:"Why not try it alongside your current system for a week? If it's not for you, no problem.",when:"Hesitant to fully commit"},
     urgency:{name:"Urgency Close",icon:"⚡",script:"If we get you live today, you'll have your first deposit tomorrow. That's money in your account 24 hours from now.",when:"Cash flow is a pain point"},
     summary:{name:"Summary Close",icon:"📋",script:"So to recap: [products] solving [pain points] at [price]. Shall we get started?",when:"After handling objections"}
 };
+
 var COMPETITORS = {
     sumup:{name:"SumUp",type:"Payments",weaknesses:["3-day settlement vs our next-day","Basic POS - no inventory management","No invoicing from the POS","Limited integrations"],counter:"They're 3 days for your money, we're next-day including weekends. Their free POS is fine for a market stall, but you need more than that."},
-    zettle:{name:"Zettle/PayPal",type:"Payments",weaknesses:["3-day settlement","Discontinued several apps","Limited POS functionality","PayPal owns them - corporate priorities"],counter:"Zettle pulled back from POS - they're payments only now. Same 3-day settlement as SumUp. We're UK-based, next-day deposits."},
+    zettle:{name:"Zettle/PayPal",type:"Payments",weaknesses:["3-day settlement","Discontinued several apps","Limited POS functionality","PayPal priorities"],counter:"Zettle pulled back from POS - they're payments only now. Same 3-day settlement as SumUp. We're UK-based, next-day deposits."},
     dojo:{name:"Dojo",type:"Payments",weaknesses:["Payments only - no POS","Need separate systems","Multiple providers to manage","No ecosystem"],counter:"Their rates look good but it's payments only. You need a separate POS, separate loyalty, separate online store - and hope they all talk to each other."},
     clover:{name:"Clover",type:"POS",weaknesses:["Fiserv-owned, US-focused","Monthly fees + rental","Complex pricing","Less UK support"],counter:"Clover is American, owned by Fiserv. Monthly fees, terminal rental, and when something breaks you're calling a US company."},
     lightspeed:{name:"Lightspeed",type:"POS",weaknesses:["Per-device fees add up","White-labeled Stripe payments","6-7 screens to take a payment","Complex setup"],counter:"They charge per device, we charge per location. Their payments is actually Stripe underneath - so when something goes wrong, you're dealing with two companies."},
@@ -163,36 +195,156 @@ function say(html, isBot) {
     out.appendChild(div);
     out.scrollTop = out.scrollHeight;
 }
+
 function playVideo(vid) {
     document.getElementById("vframe").src = "https://www.youtube-nocookie.com/embed/" + vid + "?autoplay=1&rel=0";
     document.getElementById("vmodal").classList.add("show");
 }
+
 function closeVideo() {
     document.getElementById("vmodal").classList.remove("show");
     document.getElementById("vframe").src = "";
 }
+
 function restart() {
-    state = {step:0, vertical:null, gpv:null, locations:null, staff:null, pain:null};
+    state = {step:0, vertical:null, gpv:null, locations:null, staff:null, pain:null, notes:[]};
     document.getElementById("out").innerHTML = "";
+    document.getElementById("userInput").value = "";
     startConversation();
 }
+
+function sendMessage() {
+    var input = document.getElementById("userInput");
+    var text = input.value.trim();
+    if (!text) return;
+    input.value = "";
+    
+    say(text, false);
+    state.notes.push(text);
+    
+    setTimeout(function() {
+        processInput(text);
+    }, 300);
+}
+
+function processInput(text) {
+    var lower = text.toLowerCase();
+    var matched = false;
+    
+    // Check for pain point matches
+    Object.keys(PAIN_RESPONSES).forEach(function(key) {
+        if (matched) return;
+        var pain = PAIN_RESPONSES[key];
+        pain.keywords.forEach(function(kw) {
+            if (lower.indexOf(kw) > -1 && !matched) {
+                matched = true;
+                showContextualResponse(pain, text);
+            }
+        });
+    });
+    
+    // Check for objection matches
+    if (!matched) {
+        Object.keys(OBJECTIONS).forEach(function(obj) {
+            if (matched) return;
+            var objLower = obj.toLowerCase();
+            if (lower.indexOf(objLower) > -1 || 
+                (lower.indexOf("expensive") > -1 && obj === "Too expensive") ||
+                (lower.indexOf("think") > -1 && obj === "Need to think about it") ||
+                (lower.indexOf("happy") > -1 && obj === "Happy with current provider") ||
+                (lower.indexOf("contract") > -1 && obj === "Locked into a contract") ||
+                (lower.indexOf("time") > -1 && lower.indexOf("don") > -1 && obj === "Don't have time")) {
+                matched = true;
+                showObjectionResponse(obj);
+            }
+        });
+    }
+    
+    // Generic helpful response if no match
+    if (!matched) {
+        showGenericResponse(text);
+    }
+}
+
+function showContextualResponse(pain, originalText) {
+    var html = "<div class='scard ctx'>";
+    html += "<h4>💡 Based on what they said:</h4>";
+    html += "<div class='sbox'><b>\"" + originalText + "\"</b></div>";
+    html += "<div style='margin-top:12px'><b>Your response:</b></div>";
+    html += "<div class='sbox' style='margin-top:8px'>" + pain.response + "</div>";
+    html += "<div class='sfu'>👉 Action: " + pain.action + "</div>";
+    html += "</div>";
+    
+    // Show relevant product
+    var prod = PRODUCTS[pain.product];
+    if (prod) {
+        html += "<div class='pcard'><h4>" + pain.product + " <span class='ptag tag-" + prod.cat + "'>" + prod.cat + "</span></h4>";
+        html += "<p>" + prod.desc + "</p>";
+        html += "<div style='margin-top:8px;font-size:13px'><b>" + prod.price + "</b> · <a href='" + prod.link + "' target='_blank' style='color:var(--sq-blue)'>Help article →</a></div></div>";
+    }
+    
+    html += "<div class='options' style='margin-top:16px'>";
+    html += "<div class='opt' onclick='showCloses()'>🎯 Close the Deal</div>";
+    html += "<div class='opt secondary' onclick='showObjections()'>🛡️ More Objections</div>";
+    html += "</div>";
+    
+    say(html, true);
+}
+
+function showObjectionResponse(objKey) {
+    var obj = OBJECTIONS[objKey];
+    var html = "<div class='scard obj'>";
+    html += "<h4>🛡️ Handling: \"" + objKey + "\"</h4>";
+    html += "<div class='sbox'>" + obj.response + "</div>";
+    html += "<div class='sfu'>↳ Follow up: \"" + obj.followup + "\"</div>";
+    html += "</div>";
+    
+    html += "<div class='options' style='margin-top:16px'>";
+    html += "<div class='opt' onclick='showCloses()'>🎯 Close the Deal</div>";
+    html += "<div class='opt secondary' onclick='showObjections()'>🛡️ Other Objections</div>";
+    html += "</div>";
+    
+    say(html, true);
+}
+
+function showGenericResponse(text) {
+    var html = "<b>I heard:</b> \"" + text + "\"<br><br>";
+    html += "I'm not sure exactly how to respond to that. Try asking about:<br><br>";
+    html += "<div class='options'>";
+    html += "<div class='opt secondary' onclick=\"document.getElementById('userInput').value='fees';sendMessage()\">💸 Fees</div>";
+    html += "<div class='opt secondary' onclick=\"document.getElementById('userInput').value='deposits';sendMessage()\">🏦 Deposits</div>";
+    html += "<div class='opt secondary' onclick=\"document.getElementById('userInput').value='POS system';sendMessage()\">📱 POS</div>";
+    html += "<div class='opt secondary' onclick=\"document.getElementById('userInput').value='online ordering';sendMessage()\">🌐 Online</div>";
+    html += "<div class='opt secondary' onclick=\"document.getElementById('userInput').value='bookings';sendMessage()\">📅 Bookings</div>";
+    html += "</div><br>";
+    html += "Or use the quick actions:";
+    html += "<div class='options' style='margin-top:12px'>";
+    html += "<div class='opt' onclick='showObjections()'>🛡️ Objections</div>";
+    html += "<div class='opt' onclick='showCloses()'>🎯 Close</div>";
+    html += "<div class='opt secondary' onclick='showCompetitors()'>⚔️ Competitors</div>";
+    html += "</div>";
+    
+    say(html, true);
+}
+
 function startConversation() {
-    say("<b>Hey! 👋</b><br><br>I'm here to help you close this sale. Let's quickly understand the merchant so I can give you the right pitch.<br><br><div class='section-title'>What type of business are they?</div><div class='options'>" +
+    say("<b>Hey! 👋</b><br><br>I'm here to help you close this sale. Let's quickly profile the merchant.<br><br><div class='section-title'>What type of business?</div><div class='options'>" +
         "<div class='opt' onclick=\"selectVertical('qsr')\"><span class='ico'>🍔</span>QSR</div>" +
         "<div class='opt' onclick=\"selectVertical('fsr')\"><span class='ico'>🍽️</span>FSR</div>" +
         "<div class='opt' onclick=\"selectVertical('retail')\"><span class='ico'>🛍️</span>Retail</div>" +
         "<div class='opt' onclick=\"selectVertical('beauty')\"><span class='ico'>💇</span>Beauty</div>" +
         "<div class='opt' onclick=\"selectVertical('health')\"><span class='ico'>💪</span>Health</div>" +
         "<div class='opt' onclick=\"selectVertical('services')\"><span class='ico'>💼</span>Services</div>" +
-        "</div>", true);
+        "</div><br><span style='color:var(--sq-gray-500);font-size:13px'>Or type what the merchant is saying in the box below ↓</span>", true);
 }
+
 function selectVertical(v) {
     state.vertical = v;
     state.step = 1;
     var vert = VERTICALS[v];
     say("<span class='ico'>" + vert.icon + "</span> <b>" + vert.name + "</b>", false);
     setTimeout(function() {
-        say("<b>Great!</b> " + vert.name + " - I know exactly what they need.<br><br><div class='section-title'>What's their annual card turnover (GPV)?</div><div class='options'>" +
+        say("<b>Great!</b> " + vert.name + " - I know what they need.<br><br><div class='section-title'>Annual card turnover (GPV)?</div><div class='options'>" +
             "<div class='opt' onclick=\"selectGPV('Under £50k')\">Under £50k</div>" +
             "<div class='opt' onclick=\"selectGPV('£50k-£100k')\">£50k-£100k</div>" +
             "<div class='opt' onclick=\"selectGPV('£100k-£250k')\">£100k-£250k</div>" +
@@ -202,6 +354,7 @@ function selectVertical(v) {
             "</div>", true);
     }, 300);
 }
+
 function selectGPV(g) {
     state.gpv = g;
     state.step = 2;
@@ -216,6 +369,7 @@ function selectGPV(g) {
             "</div>", true);
     }, 300);
 }
+
 function selectLocations(l) {
     state.locations = l;
     state.step = 3;
@@ -230,27 +384,11 @@ function selectLocations(l) {
             "</div>", true);
     }, 300);
 }
+
 function selectStaff(s) {
     state.staff = s;
     state.step = 4;
     say("<b>" + s + "</b> staff", false);
-    setTimeout(function() {
-        say("<div class='section-title'>Any specific pain points? (optional)</div><div class='options'>" +
-            "<div class='opt' onclick=\"selectPain('High fees')\">💸 High fees</div>" +
-            "<div class='opt' onclick=\"selectPain('Slow deposits')\">🐢 Slow deposits</div>" +
-            "<div class='opt' onclick=\"selectPain('Poor POS')\">📱 Poor POS</div>" +
-            "<div class='opt' onclick=\"selectPain('No online')\">🌐 No online presence</div>" +
-            "<div class='opt' onclick=\"selectPain('Manual processes')\">📝 Manual processes</div>" +
-            "<div class='opt' onclick=\"selectPain('None mentioned')\">Skip →</div>" +
-            "</div>", true);
-    }, 300);
-}
-function selectPain(p) {
-    state.pain = p;
-    state.step = 5;
-    if (p !== "None mentioned") {
-        say("<b>" + p + "</b>", false);
-    }
     setTimeout(showRecommendation, 400);
 }
 function showRecommendation() {
@@ -259,28 +397,21 @@ function showRecommendation() {
     var rec = RECOMMENDATIONS[v];
     var vids = VIDEOS[v];
     
-    // Summary box
     var html = "<div class='summary-box'><h3>📋 Merchant Profile</h3>";
-    html += "<div class='summary-item'><span class='label'>Business Type</span><span class='value'>" + vert.icon + " " + vert.name + "</span></div>";
+    html += "<div class='summary-item'><span class='label'>Business</span><span class='value'>" + vert.icon + " " + vert.name + "</span></div>";
     html += "<div class='summary-item'><span class='label'>Annual GPV</span><span class='value'>" + state.gpv + "</span></div>";
     html += "<div class='summary-item'><span class='label'>Locations</span><span class='value'>" + state.locations + "</span></div>";
     html += "<div class='summary-item'><span class='label'>Staff</span><span class='value'>" + state.staff + "</span></div>";
-    if (state.pain && state.pain !== "None mentioned") {
-        html += "<div class='summary-item'><span class='label'>Pain Point</span><span class='value'>" + state.pain + "</span></div>";
-    }
     html += "</div>";
     
-    // Discovery questions
-    html += "<div class='section-title'>🎯 Discovery Questions to Ask</div><ul class='wlist'>";
+    html += "<div class='section-title'>🎯 Discovery Questions</div><ul class='wlist'>";
     vert.discovery.forEach(function(q) { html += "<li>" + q + "</li>"; });
     html += "</ul>";
     
-    // Why Square wins
-    html += "<div class='section-title'>✅ Why Square Wins Here</div><ul class='wlist'>";
+    html += "<div class='section-title'>✅ Why Square Wins</div><ul class='wlist'>";
     rec.wins.forEach(function(w) { html += "<li>" + w + "</li>"; });
     html += "</ul>";
     
-    // Product recommendations
     html += "<div class='section-title'>📦 Recommended Products</div>";
     rec.products.forEach(function(pname) {
         var p = PRODUCTS[pname];
@@ -291,9 +422,8 @@ function showRecommendation() {
         }
     });
     
-    // Videos
     if (vids && vids.length > 0) {
-        html += "<div class='video-section'><div class='section-title'>🎬 Show Them a Demo</div><div class='video-grid'>";
+        html += "<div class='video-section'><div class='section-title'>🎬 Demo Videos</div><div class='video-grid'>";
         vids.forEach(function(vid) {
             html += "<div class='video-card' onclick=\"playVideo('" + vid.vid + "')\">";
             html += "<img src='https://img.youtube.com/vi/" + vid.vid + "/mqdefault.jpg'>";
@@ -303,45 +433,48 @@ function showRecommendation() {
         html += "</div></div>";
     }
     
-    // Action buttons
     html += "<div class='options' style='margin-top:24px'>";
     html += "<div class='opt' onclick='showObjections()'>🛡️ Handle Objections</div>";
     html += "<div class='opt' onclick='showCloses()'>🎯 Close the Deal</div>";
     html += "<div class='opt secondary' onclick='showCompetitors()'>⚔️ Competitor Mentioned</div>";
     html += "</div>";
+    html += "<br><span style='color:var(--sq-gray-500);font-size:13px'>💬 Type what the merchant says below for contextual responses</span>";
     
     say(html, true);
 }
+
 function showObjections() {
     say("🛡️ <b>Objection Handling</b>", false);
-    var html = "<b>Common objections and how to handle them:</b>";
+    var html = "<b>Common objections and responses:</b>";
     Object.keys(OBJECTIONS).forEach(function(obj) {
         var o = OBJECTIONS[obj];
         html += "<div class='scard obj'><h4>\"" + obj + "\"</h4>";
         html += "<div class='sbox'>" + o.response + "</div>";
-        html += "<div class='sfu'>↳ Follow up: \"" + o.followup + "\"</div></div>";
+        html += "<div class='sfu'>↳ \"" + o.followup + "\"</div></div>";
     });
     html += "<div class='options' style='margin-top:16px'>";
     html += "<div class='opt' onclick='showCloses()'>🎯 Close the Deal</div>";
-    html += "<div class='opt secondary' onclick='showCompetitors()'>⚔️ Competitor Mentioned</div>";
+    html += "<div class='opt secondary' onclick='showCompetitors()'>⚔️ Competitor</div>";
     html += "</div>";
     say(html, true);
 }
+
 function showCloses() {
-    say("🎯 <b>Ready to Close</b>", false);
-    var html = "<b>Pick the right close for the situation:</b>";
+    say("🎯 <b>Close the Deal</b>", false);
+    var html = "<b>Pick the right close:</b>";
     Object.keys(CLOSES).forEach(function(key) {
         var c = CLOSES[key];
         html += "<div class='scard cls'><h4>" + c.icon + " " + c.name + "</h4>";
         html += "<div class='sbox'>\"" + c.script + "\"</div>";
-        html += "<div class='sfu'>Best when: " + c.when + "</div></div>";
+        html += "<div class='sfu'>When: " + c.when + "</div></div>";
     });
     html += "<div class='options' style='margin-top:16px'>";
-    html += "<div class='opt' onclick='showObjections()'>🛡️ Handle Objections</div>";
+    html += "<div class='opt' onclick='showObjections()'>🛡️ Objections</div>";
     html += "<div class='opt secondary' onclick='restart()'>↺ New Merchant</div>";
     html += "</div>";
     say(html, true);
 }
+
 function showCompetitors() {
     say("⚔️ <b>Competitor Mentioned</b>", false);
     var html = "<b>Which competitor?</b><div class='options' style='margin-top:12px'>";
@@ -352,21 +485,22 @@ function showCompetitors() {
     html += "</div>";
     say(html, true);
 }
+
 function showBattlecard(key) {
     var c = COMPETITORS[key];
     say("vs <b>" + c.name + "</b>", false);
     var html = "<b>" + c.name + "</b> <span style='color:var(--sq-gray-500)'>(" + c.type + ")</span>";
     html += "<div class='scard cmp'><h4>Their Weaknesses</h4><ul class='wlist'>";
     c.weaknesses.forEach(function(w) { html += "<li>" + w + "</li>"; });
-    html += "</ul><div class='sbox' style='margin-top:12px'><b>Say this:</b> \"" + c.counter + "\"</div></div>";
+    html += "</ul><div class='sbox' style='margin-top:12px'><b>Say:</b> \"" + c.counter + "\"</div></div>";
     html += "<div class='options' style='margin-top:16px'>";
-    html += "<div class='opt' onclick='showCloses()'>🎯 Close the Deal</div>";
-    html += "<div class='opt secondary' onclick='showCompetitors()'>← Other Competitor</div>";
+    html += "<div class='opt' onclick='showCloses()'>🎯 Close</div>";
+    html += "<div class='opt secondary' onclick='showCompetitors()'>← Other</div>";
     html += "</div>";
     say(html, true);
 }
+
 document.addEventListener("keydown", function(e) { if (e.key === "Escape") closeVideo(); });
-// Start
 startConversation();
 </script>
 </body>
