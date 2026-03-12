@@ -3,237 +3,200 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>JIT - Just In Time Sales Intelligence</title>
+    <title>JIT - Sales Intelligence</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-dark: #0a0a0f;
-            --bg-card: rgba(20, 20, 30, 0.8);
-            --bg-glass: rgba(255, 255, 255, 0.03);
-            --border-glow: rgba(0, 214, 50, 0.3);
-            --sq-green: #00D632;
-            --sq-green-glow: rgba(0, 214, 50, 0.4);
-            --sq-blue: #006AFF;
-            --sq-blue-glow: rgba(0, 106, 255, 0.4);
-            --text-primary: #ffffff;
-            --text-secondary: rgba(255, 255, 255, 0.6);
-            --text-muted: rgba(255, 255, 255, 0.4);
-            --accent-orange: #FF9500;
-            --accent-red: #FF3B30;
-            --accent-purple: #AF52DE;
+            --white: #FFFFFF;
+            --black: #000000;
+            --gray-50: #FAFAFA;
+            --gray-100: #F5F5F5;
+            --gray-200: #E5E5E5;
+            --gray-300: #D4D4D4;
+            --gray-400: #A3A3A3;
+            --gray-500: #737373;
+            --gray-600: #525252;
+            --gray-700: #404040;
+            --gray-800: #262626;
+            --gray-900: #171717;
+            --green: #00D632;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg-dark);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--gray-50);
             min-height: 100vh;
-            color: var(--text-primary);
-            overflow-x: hidden;
+            color: var(--gray-900);
+            -webkit-font-smoothing: antialiased;
         }
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: 
-                radial-gradient(ellipse at 20% 20%, rgba(0, 214, 50, 0.08) 0%, transparent 50%),
-                radial-gradient(ellipse at 80% 80%, rgba(0, 106, 255, 0.08) 0%, transparent 50%),
-                radial-gradient(ellipse at 50% 50%, rgba(175, 82, 222, 0.05) 0%, transparent 70%);
-            pointer-events: none;
-            z-index: 0;
-        }
-        @keyframes pulse-glow {
-            0%, 100% { opacity: 0.5; }
-            50% { opacity: 1; }
-        }
-        @keyframes slide-up {
-            from { opacity: 0; transform: translateY(20px); }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(12px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        @keyframes shimmer {
-            0% { background-position: -200% 0; }
-            100% { background-position: 200% 0; }
-        }
         .header {
-            background: linear-gradient(180deg, rgba(10, 10, 15, 0.98) 0%, rgba(10, 10, 15, 0.9) 100%);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 16px 24px;
-            position: fixed;
-            top: 0; left: 0; right: 0;
-            z-index: 100;
+            background: var(--black);
+            padding: 0 24px;
+            height: 64px;
             display: flex;
             align-items: center;
             justify-content: space-between;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
         }
         .logo {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 14px;
         }
-        .logo-icon {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, var(--sq-green) 0%, #00ff44 100%);
-            border-radius: 10px;
+        .logo-mark {
+            width: 36px;
+            height: 36px;
+            background: var(--white);
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: 800;
-            font-size: 16px;
-            color: #000;
-            box-shadow: 0 0 30px var(--sq-green-glow);
         }
-        .logo h1 {
-            font-size: 24px;
-            font-weight: 800;
-            background: linear-gradient(135deg, #fff 0%, rgba(255,255,255,0.8) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: -0.5px;
+        .logo-mark svg {
+            width: 20px;
+            height: 20px;
         }
-        .logo-sub {
-            font-size: 10px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: var(--sq-green);
-            font-weight: 600;
-        }
-        .badge {
-            background: linear-gradient(135deg, var(--sq-green) 0%, #00ff44 100%);
-            color: #000;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 10px;
-            font-weight: 700;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 100px 20px 120px;
-            position: relative;
-            z-index: 1;
-        }
-        .chat {
-            background: var(--bg-glass);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 24px;
-            min-height: calc(100vh - 240px);
-            overflow: hidden;
-        }
-        .msgs {
-            padding: 24px;
+        .logo-text {
             display: flex;
             flex-direction: column;
-            gap: 20px;
+        }
+        .logo-text h1 {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--white);
+            letter-spacing: -0.3px;
+        }
+        .logo-text span {
+            font-size: 11px;
+            color: var(--gray-400);
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+        .header-badge {
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--black);
+            background: var(--green);
+            padding: 5px 10px;
+            border-radius: 4px;
+            letter-spacing: 0.5px;
+        }
+        .container {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 88px 20px 100px;
+        }
+        .chat {
+            background: var(--white);
+            border-radius: 16px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.03);
+            min-height: calc(100vh - 200px);
+            border: 1px solid var(--gray-200);
+        }
+        .msgs {
+            padding: 28px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
         }
         .msg {
             display: flex;
             gap: 14px;
-            animation: slide-up 0.4s ease-out;
+            animation: fadeUp 0.35s ease-out;
         }
         .msg.usr { flex-direction: row-reverse; }
         .av {
-            width: 44px;
-            height: 44px;
-            border-radius: 14px;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 700;
             flex-shrink: 0;
         }
         .msg.bot .av {
-            background: linear-gradient(135deg, var(--sq-green) 0%, #00ff44 100%);
-            color: #000;
-            box-shadow: 0 0 20px var(--sq-green-glow);
+            background: var(--black);
+            color: var(--white);
         }
         .msg.usr .av {
-            background: linear-gradient(135deg, var(--sq-blue) 0%, #0088ff 100%);
-            color: #fff;
-            box-shadow: 0 0 20px var(--sq-blue-glow);
+            background: var(--gray-200);
+            color: var(--gray-700);
         }
         .mc {
-            max-width: 85%;
+            max-width: 88%;
             font-size: 15px;
-            line-height: 1.7;
+            line-height: 1.65;
         }
         .msg.bot .mc {
-            background: var(--bg-card);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: var(--gray-50);
+            border: 1px solid var(--gray-200);
             padding: 20px 24px;
-            border-radius: 20px;
-            border-top-left-radius: 6px;
+            border-radius: 16px;
+            border-top-left-radius: 4px;
         }
         .msg.usr .mc {
-            background: linear-gradient(135deg, var(--sq-blue) 0%, #0066dd 100%);
+            background: var(--black);
+            color: var(--white);
             padding: 16px 20px;
-            border-radius: 20px;
-            border-top-right-radius: 6px;
+            border-radius: 16px;
+            border-top-right-radius: 4px;
         }
         .options {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 8px;
             margin-top: 16px;
         }
         .opt {
-            padding: 14px 24px;
-            background: transparent;
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            border-radius: 16px;
+            padding: 12px 20px;
+            background: var(--white);
+            border: 1.5px solid var(--gray-300);
+            border-radius: 10px;
             font-size: 14px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            color: var(--text-primary);
-            position: relative;
-            overflow: hidden;
-        }
-        .opt::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg, var(--sq-green) 0%, #00ff44 100%);
-            opacity: 0;
-            transition: opacity 0.3s;
+            transition: all 0.2s ease;
+            color: var(--gray-800);
         }
         .opt:hover {
-            border-color: var(--sq-green);
-            box-shadow: 0 0 30px var(--sq-green-glow);
-            transform: translateY(-2px);
+            border-color: var(--black);
+            background: var(--gray-50);
         }
-        .opt:hover::before { opacity: 0.1; }
         .opt.selected {
-            background: linear-gradient(135deg, var(--sq-green) 0%, #00ff44 100%);
-            border-color: transparent;
-            color: #000;
-            box-shadow: 0 0 30px var(--sq-green-glow);
+            background: var(--black);
+            border-color: var(--black);
+            color: var(--white);
         }
         .opt.secondary {
-            border-color: rgba(255, 255, 255, 0.1);
-            color: var(--text-secondary);
+            background: transparent;
+            border-color: var(--gray-200);
+            color: var(--gray-600);
         }
         .opt.secondary:hover {
-            border-color: rgba(255, 255, 255, 0.3);
-            color: var(--text-primary);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            border-color: var(--gray-400);
+            color: var(--gray-800);
         }
         .opt .ico {
-            margin-right: 8px;
-            font-size: 18px;
+            margin-right: 6px;
         }
         .section-title {
             font-size: 11px;
             font-weight: 700;
-            color: var(--sq-green);
+            color: var(--gray-500);
             text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 14px;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
             margin-top: 8px;
         }
         .input-bar {
@@ -241,124 +204,114 @@
             bottom: 0;
             left: 0;
             right: 0;
-            background: linear-gradient(180deg, transparent 0%, rgba(10, 10, 15, 0.95) 20%, rgba(10, 10, 15, 0.98) 100%);
-            backdrop-filter: blur(20px);
-            padding: 20px 24px 28px;
+            background: linear-gradient(to top, var(--white) 85%, transparent);
+            padding: 16px 20px 24px;
             display: flex;
-            gap: 12px;
+            gap: 10px;
             align-items: center;
             z-index: 100;
         }
         .input-bar input {
             flex: 1;
-            padding: 16px 24px;
-            background: var(--bg-card);
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
+            padding: 14px 20px;
+            background: var(--gray-100);
+            border: 1.5px solid transparent;
+            border-radius: 12px;
             font-size: 15px;
             font-family: inherit;
-            color: var(--text-primary);
-            transition: all 0.3s;
+            color: var(--gray-900);
+            transition: all 0.2s;
         }
-        .input-bar input::placeholder { color: var(--text-muted); }
+        .input-bar input::placeholder { color: var(--gray-400); }
         .input-bar input:focus {
             outline: none;
-            border-color: var(--sq-green);
-            box-shadow: 0 0 30px var(--sq-green-glow);
+            background: var(--white);
+            border-color: var(--black);
+            box-shadow: 0 0 0 3px rgba(0,0,0,0.06);
         }
         .input-bar button {
-            padding: 16px 28px;
-            background: linear-gradient(135deg, var(--sq-green) 0%, #00ff44 100%);
-            color: #000;
+            padding: 14px 24px;
+            background: var(--black);
+            color: var(--white);
             border: none;
-            border-radius: 20px;
+            border-radius: 12px;
             font-size: 15px;
-            font-weight: 700;
+            font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 0 20px var(--sq-green-glow);
+            transition: all 0.2s;
         }
         .input-bar button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 40px var(--sq-green-glow);
+            background: var(--gray-800);
         }
         .pcard {
-            background: var(--bg-card);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
-            padding: 0;
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: 12px;
             margin: 12px 0;
             overflow: hidden;
-            transition: all 0.3s;
+            transition: all 0.2s;
         }
         .pcard:hover {
-            border-color: var(--sq-green);
-            box-shadow: 0 0 30px rgba(0, 214, 50, 0.15);
-            transform: translateY(-2px);
-        }
-        .pcard-img {
-            width: 100%;
-            height: 140px;
-            object-fit: cover;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border-color: var(--gray-300);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
         }
         .pcard-body {
-            padding: 16px 18px;
+            padding: 18px 20px;
         }
         .pcard h4 {
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 700;
             margin-bottom: 8px;
             display: flex;
             align-items: center;
             gap: 10px;
             flex-wrap: wrap;
+            color: var(--gray-900);
         }
         .pcard p {
             font-size: 14px;
-            color: var(--text-secondary);
+            color: var(--gray-600);
             line-height: 1.6;
         }
         .pcard-footer {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-top: 12px;
-            padding-top: 12px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px solid var(--gray-100);
         }
         .pcard-price {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 700;
-            color: var(--sq-green);
+            color: var(--gray-900);
         }
         .pcard-link {
             font-size: 13px;
-            color: var(--sq-blue);
+            color: var(--gray-500);
             text-decoration: none;
             font-weight: 600;
-            transition: color 0.3s;
+            transition: color 0.2s;
         }
-        .pcard-link:hover { color: #0088ff; }
+        .pcard-link:hover { color: var(--black); }
         .ptag {
-            font-size: 9px;
-            font-weight: 700;
-            padding: 4px 10px;
-            border-radius: 6px;
+            font-size: 10px;
+            font-weight: 600;
+            padding: 4px 8px;
+            border-radius: 4px;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.3px;
         }
-        .tag-saas { background: rgba(0, 214, 50, 0.2); color: var(--sq-green); }
-        .tag-hardware { background: rgba(175, 82, 222, 0.2); color: var(--accent-purple); }
-        .tag-payments { background: rgba(0, 106, 255, 0.2); color: var(--sq-blue); }
+        .tag-saas { background: var(--gray-100); color: var(--gray-600); }
+        .tag-hardware { background: var(--black); color: var(--white); }
+        .tag-payments { background: var(--gray-200); color: var(--gray-700); }
         .scard {
-            background: var(--bg-card);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: 12px;
             padding: 18px 20px;
             margin: 12px 0;
             position: relative;
-            overflow: hidden;
         }
         .scard::before {
             content: '';
@@ -366,31 +319,32 @@
             left: 0;
             top: 0;
             bottom: 0;
-            width: 4px;
+            width: 3px;
+            border-radius: 3px 0 0 3px;
         }
-        .scard.obj::before { background: linear-gradient(180deg, var(--sq-blue) 0%, #0088ff 100%); }
-        .scard.cls::before { background: linear-gradient(180deg, var(--accent-orange) 0%, #ffaa00 100%); }
-        .scard.cmp::before { background: linear-gradient(180deg, var(--accent-red) 0%, #ff5544 100%); }
-        .scard.ctx::before { background: linear-gradient(180deg, var(--sq-green) 0%, #00ff44 100%); }
+        .scard.obj::before { background: var(--gray-400); }
+        .scard.cls::before { background: var(--black); }
+        .scard.cmp::before { background: var(--gray-600); }
+        .scard.ctx::before { background: var(--green); }
         .scard h4 {
             font-size: 14px;
             font-weight: 700;
             margin-bottom: 12px;
-            color: var(--text-primary);
+            color: var(--gray-800);
         }
         .sbox {
-            background: rgba(255, 255, 255, 0.05);
+            background: var(--gray-50);
             padding: 14px 16px;
-            border-radius: 12px;
+            border-radius: 8px;
             font-size: 14px;
-            line-height: 1.7;
-            color: var(--text-secondary);
+            line-height: 1.65;
+            color: var(--gray-700);
+            border: 1px solid var(--gray-100);
         }
         .sfu {
-            font-size: 12px;
-            color: var(--text-muted);
+            font-size: 13px;
+            color: var(--gray-500);
             margin-top: 12px;
-            font-style: italic;
         }
         .wlist {
             margin: 12px 0;
@@ -399,124 +353,106 @@
         }
         .wlist li {
             font-size: 14px;
-            padding: 10px 0 10px 28px;
+            padding: 10px 0 10px 24px;
             position: relative;
-            color: var(--text-secondary);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--gray-700);
+            border-bottom: 1px solid var(--gray-100);
         }
         .wlist li:last-child { border-bottom: none; }
         .wlist li::before {
             content: "✓";
             position: absolute;
             left: 0;
-            color: var(--sq-green);
-            font-weight: bold;
-            text-shadow: 0 0 10px var(--sq-green-glow);
+            color: var(--green);
+            font-weight: 700;
         }
         .summary-box {
-            background: linear-gradient(135deg, rgba(0, 214, 50, 0.1) 0%, rgba(0, 106, 255, 0.1) 100%);
-            border: 1px solid var(--border-glow);
-            border-radius: 20px;
-            padding: 24px;
-            margin: 20px 0;
-            position: relative;
-            overflow: hidden;
-        }
-        .summary-box::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent 40%, rgba(0, 214, 50, 0.1) 50%, transparent 60%);
-            animation: shimmer 3s infinite;
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: 12px;
+            padding: 20px 24px;
+            margin: 16px 0;
         }
         .summary-box h3 {
-            font-size: 18px;
+            font-size: 14px;
+            font-weight: 700;
             margin-bottom: 16px;
+            color: var(--gray-800);
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
         .summary-item {
             display: flex;
             justify-content: space-between;
-            padding: 12px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 10px 0;
+            border-bottom: 1px solid var(--gray-100);
             font-size: 14px;
-            position: relative;
-            z-index: 1;
         }
         .summary-item:last-child { border-bottom: none; }
-        .summary-item .label { color: var(--text-muted); }
-        .summary-item .value { font-weight: 600; color: var(--text-primary); }
-        .video-section { margin-top: 24px; }
+        .summary-item .label { color: var(--gray-500); }
+        .summary-item .value { font-weight: 600; color: var(--gray-800); }
+        .video-section { margin-top: 20px; }
         .video-grid {
             display: flex;
-            gap: 14px;
+            gap: 12px;
             flex-wrap: wrap;
-            margin-top: 14px;
+            margin-top: 12px;
         }
         .video-card {
-            background: var(--bg-card);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 14px;
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: 10px;
             overflow: hidden;
-            width: 200px;
+            width: 180px;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.2s;
             position: relative;
         }
         .video-card:hover {
-            border-color: var(--sq-green);
-            transform: translateY(-4px) scale(1.02);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 30px var(--sq-green-glow);
+            border-color: var(--gray-300);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.06);
         }
         .video-card img {
             width: 100%;
-            height: 112px;
+            height: 100px;
             object-fit: cover;
         }
         .video-card .play-icon {
             position: absolute;
-            top: 35px;
+            top: 30px;
             left: 50%;
             transform: translateX(-50%);
-            width: 48px;
-            height: 48px;
-            background: rgba(0, 0, 0, 0.8);
+            width: 40px;
+            height: 40px;
+            background: var(--black);
             border-radius: 50%;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            transition: all 0.3s;
+            opacity: 0.9;
+            transition: all 0.2s;
         }
         .video-card:hover .play-icon {
-            background: var(--sq-green);
-            border-color: var(--sq-green);
-            box-shadow: 0 0 30px var(--sq-green-glow);
+            opacity: 1;
+            transform: translateX(-50%) scale(1.1);
         }
         .video-card .play-icon::after {
             content: "";
             position: absolute;
             top: 50%;
             left: 50%;
-            transform: translate(-40%, -50%);
+            transform: translate(-35%, -50%);
             border-style: solid;
-            border-width: 8px 0 8px 14px;
+            border-width: 6px 0 6px 10px;
             border-color: transparent transparent transparent white;
-            transition: border-color 0.3s;
-        }
-        .video-card:hover .play-icon::after {
-            border-color: transparent transparent transparent #000;
         }
         .video-card .vinfo {
-            padding: 12px 14px;
+            padding: 10px 12px;
         }
         .video-card .vinfo h5 {
             font-size: 12px;
             font-weight: 600;
             line-height: 1.4;
-            color: var(--text-primary);
+            color: var(--gray-800);
         }
         .video-modal {
             display: none;
@@ -525,80 +461,81 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.95);
+            background: rgba(0, 0, 0, 0.9);
             z-index: 1000;
             align-items: center;
             justify-content: center;
-            backdrop-filter: blur(10px);
         }
         .video-modal.show { display: flex; }
         .video-modal-content {
             width: 90%;
-            max-width: 900px;
+            max-width: 800px;
             position: relative;
-            animation: slide-up 0.3s ease-out;
+            animation: fadeUp 0.25s ease-out;
         }
         .video-modal-close {
             position: absolute;
-            top: -50px;
+            top: -48px;
             right: 0;
             color: white;
-            font-size: 32px;
+            font-size: 28px;
             cursor: pointer;
             padding: 10px;
-            transition: all 0.3s;
+            opacity: 0.8;
+            transition: opacity 0.2s;
         }
-        .video-modal-close:hover {
-            color: var(--sq-green);
-            transform: scale(1.1);
-        }
+        .video-modal-close:hover { opacity: 1; }
         .video-modal iframe {
             width: 100%;
-            height: 500px;
+            height: 450px;
             border: none;
-            border-radius: 16px;
-            box-shadow: 0 0 60px rgba(0, 0, 0, 0.5);
+            border-radius: 12px;
         }
         .restart-btn {
             position: fixed;
-            bottom: 90px;
-            right: 24px;
-            padding: 12px 20px;
-            background: var(--bg-card);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: var(--text-secondary);
-            border-radius: 14px;
+            bottom: 84px;
+            right: 20px;
+            padding: 10px 16px;
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            color: var(--gray-600);
+            border-radius: 10px;
             font-size: 13px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.2s;
             z-index: 99;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
         }
         .restart-btn:hover {
-            border-color: var(--sq-green);
-            color: var(--sq-green);
-            box-shadow: 0 0 20px var(--sq-green-glow);
+            border-color: var(--gray-300);
+            color: var(--gray-800);
         }
         @media (max-width: 600px) {
-            .container { padding: 90px 12px 110px; }
-            .video-card { width: calc(50% - 7px); }
-            .video-modal iframe { height: 280px; }
-            .options { gap: 8px; }
-            .opt { padding: 12px 18px; font-size: 13px; }
-            .pcard-img { height: 100px; }
+            .container { padding: 80px 12px 100px; }
+            .video-card { width: calc(50% - 6px); }
+            .video-modal iframe { height: 260px; }
+            .options { gap: 6px; }
+            .opt { padding: 10px 16px; font-size: 13px; }
+            .msgs { padding: 20px; gap: 20px; }
         }
     </style>
 </head>
 <body>
 <div class="header">
     <div class="logo">
-        <div class="logo-icon">JIT</div>
-        <div>
+        <div class="logo-mark">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M3 3h18v18H3V3z" fill="#000"/>
+                <path d="M7 7h10v10H7V7z" fill="#fff"/>
+            </svg>
+        </div>
+        <div class="logo-text">
             <h1>JIT</h1>
-            <div class="logo-sub">Just In Time Intelligence</div>
+            <span>Sales Intelligence</span>
         </div>
     </div>
-    <div class="badge">BETA</div>
+    <div class="header-badge">BETA</div>
 </div>
 <div class="container">
     <div class="chat"><div class="msgs" id="out"></div></div>
@@ -617,15 +554,6 @@
 <script>
 var state = {step:0, vertical:null, gpv:null, locations:null, staff:null, paymentMethods:[], notes:[]};
 
-// PRODUCT IMAGES from Square website
-var PRODUCT_IMAGES = {
-    "Square Reader": "https://images.squarespace-cdn.com/content/v1/583a3246bebafb8212e3a26d/1580328781189-XHQJQVMVXJZ8XQVXQVXQ/square-reader.jpg",
-    "Square Terminal": "https://squareup.com/us/en/hardware/terminal/_jcr_content/root/hero/image.img.png/1697665547677.png",
-    "Square Register": "https://squareup.com/us/en/hardware/register/_jcr_content/root/hero/image.img.png/1697665547677.png",
-    "Square Stand": "https://squareup.com/us/en/hardware/stand/_jcr_content/root/hero/image.img.png/1697665547677.png"
-};
-
-// VERTICALS
 var VERTICALS = {
     qsr:{name:"Quick Service Restaurant",icon:"🍔",priority:"P0",
         discovery:["What POS system are you using today?","How do you handle busy periods - any queuing issues?","Do you offer online ordering or click & collect?","Are you on any delivery apps like Deliveroo or Uber Eats?"],
@@ -647,41 +575,38 @@ var VERTICALS = {
         pmf:"Moderate PMF. Best for consultants, trainers, photographers with booking needs.",showDelivery:false}
 };
 
-// PRODUCTS with UK pricing
 var PRODUCTS = {
-    "Square Reader":{cat:"hardware",desc:"Compact chip & PIN and contactless card reader. Pairs with phone or tablet. Best for sole traders, markets, mobile sellers.",price:"£19 + VAT",link:"https://squareup.com/help/gb/en/article/5087",img:"https://images.ctfassets.net/2d5q1td6cyxq/5KmPjPJLLPYJwfTqPqPqPq/reader.png"},
-    "Square Terminal":{cat:"hardware",desc:"All-in-one card machine with built-in POS, receipts, and next-day deposits. No rental fees. Best for 1-10 locations wanting portable payments.",price:"£149 + VAT",link:"https://squareup.com/help/gb/en/article/5583",img:"https://images.ctfassets.net/2d5q1td6cyxq/terminal/terminal.png"},
-    "Square Register":{cat:"hardware",desc:"Premium countertop POS with separate customer-facing display. Built-in card reader. Best for high-volume locations wanting a premium setup.",price:"£599 + VAT",link:"https://squareup.com/help/gb/en/article/7631",img:"https://images.ctfassets.net/2d5q1td6cyxq/register/register.png"},
-    "Square Stand":{cat:"hardware",desc:"Sleek iPad stand with built-in card reader. Uses your own iPad. Best for countertop payments with existing iPad.",price:"£99 + VAT",link:"https://squareup.com/help/gb/en/article/5580",img:"https://images.ctfassets.net/2d5q1td6cyxq/stand/stand.png"},
-    "Square for Restaurants":{cat:"saas",desc:"Purpose-built restaurant POS: table management, floor plans, coursing, KDS integration, tip pooling, menu management. Free plan available.",price:"Free / Plus £69/mo",link:"https://squareup.com/help/gb/en/article/6238"},
-    "Square for Retail":{cat:"saas",desc:"Advanced retail POS: inventory management with low stock alerts, purchase orders, barcode scanning, vendor management, multi-location stock tracking.",price:"Free / Plus £60/mo",link:"https://squareup.com/help/gb/en/article/5061"},
-    "Square Appointments":{cat:"saas",desc:"Online booking 24/7, automated SMS/email reminders (cuts no-shows by 30%), no-show protection with card-on-file, Google Calendar sync, client notes.",price:"Free / Plus £29/mo / Premium £69/mo",link:"https://squareup.com/help/gb/en/article/6996"},
-    "Square Invoices":{cat:"saas",desc:"Professional invoices with your branding, online payment, automatic reminders for late payers, milestone billing for projects. Completely free.",price:"Free",link:"https://squareup.com/help/gb/en/article/5103"},
-    "Square Online":{cat:"saas",desc:"Free online store synced with in-store inventory. Click & collect, delivery, or shipping. No manual stock updates needed.",price:"Free / Plus £29/mo / Premium £64/mo",link:"https://squareup.com/help/gb/en/article/5652"},
-    "Virtual Terminal":{cat:"saas",desc:"Take card payments over the phone by keying in details. Access from any browser - no special equipment. 2.5% per transaction.",price:"Free (2.5%/txn)",link:"https://squareup.com/help/gb/en/article/5096"},
-    "Payment Links":{cat:"saas",desc:"Create shareable payment links. Send via text, email, WhatsApp, social media. Customer clicks, pays, done.",price:"Free (2.5%/txn)",link:"https://squareup.com/help/gb/en/article/7126"},
-    "Kitchen Display System":{cat:"saas",desc:"Digital ticket management. No lost orders, track prep times, automatic order routing. Connects front of house to kitchen.",price:"£15/mo per device",link:"https://squareup.com/help/gb/en/article/7653"},
-    "Square Loyalty":{cat:"saas",desc:"Digital loyalty program - customers earn points automatically when they pay. See your best customers, send targeted promos. No paper cards.",price:"From £45/mo",link:"https://squareup.com/help/gb/en/article/5048"},
-    "Square Kiosk":{cat:"saas",desc:"Self-service ordering for QSRs. Customers order and pay themselves, reducing queues and increasing average order value through upsells.",price:"Contact for pricing",link:"https://squareup.com/gb/en/point-of-sale/restaurants/kiosk"}
+    "Square Reader":{cat:"hardware",desc:"Compact chip & PIN and contactless card reader. Pairs with phone or tablet.",price:"£19 + VAT",link:"https://squareup.com/help/gb/en/article/5087"},
+    "Square Terminal":{cat:"hardware",desc:"All-in-one card machine with built-in POS, receipts, and next-day deposits. No rental fees.",price:"£149 + VAT",link:"https://squareup.com/help/gb/en/article/5583"},
+    "Square Register":{cat:"hardware",desc:"Premium countertop POS with customer-facing display. Built-in card reader.",price:"£599 + VAT",link:"https://squareup.com/help/gb/en/article/7631"},
+    "Square Stand":{cat:"hardware",desc:"Sleek iPad stand with built-in card reader. Uses your own iPad.",price:"£99 + VAT",link:"https://squareup.com/help/gb/en/article/5580"},
+    "Square for Restaurants":{cat:"saas",desc:"Purpose-built restaurant POS: table management, floor plans, coursing, KDS integration, tip pooling.",price:"Free / Plus £69/mo",link:"https://squareup.com/help/gb/en/article/6238"},
+    "Square for Retail":{cat:"saas",desc:"Advanced retail POS: inventory management, low stock alerts, purchase orders, barcode scanning.",price:"Free / Plus £60/mo",link:"https://squareup.com/help/gb/en/article/5061"},
+    "Square Appointments":{cat:"saas",desc:"Online booking 24/7, automated reminders, no-show protection, Google Calendar sync.",price:"Free / Plus £29/mo",link:"https://squareup.com/help/gb/en/article/6996"},
+    "Square Invoices":{cat:"saas",desc:"Professional invoices with online payment, automatic reminders, milestone billing.",price:"Free",link:"https://squareup.com/help/gb/en/article/5103"},
+    "Square Online":{cat:"saas",desc:"Free online store synced with in-store inventory. Click & collect, delivery, or shipping.",price:"Free / Plus £29/mo",link:"https://squareup.com/help/gb/en/article/5652"},
+    "Virtual Terminal":{cat:"payments",desc:"Take card payments over the phone. Access from any browser.",price:"Free (2.5%/txn)",link:"https://squareup.com/help/gb/en/article/5096"},
+    "Payment Links":{cat:"payments",desc:"Create shareable payment links. Send via text, email, WhatsApp.",price:"Free (2.5%/txn)",link:"https://squareup.com/help/gb/en/article/7126"},
+    "Kitchen Display System":{cat:"saas",desc:"Digital ticket management. No lost orders, track prep times.",price:"£15/mo per device",link:"https://squareup.com/help/gb/en/article/7653"},
+    "Square Loyalty":{cat:"saas",desc:"Digital loyalty program - customers earn points automatically.",price:"From £45/mo",link:"https://squareup.com/help/gb/en/article/5048"},
+    "Square Kiosk":{cat:"saas",desc:"Self-service ordering for QSRs. Reduces queues, increases order value.",price:"Contact for pricing",link:"https://squareup.com/gb/en/point-of-sale/restaurants/kiosk"}
 };
 
-// RECOMMENDATIONS by vertical
 var RECOMMENDATIONS = {
     qsr:{products:["Square Register","Square Terminal","Kitchen Display System","Square Online","Square Kiosk"],
-        wins:["Fastest transaction time in the industry - 2 seconds","KDS eliminates lost tickets and speeds up service","Online ordering syncs automatically with in-store inventory","Next-day deposits including weekends and bank holidays","Self-service kiosk reduces queues and increases order value"]},
+        wins:["Fastest transaction time - 2 seconds","KDS eliminates lost tickets","Online ordering syncs with inventory","Next-day deposits including weekends","Self-service kiosk reduces queues"]},
     fsr:{products:["Square for Restaurants","Square Terminal","Kitchen Display System","Square Loyalty"],
-        wins:["Tableside ordering AND payments on one device (Terminal)","Visual floor plan with table management","Automatic tip pooling saves hours of admin weekly","Course firing keeps kitchen perfectly in sync","Bill splitting made easy - by seat, item, or custom amount"]},
+        wins:["Tableside ordering AND payments on Terminal","Visual floor plan with table management","Automatic tip pooling","Course firing keeps kitchen in sync","Bill splitting made easy"]},
     retail:{products:["Square for Retail","Square Register","Square Terminal","Square Online"],
-        wins:["Real-time inventory across all locations and online","Low stock alerts prevent missed sales","Barcode scanning built-in - no extra hardware","Purchase orders and vendor management included","Sell online and in-store from one unified system"]},
+        wins:["Real-time inventory across all locations","Low stock alerts prevent missed sales","Barcode scanning built-in","Purchase orders included","Sell online and in-store from one system"]},
     beauty:{products:["Square Appointments","Square Terminal","Square Loyalty"],
-        wins:["24/7 online booking reduces phone time dramatically","Automated reminders cut no-shows by 30%","No-show protection with card-on-file","Client notes and history at your fingertips","Google Calendar sync keeps everything organised"]},
+        wins:["24/7 online booking","Automated reminders cut no-shows by 30%","No-show protection with card-on-file","Client notes at your fingertips","Google Calendar sync"]},
     health:{products:["Square Appointments","Square Terminal","Square Invoices"],
-        wins:["Recurring appointments for regular clients","Class and session booking built-in","Automated reminders reduce no-shows significantly","Professional invoices for corporate clients","Deposits protect against late cancellations"]},
+        wins:["Recurring appointments for regular clients","Class and session booking","Automated reminders","Professional invoices for corporate clients","Deposits protect against cancellations"]},
     services:{products:["Square Appointments","Square Invoices","Square Terminal","Virtual Terminal"],
-        wins:["Online booking frees up your time","Deposits protect against cancellations","Professional invoices with automatic reminders","Take phone payments with Virtual Terminal","Milestone billing for larger projects"]}
+        wins:["Online booking frees up time","Deposits protect against cancellations","Professional invoices with reminders","Phone payments with Virtual Terminal","Milestone billing for projects"]}
 };
 
-// VIDEOS
 var VIDEOS = {
     general:[{title:"Switch to Square POS",vid:"8V3FpMv_L2g"},{title:"Select Your Mode",vid:"n-N3p7A9pG8"},{title:"Getting Started",vid:"aJvoY25CtWw"}],
     qsr:[{title:"Square Register",vid:"yrYBJZvi0Hs"},{title:"Square Terminal",vid:"6WUabw7MjVQ"},{title:"KDS Overview",vid:"-3_ZZT6Rvwg"}],
@@ -693,162 +618,138 @@ var VIDEOS = {
     online:[{title:"Square Online Setup",vid:"xE6JPb9r3Gw"},{title:"Product Pages",vid:"UZvFMyjgFRY"},{title:"Shopping Pages",vid:"9_p5_v1f4jM"}],
     hardware:[{title:"Square Reader Setup",vid:"fXvI08V9qS0"},{title:"Tap to Pay iPhone",vid:"U9K3vA0300Y"},{title:"Square Kiosk",vid:"hzTN2WyfZAM"}]
 };
-// PAIN RESPONSES
 var PAIN_RESPONSES = {
-    "fee":{keywords:["fee","expensive","cost","price","rate","percent","charge","paying too much","1.75","transaction fee","processing"],
-        response:"Square is 1.75% for chip & PIN, 2.5% for keyed/online. No monthly fees, no terminal rental, no PCI fees, no statement fees, no minimum monthly charges. Most merchants switching from traditional providers save 20-30%. Win/Loss data shows 35% of lost deals are rate-sensitive - but we win on total cost of ownership.",
-        product:"Square Terminal",action:"Ask to see their current statement - do a quick comparison on the spot",
-        stat:"35% of lost deals mention rates, but integrated POS+payments drives 39% of our wins"},
-    "deposit":{keywords:["deposit","settlement","money","cash flow","wait","days","slow","next day","when do i get","payout"],
-        response:"Square offers next-day deposits including weekends and bank holidays. Payments before midnight GMT hit your account the next day. SumUp and Zettle are 3 business days. Dojo rolled back their 6am next-day - now only 3pm next business day free. We also offer Instant Transfers (1.5% fee) for same-day access.",
-        product:"Square Terminal",action:"Emphasise: your money tomorrow vs 3 days with SumUp/Zettle",
-        stat:"Next-day deposits is a key differentiator - competitors can't match weekends/holidays"},
-    "pos":{keywords:["pos","till","system","software","clunky","old","outdated","slow system","epos","complicated"],
-        response:"Square POS is free and intuitive - most staff learn it in minutes, not days. Runs on iPad or our dedicated hardware. Includes inventory, reporting, staff management. Win/Loss shows 'integrated POS + payments' drives 39% of our wins and £82M+ in deal value. ePOS Now loses on complexity - we win on simplicity.",
-        product:"Square Register",action:"Offer a quick demo on your device - show how simple it is",
-        stat:"Integrated POS+Payments is our #1 winning differentiator (39% of wins)"},
-    "hardware":{keywords:["hardware","terminal","card machine","reader","device","equipment","countertop"],
-        response:"Square hardware: Reader £19, Terminal £149, Stand £99, Register £599 - all +VAT, buy once, own forever. No rental fees ever. Competitors like Clover charge £20+/month rental. Terminal has POS built-in - Dojo terminals at similar price have no POS. Win/Loss shows 27% of wins mention hardware quality and modern aesthetics.",
+    "fee":{keywords:["fee","expensive","cost","price","rate","percent","charge","paying too much","1.75","transaction fee"],
+        response:"Square is 1.75% for chip & PIN, 2.5% for keyed/online. No monthly fees, no terminal rental, no PCI fees, no statement fees. Most merchants save 20-30% on total cost.",
+        product:"Square Terminal",action:"Ask to see their current statement - do a comparison on the spot",
+        stat:"35% of lost deals mention rates, but we win on total cost of ownership"},
+    "deposit":{keywords:["deposit","settlement","money","cash flow","wait","days","slow","next day","payout"],
+        response:"Square offers next-day deposits including weekends and bank holidays. SumUp and Zettle are 3 business days. We also offer Instant Transfers (1.5% fee) for same-day access.",
+        product:"Square Terminal",action:"Emphasise: your money tomorrow vs 3 days with competitors"},
+    "pos":{keywords:["pos","till","system","software","clunky","old","outdated","epos"],
+        response:"Square POS is free and intuitive - staff learn it in minutes. Runs on iPad or dedicated hardware. Includes inventory, reporting, staff management.",
+        product:"Square Register",action:"Offer a quick demo - show how simple it is",
+        stat:"Integrated POS+Payments drives 39% of our wins"},
+    "hardware":{keywords:["hardware","terminal","card machine","reader","device","equipment"],
+        response:"Square hardware: Reader £19, Terminal £149, Stand £99, Register £599 - all +VAT, buy once, own forever. No rental fees. Competitors charge £20+/month rental.",
         product:"Square Terminal",action:"Show them the hardware - let them feel the quality",
-        stat:"27% of wins specifically mention hardware quality and aesthetics"},
-    "online":{keywords:["online","website","ecommerce","delivery","click and collect","pickup","web shop","sell online"],
-        response:"Square Online is free to start and syncs automatically with in-store inventory - no manual updates. Click & collect, delivery, or shipping. One dashboard for everything. Unlike competitors, your online and in-store stock is always in sync.",
-        product:"Square Online",action:"Show them the online store builder - takes minutes to set up",videos:"online"},
-    "inventory":{keywords:["inventory","stock","sku","product","track","counting","ordering","stock take","purchase order","stock management"],
-        response:"Square for Retail has advanced inventory: low stock alerts, purchase orders, vendor management, barcode scanning built-in. Track stock across multiple locations in real-time. Win/Loss shows 8% of losses (£31M+ deal value) mention inventory gaps - but our Marketman integration addresses complex needs.",
-        product:"Square for Retail",action:"Demo the inventory management - show low stock alerts and PO creation",
-        stat:"Inventory management gap caused 8% of losses - now addressed with integrations"},
-    "booking":{keywords:["booking","appointment","schedule","calendar","no-show","cancel","book online","diary","reservation"],
-        response:"Square Appointments: 24/7 online booking, automated SMS/email reminders (cuts no-shows by 30%), card-on-file for no-show protection, Google Calendar sync. Free for individuals. Sellers who switch from SPOS to Appointments see 43% increase in GPV.",
-        product:"Square Appointments",action:"Show them the online booking page - demonstrate the customer experience",
-        stat:"Appointments sellers see 43% GPV increase and 50% more reservations YoY"},
-    "staff":{keywords:["staff","employee","team","permission","clock","payroll","tip","rota","shift","tip pooling"],
-        response:"Square has built-in team management: custom permissions, time tracking, automatic tip pooling. Staff clock in/out on the POS. Reports show sales by employee. Square for Restaurants handles complex tip distribution automatically - saves hours of admin weekly.",
-        product:"Square for Restaurants",action:"Demo the team management and tip pooling features"},
-    "table":{keywords:["table","tableside","floor","seat","course","kitchen","floor plan"],
-        response:"Square for Restaurants: visual floor plan, table management, tableside ordering on Terminal, course firing to KDS. Tips automatically pooled or split per your rules. Covers FOH to BOH seamlessly.",
-        product:"Square for Restaurants",action:"Show the floor plan builder and table management"},
-    "invoice":{keywords:["invoice","bill","quote","estimate","payment terms","chase payment","late payment"],
-        response:"Square Invoices is completely free - professional invoices with your branding, online payment, automatic reminders chase late payers for you. Track paid, pending, overdue. Milestone billing for larger projects.",
-        product:"Square Invoices",action:"Create a sample invoice to show them - takes 30 seconds"},
-    "loyalty":{keywords:["loyalty","reward","repeat","customer","retention","points","loyalty card","stamp"],
-        response:"Square Loyalty: digital points program, customers earn automatically when paying. No paper cards to lose. See your best customers, send targeted promos. Win/Loss shows Loyalty drives 15% of our wins.",
-        product:"Square Loyalty",action:"Explain how easy setup is - customers enrolled automatically",
-        stat:"Loyalty programme mentioned in 15% of wins"},
-    "phone":{keywords:["phone","over the phone","card not present","moto","key in","manual","telephone"],
-        response:"Square Virtual Terminal: take payments over the phone by keying in card details. 2.5% per transaction, no monthly fee. Access from any browser - no special equipment needed.",
-        product:"Virtual Terminal",action:"Demo Virtual Terminal - show how simple it is",videos:"services"},
-    "link":{keywords:["payment link","send link","text","sms","email payment","remote","whatsapp"],
-        response:"Square Payment Links: create shareable links in seconds. Send via text, email, WhatsApp, social media. Customer clicks, pays, done. 2.5% per transaction, no monthly fee.",
-        product:"Payment Links",action:"Create a payment link on the spot to demonstrate"},
-    "deliveroo":{keywords:["deliveroo","uber eats","just eat","delivery app","food delivery","aggregator"],
-        response:"Square integrates with major delivery platforms - orders come straight into your POS, no manual re-entry. Inventory syncs automatically so you don't oversell. One system for dine-in, takeaway, and delivery.",
-        product:"Square for Restaurants",action:"Show the delivery integration settings"},
-    "offline":{keywords:["offline","internet","wifi","connection","no signal","connectivity"],
-        response:"Square works offline - keep taking payments even if internet drops. Transactions stored securely, process automatically when back online. Win/Loss shows 13% of wins mention offline mode. Essential for events, pop-ups, or areas with poor connectivity. Zettle has connectivity issues - we don't.",
-        product:"Square Terminal",action:"Demo offline mode - show how it works",
-        stat:"Offline mode mentioned in 13% of wins - key for events/festivals"},
-    "reliability":{keywords:["reliable","uptime","outage","crash","down","broken"],
-        response:"Square processes billions in payments globally with enterprise-grade reliability. Unlike some competitors, we own our entire stack - payments, software, hardware. When issues occur, you're dealing with one company, not multiple vendors pointing fingers.",
-        product:"Square Terminal",action:"Emphasise single integrated system vs multiple vendors"}
+        stat:"27% of wins mention hardware quality"},
+    "online":{keywords:["online","website","ecommerce","delivery","click and collect"],
+        response:"Square Online is free and syncs with in-store inventory automatically. Click & collect, delivery, or shipping. One dashboard for everything.",
+        product:"Square Online",action:"Show the online store builder",videos:"online"},
+    "inventory":{keywords:["inventory","stock","sku","product","track","counting","purchase order"],
+        response:"Square for Retail has advanced inventory: low stock alerts, purchase orders, vendor management, barcode scanning. Track stock across locations in real-time.",
+        product:"Square for Retail",action:"Demo the inventory management"},
+    "booking":{keywords:["booking","appointment","schedule","calendar","no-show","cancel"],
+        response:"Square Appointments: 24/7 online booking, automated reminders (cuts no-shows by 30%), card-on-file protection, Google Calendar sync. Free for individuals.",
+        product:"Square Appointments",action:"Show the online booking page",
+        stat:"Appointments sellers see 43% GPV increase"},
+    "staff":{keywords:["staff","employee","team","permission","clock","payroll","tip"],
+        response:"Square has built-in team management: custom permissions, time tracking, automatic tip pooling. Reports show sales by employee.",
+        product:"Square for Restaurants",action:"Demo team management features"},
+    "invoice":{keywords:["invoice","bill","quote","estimate","payment terms","chase"],
+        response:"Square Invoices is free - professional invoices, online payment, automatic reminders. Track paid, pending, overdue.",
+        product:"Square Invoices",action:"Create a sample invoice - takes 30 seconds"},
+    "loyalty":{keywords:["loyalty","reward","repeat","customer","retention","points"],
+        response:"Square Loyalty: digital points program, customers earn automatically. See your best customers, send targeted promos.",
+        product:"Square Loyalty",action:"Explain easy setup - customers enrolled automatically",
+        stat:"Loyalty drives 15% of wins"},
+    "phone":{keywords:["phone","over the phone","card not present","moto","key in"],
+        response:"Square Virtual Terminal: take payments over the phone. 2.5% per transaction, no monthly fee. Access from any browser.",
+        product:"Virtual Terminal",action:"Demo Virtual Terminal",videos:"services"},
+    "deliveroo":{keywords:["deliveroo","uber eats","just eat","delivery app"],
+        response:"Square integrates with delivery platforms - orders come straight into POS. Inventory syncs automatically.",
+        product:"Square for Restaurants",action:"Show delivery integration"},
+    "offline":{keywords:["offline","internet","wifi","connection","no signal"],
+        response:"Square works offline - keep taking payments if internet drops. Transactions process when back online.",
+        product:"Square Terminal",action:"Demo offline mode",
+        stat:"Offline mode mentioned in 13% of wins"}
 };
-// COMPETITORS
+
 var COMPETITORS = {
     sumup:{name:"SumUp",type:"Payments + Basic POS",
         hwPricing:"Air Reader £34, Solo £79, POS Lite £349",
-        rates:"1.69% PAYG or 0.99% with £19/mo subscription (SumUp One)",
-        weaknesses:["3-day settlement vs our next-day including weekends","Basic POS - no real inventory management","No invoicing from the POS","Limited reporting and analytics","GoodTill POS has only 2.4 stars on TrustPilot","12-month minimum contract for self-onboarded sellers","Custom rates only available above £60k GPV (ours is £200k but better ecosystem)"],
-        wins:["Next-day deposits including weekends - they're 3 days","Proper POS with inventory, not basic till","All-in-one ecosystem vs fragmented tools","No minimum contract - use as long as it works","Hardware value: Terminal £149 with POS built-in vs Solo £79 without"],
-        counter:"SumUp is 3 days for your money, we're next-day including weekends. Their free POS is fine for a market stall, but you need proper inventory, reporting, and invoicing for a real business. Their GoodTill POS has 2.4 stars on TrustPilot - ours is 4 stars."},
+        rates:"1.69% PAYG or 0.99% with £19/mo subscription",
+        weaknesses:["3-day settlement vs our next-day","Basic POS - no real inventory","No invoicing from POS","GoodTill POS has 2.4 stars on TrustPilot","12-month minimum contract"],
+        wins:["Next-day deposits including weekends","Proper POS with inventory","All-in-one ecosystem","No minimum contract"],
+        counter:"SumUp is 3 days for your money, we're next-day including weekends. Their POS is basic - fine for a market stall, but you need proper inventory and reporting."},
     zettle:{name:"Zettle (PayPal)",type:"Payments",
         hwPricing:"Reader £29, Terminal £149",
         rates:"1.75% (same as Square)",
-        weaknesses:["3-day settlement vs our next-day","Discontinued several apps - pulled back from POS","Limited POS functionality - payments focused","PayPal corporate priorities - not SMB focused","Poor connectivity issues mentioned in Win/Loss","Slow processing reported by sellers"],
-        wins:["Next-day deposits vs their 3-day","Full POS ecosystem - they pulled back","We're committed to SMB, they're PayPal's side project","Better connectivity and processing speed","UK-based support"],
-        counter:"Zettle pulled back from POS - they discontinued apps and focused on payments only. Same 3-day settlement as SumUp. We're next-day including weekends, UK-based support, and a full ecosystem they can't match."},
+        weaknesses:["3-day settlement","Discontinued several apps","Limited POS functionality","Poor connectivity issues"],
+        wins:["Next-day deposits vs 3-day","Full POS ecosystem","Better connectivity","UK-based support"],
+        counter:"Zettle pulled back from POS - discontinued apps, payments only now. Same 3-day settlement as SumUp. We're next-day including weekends."},
     dojo:{name:"Dojo",type:"Payments Only",
         hwPricing:"Pay Monthly £15/mo or Upfront from £179",
-        rates:"From 1% or £39.99/mo flat fee (under £100k GPV only)",
-        weaknesses:["Payments only - no POS software","Need separate EPOS system (600+ integrations but not owned)","Rolled back 6am next-day payouts - now 3pm next business day","6-18 month contracts - locked in","No 1st party POS - subpar UX running 3rd party on their hardware","Expensive rates despite marketing - see T&Cs","Poor customer service mentioned in Win/Loss"],
-        wins:["All-in-one: POS + Payments owned by us","No contracts - leave anytime","Next-day deposits including weekends (they rolled back)","One company when things break, not two","Terminal £149 has POS built-in - Dojo £179 doesn't"],
-        counter:"Dojo rates look good but it's payments only. You need separate POS, loyalty, online ordering - and hope they all talk to each other. They rolled back their next-day deposits. We're one integrated system, next-day including weekends, no contracts."},
+        rates:"From 1% or £39.99/mo flat fee",
+        weaknesses:["Payments only - no POS","Need separate EPOS system","Rolled back next-day payouts","6-18 month contracts"],
+        wins:["All-in-one: POS + Payments","No contracts","Next-day deposits including weekends","One company when things break"],
+        counter:"Dojo rates look good but it's payments only. You need separate POS, loyalty, online ordering. They rolled back next-day deposits. We're one integrated system."},
     clover:{name:"Clover",type:"POS + Payments",
         hwPricing:"£20+/mo rental or Mini £599, Station £1000",
-        rates:"1.49% flat rate (new offer)",
-        weaknesses:["Fiserv-owned, US-focused - less UK support","Monthly rental fees on top of hardware cost","Complex pricing structure","Heavily relies on 3rd party apps for features we include: Marketing, Loyalty, Gift Cards, Lending","No KDS product for complex restaurant needs","No self-service kiosk option","Phone support 8am-midnight vs our 9-5 (but we have 24/7 online)","App marketplace can be confusing"],
-        wins:["No rental fees - buy once, own forever","1st party features included: Loyalty, Marketing, Gift Cards","KDS and Kiosk available","UK-based support","Simpler pricing - no hidden monthly fees"],
-        counter:"Clover is American, owned by Fiserv. Monthly rental fees plus hardware cost. When something breaks, you're calling a US company. We're simpler pricing, UK support, and features like Loyalty and Marketing are included - not extra apps."},
+        rates:"1.49% flat rate",
+        weaknesses:["US-focused, less UK support","Monthly rental fees","Complex pricing","Relies on 3rd party apps"],
+        wins:["No rental fees - buy once","1st party features included","UK-based support","Simpler pricing"],
+        counter:"Clover is American, owned by Fiserv. Monthly rental plus hardware cost. Features like Loyalty are extra apps - ours are included."},
     lightspeed:{name:"Lightspeed",type:"POS",
         hwPricing:"Per-device fees",
-        rates:"Uses Stripe underneath (white-labeled)",
-        weaknesses:["Per-device fees add up fast","Payments is actually Stripe - two companies when things go wrong","6-7 screens to take a payment - complex UX","Expensive overall","Loyalty costs extra","Forced to use as payment processor"],
-        wins:["We charge per location, not per device","Payments and POS from one company","Simple UX - 2-3 taps to take payment","Loyalty included in ecosystem","Better value for multi-device setups"],
-        counter:"Lightspeed charges per device, we charge per location. Their payments is actually Stripe underneath - so when something goes wrong, you're dealing with two companies. Our UX is simpler - 2 taps vs their 6-7 screens."},
+        rates:"Uses Stripe underneath",
+        weaknesses:["Per-device fees add up","Payments is actually Stripe","6-7 screens to take payment","Expensive overall"],
+        wins:["We charge per location, not device","Payments and POS from one company","Simple UX - 2-3 taps","Better value for multi-device"],
+        counter:"Lightspeed charges per device, we charge per location. Their payments is Stripe underneath - two companies when something goes wrong."},
     toast:{name:"Toast",type:"Restaurant POS",
         hwPricing:"Starter £80/mo, Essentials £150/mo",
-        rates:"Uses WorldPay (not disclosed)",
-        weaknesses:["More expensive - £80/mo minimum vs our Free tier","WorldPay payments underneath - can't guarantee offline","US-focused, less UK support","No offline guarantee like Square","Hardware lock-in","Toast Go handheld doesn't print receipts directly","No Marketing product","No Tap to Pay option"],
-        wins:["Free tier available - they start at £80/mo","1st party payments - we guarantee offline","UK support","Terminal prints receipts directly","Marketing included in ecosystem","Tap to Pay on iPhone available"],
-        counter:"Toast is solid but pricier - £80/mo minimum vs our free tier. Their payments is WorldPay - they can't guarantee offline like we can. US-focused with less UK support. Our Terminal prints receipts directly, theirs doesn't."},
+        rates:"Uses WorldPay",
+        weaknesses:["More expensive - £80/mo minimum","US-focused, less UK support","No offline guarantee","No Tap to Pay option"],
+        wins:["Free tier available","1st party payments - offline guaranteed","UK support","Tap to Pay available"],
+        counter:"Toast is solid but pricier - £80/mo minimum vs our free tier. US-focused with less UK support."},
     eposnow:{name:"ePOS Now",type:"POS",
         hwPricing:"Various",
         rates:"From 1.7%",
-        weaknesses:["Overcomplicated system","Slow performance reported","Poor UX - Win/Loss data confirms","Expensive overall","Complex setup and training"],
-        wins:["Simple but powerful - easy to learn","Fast, modern interface","Quick setup - minutes not days","Better UX confirmed by Win/Loss data"],
-        counter:"ePOS Now is overcomplicated and slow - our Win/Loss data confirms sellers find it frustrating. Square is 'simple but powerful' - staff learn it in minutes, not days. Modern interface, fast performance."}
+        weaknesses:["Overcomplicated system","Slow performance","Poor UX","Expensive"],
+        wins:["Simple but powerful","Fast, modern interface","Quick setup","Better UX"],
+        counter:"ePOS Now is overcomplicated and slow. Square is simple but powerful - staff learn it in minutes."}
 };
 
-// OBJECTIONS
 var OBJECTIONS = {
     "Too expensive / High rates":{
-        response:"What are you paying now in monthly fees, terminal rental, and per-transaction? With Square: no monthly fees, no rental, no PCI fees, no statement fees, no minimum monthly charges - just 1.75% per tap. Most merchants save on total cost of ownership. Our Win/Loss shows 35% mention rates, but 39% of wins come from integrated POS+payments value.",
-        followup:"Can I see a recent statement? I can do a quick comparison right now - takes 2 minutes.",
+        response:"What are you paying in monthly fees, terminal rental, and per-transaction? With Square: no monthly fees, no rental, no PCI fees - just 1.75% per tap. Most save on total cost.",
+        followup:"Can I see a recent statement? Quick comparison takes 2 minutes.",
         stat:"35% of losses mention rates, but we win on total value"},
     "Happy with current provider":{
-        response:"When did you last review your statement? Many merchants find hidden fees they didn't know about - PCI charges, statement fees, minimum monthly fees, terminal rental. A quick comparison costs nothing and takes 2 minutes.",
-        followup:"What if you're overpaying? Just a quick look - no obligation.",
-        stat:"Many switches happen after statement review reveals hidden fees"},
+        response:"When did you last review your statement? Many find hidden fees - PCI charges, statement fees, minimum monthly fees, terminal rental.",
+        followup:"What if you're overpaying? Quick look, no obligation."},
     "Need to think about it":{
-        response:"Totally understand - it's a business decision. What specific concerns do you have? I might be able to address them right now and save you time.",
-        followup:"What would need to be true for this to be a yes today?",
-        stat:"Addressing concerns on the spot converts more than follow-ups"},
+        response:"Totally understand. What specific concerns do you have? I might be able to address them right now.",
+        followup:"What would need to be true for this to be a yes today?"},
     "Locked into a contract":{
-        response:"When does your contract end? We can get you set up now so you switch the day it ends - no gap in service. Often the savings cover any exit fees. Dojo even buy out contracts up to £3k - but then you're locked into them for 6-18 months.",
-        followup:"Do you know your exit fee? Sometimes it's less than people think. When's your contract end date?",
-        stat:"28% of losses are contract lock-in - timing is everything"},
+        response:"When does your contract end? We can get you set up now so you switch the day it ends - no gap in service.",
+        followup:"Do you know your exit fee? Often less than people think.",
+        stat:"28% of losses are contract lock-in"},
     "Don't have time right now":{
-        response:"Setup takes literally 10 minutes - I can do it right now while we chat, or leave the kit and you activate when ready. The app guides you through everything step by step.",
-        followup:"What if you just tried it alongside your current system? No commitment, no risk - see how it compares.",
-        stat:"10-minute setup removes the time objection"},
+        response:"Setup takes 10 minutes - I can do it now, or leave the kit and you activate when ready.",
+        followup:"What if you tried it alongside your current system? No commitment."},
     "Need to speak to partner/accountant":{
-        response:"Of course - what questions do you think they'll have? I can give you the key points to share, or I'm happy to speak with them directly if that helps.",
-        followup:"When are you next speaking to them? I can follow up after with any answers they need.",
-        stat:"Offering to speak directly often accelerates decisions"},
-    "Had bad experience with card machines":{
-        response:"I hear that a lot - usually from merchants who've dealt with traditional providers or got locked into contracts. Square is different: no contracts, no hidden fees, no rental. If it doesn't work for you, just stop using it - no penalties, no hassle.",
-        followup:"What specifically went wrong before? I can show you how Square handles that differently.",
-        stat:"Bad experiences are usually with traditional providers - we're different"},
-    "Upfront hardware cost concerns":{
-        response:"I understand - but consider: Terminal £149 you own forever vs Dojo/Clover £15-20/month rental forever. After 10 months, rental costs more. Plus our Terminal has POS built-in - Dojo's doesn't. It's better value long-term.",
+        response:"Of course. What questions will they have? I can give you key points, or speak with them directly.",
+        followup:"When are you next speaking to them?"},
+    "Upfront hardware cost":{
+        response:"Terminal £149 you own forever vs £15-20/month rental forever. After 10 months, rental costs more. Plus our Terminal has POS built-in.",
         followup:"Would trying Reader at £19 first help? Start small, upgrade when ready.",
         stat:"20% of losses mention upfront costs - but TCO favours us"}
 };
 
-// CLOSES
 var CLOSES = {
-    assumptive:{name:"Assumptive Close",icon:"✅",script:"Let's get you set up. You'll be taking payments before I leave - takes about 10 minutes.",when:"No major objections, positive body language throughout"},
-    trial:{name:"Trial Close",icon:"🧪",script:"Why not try it alongside your current system for a week? No contract, no commitment. If you don't love it, no problem.",when:"Hesitant to fully commit, wants to test first"},
-    urgency:{name:"Urgency Close",icon:"⚡",script:"If we get you live today, you'll have your first deposit tomorrow morning. That's money in your account 24 hours from now.",when:"Cash flow is a clear pain point"},
-    summary:{name:"Summary Close",icon:"📋",script:"So to recap: [Terminal/Register] giving you [key benefits] at [1.75%], solving [their pain points]. Ready to get started?",when:"After handling all objections"},
-    puppy:{name:"Puppy Dog Close",icon:"🐕",script:"Take the Terminal, try it for a few transactions. If you don't love it, I'll come back and collect it. No obligation whatsoever.",when:"Very hesitant, needs to experience it to believe it"},
-    comparison:{name:"Comparison Close",icon:"📊",script:"You mentioned you're paying [X] now. With Square at 1.75% and no monthly fees, you'd save [Y] per month. That's [Z] per year back in your pocket.",when:"After reviewing their current statement"}
+    assumptive:{name:"Assumptive Close",icon:"✓",script:"Let's get you set up. You'll be taking payments before I leave - takes about 10 minutes.",when:"No major objections, positive signals"},
+    trial:{name:"Trial Close",icon:"↻",script:"Why not try it alongside your current system for a week? No contract, no commitment.",when:"Hesitant to fully commit"},
+    urgency:{name:"Urgency Close",icon:"⚡",script:"If we get you live today, you'll have your first deposit tomorrow morning.",when:"Cash flow is a pain point"},
+    summary:{name:"Summary Close",icon:"≡",script:"So to recap: [product] giving you [benefits] at 1.75%, solving [pain points]. Ready to start?",when:"After handling objections"},
+    comparison:{name:"Comparison Close",icon:"⇄",script:"You're paying [X] now. With Square at 1.75% and no monthly fees, you'd save [Y] per month.",when:"After reviewing their statement"}
 };
-// FUNCTIONS
 function say(html, isBot) {
     var out = document.getElementById("out");
     var div = document.createElement("div");
     div.className = "msg " + (isBot ? "bot" : "usr");
-    div.innerHTML = '<div class="av">' + (isBot ? "JIT" : "IC") + '</div><div class="mc">' + html + '</div>';
+    div.innerHTML = '<div class="av">' + (isBot ? "JIT" : "You") + '</div><div class="mc">' + html + '</div>';
     out.appendChild(div);
     out.scrollTop = out.scrollHeight;
 }
@@ -897,122 +798,119 @@ function processInput(text) {
         });
     }
     if (!matched) {
-        if (lower.indexOf("expensive") > -1 || lower.indexOf("cost") > -1 || lower.indexOf("rate") > -1) { matched = true; showObjectionResponse("Too expensive / High rates"); }
-        else if (lower.indexOf("think") > -1 || lower.indexOf("consider") > -1) { matched = true; showObjectionResponse("Need to think about it"); }
-        else if (lower.indexOf("happy") > -1 || lower.indexOf("fine with") > -1) { matched = true; showObjectionResponse("Happy with current provider"); }
-        else if (lower.indexOf("contract") > -1 || lower.indexOf("locked") > -1) { matched = true; showObjectionResponse("Locked into a contract"); }
-        else if (lower.indexOf("time") > -1 && (lower.indexOf("don") > -1 || lower.indexOf("no ") > -1 || lower.indexOf("busy") > -1)) { matched = true; showObjectionResponse("Don't have time right now"); }
-        else if (lower.indexOf("partner") > -1 || lower.indexOf("accountant") > -1 || lower.indexOf("wife") > -1 || lower.indexOf("husband") > -1) { matched = true; showObjectionResponse("Need to speak to partner/accountant"); }
-        else if (lower.indexOf("bad experience") > -1 || lower.indexOf("burnt") > -1 || lower.indexOf("before") > -1) { matched = true; showObjectionResponse("Had bad experience with card machines"); }
-        else if (lower.indexOf("upfront") > -1 || lower.indexOf("hardware cost") > -1) { matched = true; showObjectionResponse("Upfront hardware cost concerns"); }
+        if (lower.indexOf("expensive") > -1 || lower.indexOf("cost") > -1) { matched = true; showObjectionResponse("Too expensive / High rates"); }
+        else if (lower.indexOf("think") > -1) { matched = true; showObjectionResponse("Need to think about it"); }
+        else if (lower.indexOf("happy") > -1) { matched = true; showObjectionResponse("Happy with current provider"); }
+        else if (lower.indexOf("contract") > -1) { matched = true; showObjectionResponse("Locked into a contract"); }
+        else if (lower.indexOf("time") > -1 && lower.indexOf("busy") > -1) { matched = true; showObjectionResponse("Don't have time right now"); }
+        else if (lower.indexOf("partner") > -1 || lower.indexOf("accountant") > -1) { matched = true; showObjectionResponse("Need to speak to partner/accountant"); }
+        else if (lower.indexOf("upfront") > -1) { matched = true; showObjectionResponse("Upfront hardware cost"); }
     }
     if (!matched) showGenericResponse(text);
 }
 function showContextualResponse(pain, originalText) {
-    var html = "<div class='scard ctx'><h4>💡 They said:</h4><div class='sbox'><b>\"" + originalText + "\"</b></div>";
-    html += "<div style='margin-top:12px'><b>Your response:</b></div><div class='sbox' style='margin-top:8px'>" + pain.response + "</div>";
-    html += "<div class='sfu'>👉 " + pain.action + "</div>";
+    var html = "<div class='scard ctx'><h4>They said:</h4><div class='sbox'>\"" + originalText + "\"</div>";
+    html += "<div style='margin-top:14px;font-weight:600;color:var(--gray-800)'>Your response:</div><div class='sbox' style='margin-top:8px'>" + pain.response + "</div>";
+    html += "<div class='sfu'>→ " + pain.action + "</div>";
     if (pain.stat) html += "<div class='sfu'>📊 " + pain.stat + "</div>";
     html += "</div>";
     var prod = PRODUCTS[pain.product];
     if (prod) {
-        html += "<div class='pcard'>";
-        html += "<div class='pcard-body'><h4>" + pain.product + " <span class='ptag tag-" + prod.cat + "'>" + prod.cat + "</span></h4>";
+        html += "<div class='pcard'><div class='pcard-body'><h4>" + pain.product + " <span class='ptag tag-" + prod.cat + "'>" + prod.cat + "</span></h4>";
         html += "<p>" + prod.desc + "</p>";
         html += "<div class='pcard-footer'><span class='pcard-price'>" + prod.price + "</span><a href='" + prod.link + "' target='_blank' class='pcard-link'>Learn more →</a></div></div></div>";
     }
     if (pain.videos && VIDEOS[pain.videos]) {
-        html += "<div class='video-section'><div class='section-title'>🎬 Show them</div><div class='video-grid'>";
+        html += "<div class='video-section'><div class='section-title'>Show them</div><div class='video-grid'>";
         VIDEOS[pain.videos].forEach(function(vid) {
             html += "<div class='video-card' onclick=\"playVideo('" + vid.vid + "')\"><img src='https://img.youtube.com/vi/" + vid.vid + "/mqdefault.jpg'><div class='play-icon'></div><div class='vinfo'><h5>" + vid.title + "</h5></div></div>";
         });
         html += "</div></div>";
     }
-    html += "<div class='options' style='margin-top:16px'><div class='opt' onclick='showCloses()'>🎯 Close the Deal</div><div class='opt secondary' onclick='showObjections()'>🛡️ Handle Objections</div></div>";
+    html += "<div class='options' style='margin-top:16px'><div class='opt' onclick='showCloses()'>Close the Deal</div><div class='opt secondary' onclick='showObjections()'>Handle Objections</div></div>";
     say(html, true);
 }
 function showObjectionResponse(objKey) {
     var obj = OBJECTIONS[objKey];
     if (!obj) return;
-    var html = "<div class='scard obj'><h4>🛡️ \"" + objKey + "\"</h4><div class='sbox'>" + obj.response + "</div>";
-    html += "<div class='sfu'>↳ Follow up: \"" + obj.followup + "\"</div>";
+    var html = "<div class='scard obj'><h4>\"" + objKey + "\"</h4><div class='sbox'>" + obj.response + "</div>";
+    html += "<div class='sfu'>↳ \"" + obj.followup + "\"</div>";
     if (obj.stat) html += "<div class='sfu'>📊 " + obj.stat + "</div>";
-    html += "</div><div class='options' style='margin-top:16px'><div class='opt' onclick='showCloses()'>🎯 Close the Deal</div><div class='opt secondary' onclick='showObjections()'>🛡️ Other Objections</div></div>";
+    html += "</div><div class='options' style='margin-top:16px'><div class='opt' onclick='showCloses()'>Close the Deal</div><div class='opt secondary' onclick='showObjections()'>Other Objections</div></div>";
     say(html, true);
 }
 function showGenericResponse(text) {
-    var html = "<b>I heard:</b> \"" + text + "\"<br><br><span style='color:var(--text-muted)'>Try topics like:</span><div class='options' style='margin-top:12px'>";
-    html += "<div class='opt secondary' onclick=\"document.getElementById('userInput').value='fees too high';sendMessage()\">💸 Fees</div>";
-    html += "<div class='opt secondary' onclick=\"document.getElementById('userInput').value='slow deposits';sendMessage()\">🏦 Deposits</div>";
-    html += "<div class='opt secondary' onclick=\"document.getElementById('userInput').value='need better POS';sendMessage()\">📱 POS</div>";
-    html += "<div class='opt secondary' onclick=\"document.getElementById('userInput').value='inventory tracking';sendMessage()\">📦 Inventory</div>";
-    html += "<div class='opt secondary' onclick=\"document.getElementById('userInput').value='using SumUp';sendMessage()\">⚔️ SumUp</div>";
-    html += "<div class='opt secondary' onclick=\"document.getElementById('userInput').value='using Zettle';sendMessage()\">⚔️ Zettle</div>";
-    html += "</div><div class='options' style='margin-top:12px'><div class='opt' onclick='showObjections()'>🛡️ Objections</div><div class='opt' onclick='showCloses()'>🎯 Close</div><div class='opt secondary' onclick='showCompetitors()'>⚔️ Competitors</div></div>";
+    var html = "<b>I heard:</b> \"" + text + "\"<br><br><span style='color:var(--gray-500)'>Try topics like:</span><div class='options' style='margin-top:12px'>";
+    html += "<div class='opt secondary' onclick=\"document.getElementById('userInput').value='fees too high';sendMessage()\">Fees</div>";
+    html += "<div class='opt secondary' onclick=\"document.getElementById('userInput').value='slow deposits';sendMessage()\">Deposits</div>";
+    html += "<div class='opt secondary' onclick=\"document.getElementById('userInput').value='need better POS';sendMessage()\">POS</div>";
+    html += "<div class='opt secondary' onclick=\"document.getElementById('userInput').value='using SumUp';sendMessage()\">SumUp</div>";
+    html += "<div class='opt secondary' onclick=\"document.getElementById('userInput').value='using Zettle';sendMessage()\">Zettle</div>";
+    html += "</div><div class='options' style='margin-top:12px'><div class='opt' onclick='showObjections()'>Objections</div><div class='opt' onclick='showCloses()'>Close</div><div class='opt secondary' onclick='showCompetitors()'>Competitors</div></div>";
     say(html, true);
 }
 function startConversation() {
-    say("<div style='font-size:28px;margin-bottom:8px'>👋</div><b style='font-size:18px'>Welcome to JIT</b><br><br><span style='color:var(--text-secondary)'>Your real-time sales intelligence assistant. Let's profile this merchant for tailored recommendations.</span><br><br><div class='section-title'>What type of business?</div><div class='options'>" +
+    say("<div style='margin-bottom:16px'><span style='font-size:32px'>■</span></div><b style='font-size:18px'>Welcome to JIT</b><br><span style='color:var(--gray-500)'>Real-time sales intelligence. Let's profile this merchant.</span><br><br><div class='section-title'>Business type</div><div class='options'>" +
         "<div class='opt' onclick=\"selectVertical('qsr')\"><span class='ico'>🍔</span>QSR</div>" +
         "<div class='opt' onclick=\"selectVertical('fsr')\"><span class='ico'>🍽️</span>FSR</div>" +
         "<div class='opt' onclick=\"selectVertical('retail')\"><span class='ico'>🛍️</span>Retail</div>" +
         "<div class='opt' onclick=\"selectVertical('beauty')\"><span class='ico'>💇</span>Beauty</div>" +
         "<div class='opt' onclick=\"selectVertical('health')\"><span class='ico'>💪</span>Health</div>" +
         "<div class='opt' onclick=\"selectVertical('services')\"><span class='ico'>💼</span>Services</div>" +
-        "</div><br><span style='color:var(--text-muted);font-size:13px'>💬 Or type what the merchant is saying below for instant intel</span>", true);
+        "</div><br><span style='color:var(--gray-400);font-size:13px'>Or type what the merchant says below</span>", true);
 }
 function selectVertical(v) {
     state.vertical = v;
     var vert = VERTICALS[v];
-    say(vert.icon + " <b>" + vert.name + "</b>", false);
+    say(vert.icon + " " + vert.name, false);
     setTimeout(function() {
-        say("<div class='section-title'>Annual card turnover (GPV)?</div><div class='options'>" +
+        say("<div class='section-title'>Annual card turnover</div><div class='options'>" +
             "<div class='opt' onclick=\"selectGPV('Under £50k')\">Under £50k</div>" +
             "<div class='opt' onclick=\"selectGPV('£50k-£100k')\">£50k-£100k</div>" +
             "<div class='opt' onclick=\"selectGPV('£100k-£250k')\">£100k-£250k</div>" +
             "<div class='opt' onclick=\"selectGPV('£250k-£500k')\">£250k-£500k</div>" +
             "<div class='opt' onclick=\"selectGPV('£500k-£1m')\">£500k-£1m</div>" +
             "<div class='opt' onclick=\"selectGPV('£1m+')\">£1m+</div></div>", true);
-    }, 300);
+    }, 250);
 }
 function selectGPV(g) {
     state.gpv = g;
-    say("<b>" + g + "</b> annual GPV", false);
+    say(g + " annual GPV", false);
     setTimeout(function() {
-        say("<div class='section-title'>How many locations?</div><div class='options'>" +
+        say("<div class='section-title'>Locations</div><div class='options'>" +
             "<div class='opt' onclick=\"selectLocations('1')\">1</div>" +
             "<div class='opt' onclick=\"selectLocations('2-3')\">2-3</div>" +
             "<div class='opt' onclick=\"selectLocations('4-5')\">4-5</div>" +
             "<div class='opt' onclick=\"selectLocations('6-10')\">6-10</div>" +
             "<div class='opt' onclick=\"selectLocations('10+')\">10+</div></div>", true);
-    }, 300);
+    }, 250);
 }
 function selectLocations(l) {
     state.locations = l;
-    say("<b>" + l + "</b> location" + (l === "1" ? "" : "s"), false);
+    say(l + " location" + (l === "1" ? "" : "s"), false);
     setTimeout(function() {
-        say("<div class='section-title'>How many staff?</div><div class='options'>" +
+        say("<div class='section-title'>Staff</div><div class='options'>" +
             "<div class='opt' onclick=\"selectStaff('Just me')\">Just me</div>" +
             "<div class='opt' onclick=\"selectStaff('2-5')\">2-5</div>" +
             "<div class='opt' onclick=\"selectStaff('6-10')\">6-10</div>" +
             "<div class='opt' onclick=\"selectStaff('11-20')\">11-20</div>" +
             "<div class='opt' onclick=\"selectStaff('20+')\">20+</div></div>", true);
-    }, 300);
+    }, 250);
 }
 function selectStaff(s) {
     state.staff = s;
-    say("<b>" + s + "</b> staff", false);
-    setTimeout(askPaymentMethods, 300);
+    say(s + " staff", false);
+    setTimeout(askPaymentMethods, 250);
 }
 function askPaymentMethods() {
     var vert = VERTICALS[state.vertical];
-    var html = "<div class='section-title'>How do they take payments? <span style='font-weight:400;text-transform:none;letter-spacing:0'>(select all)</span></div><div class='options'>";
-    html += "<div class='opt secondary' id='pm-f2f' onclick=\"togglePayment('f2f')\">💳 Face to face</div>";
-    html += "<div class='opt secondary' id='pm-online' onclick=\"togglePayment('online')\">🌐 Online</div>";
-    html += "<div class='opt secondary' id='pm-phone' onclick=\"togglePayment('phone')\">📞 Phone/VT</div>";
-    html += "<div class='opt secondary' id='pm-links' onclick=\"togglePayment('links')\">🔗 Payment Links</div>";
-    if (vert.showDelivery) html += "<div class='opt secondary' id='pm-delivery' onclick=\"togglePayment('delivery')\">🛵 Delivery Apps</div>";
-    html += "</div><div class='options' style='margin-top:16px'><div class='opt' onclick='finishPaymentMethods()'>Generate Intel →</div></div>";
+    var html = "<div class='section-title'>How do they take payments? <span style='font-weight:400;text-transform:none;letter-spacing:0'>(select all that apply)</span></div><div class='options'>";
+    html += "<div class='opt secondary' id='pm-f2f' onclick=\"togglePayment('f2f')\">Face to face</div>";
+    html += "<div class='opt secondary' id='pm-online' onclick=\"togglePayment('online')\">Online</div>";
+    html += "<div class='opt secondary' id='pm-phone' onclick=\"togglePayment('phone')\">Phone</div>";
+    html += "<div class='opt secondary' id='pm-links' onclick=\"togglePayment('links')\">Payment Links</div>";
+    if (vert.showDelivery) html += "<div class='opt secondary' id='pm-delivery' onclick=\"togglePayment('delivery')\">Delivery Apps</div>";
+    html += "</div><div class='options' style='margin-top:16px'><div class='opt' onclick='finishPaymentMethods()'>Get Recommendations →</div></div>";
     say(html, true);
 }
 function togglePayment(method) {
@@ -1023,9 +921,9 @@ function togglePayment(method) {
 }
 function finishPaymentMethods() {
     var methods = state.paymentMethods.length ? state.paymentMethods : ['f2f'];
-    var labels = {f2f:'Face to face',online:'Online',phone:'Phone/VT',links:'Payment Links',delivery:'Delivery Apps'};
-    say("<b>" + methods.map(function(m){return labels[m]}).join(', ') + "</b>", false);
-    setTimeout(showRecommendation, 400);
+    var labels = {f2f:'Face to face',online:'Online',phone:'Phone',links:'Payment Links',delivery:'Delivery Apps'};
+    say(methods.map(function(m){return labels[m]}).join(', '), false);
+    setTimeout(showRecommendation, 300);
 }
 function showRecommendation() {
     var v = state.vertical, vert = VERTICALS[v], rec = RECOMMENDATIONS[v], vids = VIDEOS[v] || VIDEOS.general;
@@ -1034,51 +932,48 @@ function showRecommendation() {
     if (state.paymentMethods.indexOf('phone') > -1 && products.indexOf('Virtual Terminal') === -1) products.push('Virtual Terminal');
     if (state.paymentMethods.indexOf('links') > -1 && products.indexOf('Payment Links') === -1) products.push('Payment Links');
     
-    var html = "<div class='summary-box'><h3>📋 Merchant Profile</h3>";
-    html += "<div class='summary-item'><span class='label'>Business</span><span class='value'>" + vert.icon + " " + vert.name + " (" + vert.priority + ")</span></div>";
+    var html = "<div class='summary-box'><h3>■ Merchant Profile</h3>";
+    html += "<div class='summary-item'><span class='label'>Business</span><span class='value'>" + vert.icon + " " + vert.name + "</span></div>";
+    html += "<div class='summary-item'><span class='label'>Priority</span><span class='value'>" + vert.priority + "</span></div>";
     html += "<div class='summary-item'><span class='label'>Annual GPV</span><span class='value'>" + state.gpv + "</span></div>";
     html += "<div class='summary-item'><span class='label'>Locations</span><span class='value'>" + state.locations + "</span></div>";
     html += "<div class='summary-item'><span class='label'>Staff</span><span class='value'>" + state.staff + "</span></div>";
-    var labels = {f2f:'Face to face',online:'Online',phone:'Phone/VT',links:'Payment Links',delivery:'Delivery Apps'};
-    html += "<div class='summary-item'><span class='label'>Payments</span><span class='value'>" + (state.paymentMethods.length ? state.paymentMethods.map(function(m){return labels[m]}).join(', ') : 'Face to face') + "</span></div>";
-    html += "<div class='summary-item'><span class='label'>PMF Note</span><span class='value' style='font-size:12px;font-weight:normal'>" + vert.pmf + "</span></div></div>";
+    var labels = {f2f:'Face to face',online:'Online',phone:'Phone',links:'Payment Links',delivery:'Delivery Apps'};
+    html += "<div class='summary-item'><span class='label'>Payments</span><span class='value'>" + (state.paymentMethods.length ? state.paymentMethods.map(function(m){return labels[m]}).join(', ') : 'Face to face') + "</span></div></div>";
     
-    html += "<div class='section-title'>🎯 Discovery Questions</div><ul class='wlist'>";
+    html += "<div class='section-title'>Discovery Questions</div><ul class='wlist'>";
     vert.discovery.forEach(function(q) { html += "<li>" + q + "</li>"; });
     html += "</ul>";
     
-    html += "<div class='section-title'>✅ Why Square Wins Here</div><ul class='wlist'>";
+    html += "<div class='section-title'>Why Square Wins</div><ul class='wlist'>";
     rec.wins.forEach(function(w) { html += "<li>" + w + "</li>"; });
-    if (state.paymentMethods.indexOf('online') > -1) html += "<li>Online store syncs with in-store inventory automatically</li>";
-    if (state.paymentMethods.indexOf('delivery') > -1) html += "<li>Delivery app orders flow straight into POS - no re-keying</li>";
     html += "</ul>";
     
-    html += "<div class='section-title'>📦 Recommended Products</div>";
+    html += "<div class='section-title'>Recommended Products</div>";
     products.forEach(function(pname) {
         var p = PRODUCTS[pname];
         if (p) {
-            html += "<div class='pcard'>";
-            html += "<div class='pcard-body'><h4>" + pname + " <span class='ptag tag-" + p.cat + "'>" + p.cat + "</span></h4>";
+            html += "<div class='pcard'><div class='pcard-body'><h4>" + pname + " <span class='ptag tag-" + p.cat + "'>" + p.cat + "</span></h4>";
             html += "<p>" + p.desc + "</p>";
             html += "<div class='pcard-footer'><span class='pcard-price'>" + p.price + "</span><a href='" + p.link + "' target='_blank' class='pcard-link'>Learn more →</a></div></div></div>";
         }
     });
     
     var videosToShow = vids.slice(0,3);
-    if (state.paymentMethods.indexOf('online') > -1) videosToShow = videosToShow.concat(VIDEOS.online.slice(0,1));
-    html += "<div class='video-section'><div class='section-title'>🎬 Demo Videos</div><div class='video-grid'>";
+    if (state.paymentMethods.indexOf('online') > -1 && VIDEOS.online) videosToShow = videosToShow.concat(VIDEOS.online.slice(0,1));
+    html += "<div class='video-section'><div class='section-title'>Demo Videos</div><div class='video-grid'>";
     videosToShow.forEach(function(vid) {
         html += "<div class='video-card' onclick=\"playVideo('" + vid.vid + "')\"><img src='https://img.youtube.com/vi/" + vid.vid + "/mqdefault.jpg'><div class='play-icon'></div><div class='vinfo'><h5>" + vid.title + "</h5></div></div>";
     });
     html += "</div></div>";
     
-    html += "<div class='options' style='margin-top:24px'><div class='opt' onclick='showObjections()'>🛡️ Objections</div><div class='opt' onclick='showCloses()'>🎯 Close</div><div class='opt secondary' onclick='showCompetitors()'>⚔️ Competitor</div></div>";
-    html += "<br><span style='color:var(--text-muted);font-size:13px'>💬 Type what the merchant says for contextual intel</span>";
+    html += "<div class='options' style='margin-top:24px'><div class='opt' onclick='showObjections()'>Objections</div><div class='opt' onclick='showCloses()'>Close</div><div class='opt secondary' onclick='showCompetitors()'>Competitors</div></div>";
+    html += "<br><span style='color:var(--gray-400);font-size:13px'>Type what the merchant says for contextual help</span>";
     say(html, true);
 }
 function showObjections() {
-    say("🛡️ <b>Objection Handling</b>", false);
-    var html = "<b>Based on Win/Loss Analysis - top objections and responses:</b>";
+    say("Objection Handling", false);
+    var html = "<span style='color:var(--gray-500)'>Based on Win/Loss Analysis:</span>";
     Object.keys(OBJECTIONS).forEach(function(obj) {
         var o = OBJECTIONS[obj];
         html += "<div class='scard obj'><h4>\"" + obj + "\"</h4><div class='sbox'>" + o.response + "</div>";
@@ -1086,39 +981,39 @@ function showObjections() {
         if (o.stat) html += "<div class='sfu'>📊 " + o.stat + "</div>";
         html += "</div>";
     });
-    html += "<div class='options' style='margin-top:16px'><div class='opt' onclick='showCloses()'>🎯 Close</div><div class='opt secondary' onclick='showCompetitors()'>⚔️ Competitor</div></div>";
+    html += "<div class='options' style='margin-top:16px'><div class='opt' onclick='showCloses()'>Close</div><div class='opt secondary' onclick='showCompetitors()'>Competitors</div></div>";
     say(html, true);
 }
 function showCloses() {
-    say("🎯 <b>Close the Deal</b>", false);
-    var html = "<b>Pick the right close for the situation:</b>";
+    say("Close the Deal", false);
+    var html = "<span style='color:var(--gray-500)'>Pick the right close:</span>";
     Object.keys(CLOSES).forEach(function(key) {
         var c = CLOSES[key];
         html += "<div class='scard cls'><h4>" + c.icon + " " + c.name + "</h4><div class='sbox'>\"" + c.script + "\"</div><div class='sfu'>When: " + c.when + "</div></div>";
     });
-    html += "<div class='options' style='margin-top:16px'><div class='opt' onclick='showObjections()'>🛡️ Objections</div><div class='opt secondary' onclick='restart()'>↺ New Merchant</div></div>";
+    html += "<div class='options' style='margin-top:16px'><div class='opt' onclick='showObjections()'>Objections</div><div class='opt secondary' onclick='restart()'>New Merchant</div></div>";
     say(html, true);
 }
 function showCompetitors() {
-    say("⚔️ <b>Competitor Battlecards</b>", false);
-    var html = "<b>Which competitor are they using/mentioning?</b><div class='options' style='margin-top:12px'>";
+    say("Competitor Battlecards", false);
+    var html = "<span style='color:var(--gray-500)'>Which competitor?</span><div class='options' style='margin-top:12px'>";
     Object.keys(COMPETITORS).forEach(function(key) { html += "<div class='opt secondary' onclick=\"showBattlecard('" + key + "')\">" + COMPETITORS[key].name + "</div>"; });
     html += "</div>";
     say(html, true);
 }
 function showBattlecard(key) {
     var c = COMPETITORS[key];
-    say("vs <b>" + c.name + "</b>", false);
-    var html = "<b>" + c.name + "</b> <span style='color:var(--text-muted)'>(" + c.type + ")</span>";
-    html += "<div class='scard cmp'><h4>💰 Their Pricing</h4><div class='sbox'>HW: " + c.hwPricing + "<br>Rates: " + c.rates + "</div></div>";
-    html += "<div class='scard cmp'><h4>❌ Their Weaknesses</h4><ul class='wlist'>";
+    say("vs " + c.name, false);
+    var html = "<b>" + c.name + "</b> <span style='color:var(--gray-500)'>(" + c.type + ")</span>";
+    html += "<div class='scard cmp'><h4>Their Pricing</h4><div class='sbox'>Hardware: " + c.hwPricing + "<br>Rates: " + c.rates + "</div></div>";
+    html += "<div class='scard cmp'><h4>Their Weaknesses</h4><ul class='wlist'>";
     c.weaknesses.forEach(function(w) { html += "<li>" + w + "</li>"; });
     html += "</ul></div>";
-    html += "<div class='scard ctx'><h4>✅ Where We Win</h4><ul class='wlist'>";
+    html += "<div class='scard ctx'><h4>Where We Win</h4><ul class='wlist'>";
     c.wins.forEach(function(w) { html += "<li>" + w + "</li>"; });
     html += "</ul></div>";
-    html += "<div class='scard cls'><h4>💬 Say This</h4><div class='sbox'>\"" + c.counter + "\"</div></div>";
-    html += "<div class='options' style='margin-top:16px'><div class='opt' onclick='showCloses()'>🎯 Close</div><div class='opt secondary' onclick='showCompetitors()'>← Back</div></div>";
+    html += "<div class='scard cls'><h4>Say This</h4><div class='sbox'>\"" + c.counter + "\"</div></div>";
+    html += "<div class='options' style='margin-top:16px'><div class='opt' onclick='showCloses()'>Close</div><div class='opt secondary' onclick='showCompetitors()'>← Back</div></div>";
     say(html, true);
 }
 document.addEventListener("keydown", function(e) { if (e.key === "Escape") closeVideo(); });
