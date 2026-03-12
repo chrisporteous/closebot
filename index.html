@@ -2,84 +2,603 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CloseBot - IC Sales Assistant</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>JIT - Just In Time Sales Intelligence</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        :root{--sq-black:#000;--sq-white:#fff;--sq-green:#00D632;--sq-gray-100:#F7F7F7;--sq-gray-200:#E6E6E6;--sq-gray-300:#CCC;--sq-gray-500:#787878;--sq-gray-700:#3D3D3D;--sq-blue:#006AFF;--sq-red:#C00;--sq-orange:#FF9500}
-        *{margin:0;padding:0;box-sizing:border-box}
-        body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:var(--sq-gray-100);min-height:100vh}
-        .header{background:var(--sq-black);color:var(--sq-white);padding:14px 20px;display:flex;align-items:center;justify-content:space-between}
-        .header h1{font-size:20px;font-weight:600}
-        .badge{background:var(--sq-green);color:var(--sq-black);padding:4px 10px;border-radius:4px;font-size:11px;font-weight:700;margin-left:10px}
-        .container{max-width:800px;margin:0 auto;padding:20px;padding-bottom:100px}
-        .chat{background:var(--sq-white);border-radius:16px;min-height:calc(100vh - 180px);display:flex;flex-direction:column}
-        .msgs{flex:1;padding:24px;overflow-y:auto}
-        .msg{margin-bottom:20px;display:flex;gap:12px}
-        .msg.usr{flex-direction:row-reverse}
-        .av{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:bold;flex-shrink:0}
-        .msg.bot .av{background:var(--sq-black);color:var(--sq-white)}
-        .msg.usr .av{background:var(--sq-green);color:var(--sq-black)}
-        .mc{max-width:90%;font-size:15px;line-height:1.6}
-        .msg.bot .mc{background:var(--sq-gray-100);padding:16px 20px;border-radius:20px;border-top-left-radius:4px}
-        .msg.usr .mc{background:var(--sq-black);color:var(--sq-white);padding:16px 20px;border-radius:20px;border-top-right-radius:4px}
-        .options{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
-        .opt{padding:12px 20px;background:var(--sq-white);border:2px solid var(--sq-black);border-radius:30px;font-size:14px;font-weight:600;cursor:pointer;transition:all 0.2s}
-        .opt:hover{background:var(--sq-black);color:var(--sq-white)}
-        .opt.selected{background:var(--sq-black);color:var(--sq-white)}
-        .opt.secondary{border-color:var(--sq-gray-300);color:var(--sq-gray-700)}
-        .opt.secondary:hover{border-color:var(--sq-black);background:var(--sq-gray-100);color:var(--sq-black)}
-        .opt.small{padding:8px 14px;font-size:12px}
-        .section-title{font-size:13px;font-weight:700;color:var(--sq-gray-500);text-transform:uppercase;margin-bottom:12px;margin-top:8px}
-        .input-bar{position:fixed;bottom:0;left:0;right:0;background:var(--sq-white);border-top:1px solid var(--sq-gray-200);padding:16px 20px;display:flex;gap:12px;align-items:center}
-        .input-bar input{flex:1;padding:14px 18px;border:2px solid var(--sq-gray-200);border-radius:30px;font-size:15px;font-family:inherit}
-        .input-bar input:focus{outline:none;border-color:var(--sq-black)}
-        .input-bar button{padding:14px 24px;background:var(--sq-black);color:var(--sq-white);border:none;border-radius:30px;font-size:15px;font-weight:600;cursor:pointer}
-        .pcard{background:var(--sq-white);border:1px solid var(--sq-gray-200);border-left:4px solid var(--sq-green);border-radius:8px;padding:14px 16px;margin:10px 0}
-        .pcard h4{font-size:15px;font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:8px}
-        .pcard p{font-size:14px;color:var(--sq-gray-700);line-height:1.5}
-        .ptag{font-size:10px;font-weight:700;padding:3px 8px;border-radius:4px}
-        .tag-saas{background:#E8F5E9;color:#2E7D32}
-        .tag-hardware{background:#F3E5F5;color:#7B1FA2}
-        .tag-payments{background:#E3F2FD;color:#1565C0}
-        .wlist{margin:12px 0;padding:0;list-style:none}
-        .wlist li{font-size:14px;padding:8px 0 8px 24px;position:relative;color:var(--sq-gray-700)}
-        .wlist li::before{content:"✓";position:absolute;left:0;color:var(--sq-green);font-weight:bold}
-        .scard{background:var(--sq-white);border:1px solid var(--sq-gray-200);border-radius:10px;padding:16px;margin:10px 0}
-        .scard.obj{border-left:4px solid var(--sq-blue)}
-        .scard.cls{border-left:4px solid var(--sq-orange)}
-        .scard.cmp{border-left:4px solid var(--sq-red)}
-        .scard.ctx{border-left:4px solid var(--sq-green)}
-        .scard h4{font-size:14px;font-weight:700;margin-bottom:10px;color:var(--sq-gray-700)}
-        .sbox{background:var(--sq-gray-100);padding:12px 14px;border-radius:8px;font-size:14px;line-height:1.5}
-        .sfu{font-size:12px;color:var(--sq-gray-500);margin-top:10px;font-style:italic}
-        .video-section{margin-top:20px}
-        .video-grid{display:flex;gap:12px;flex-wrap:wrap;margin-top:12px}
-        .video-card{background:var(--sq-white);border:1px solid var(--sq-gray-200);border-radius:10px;overflow:hidden;width:180px;cursor:pointer;transition:all 0.2s;position:relative}
-        .video-card:hover{border-color:var(--sq-black);transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,0.1)}
-        .video-card img{width:100%;height:101px;object-fit:cover;background:#000}
-        .video-card .play-icon{position:absolute;top:30px;left:50%;transform:translateX(-50%);width:40px;height:40px;background:rgba(0,0,0,0.75);border-radius:50%}
-        .video-card .play-icon::after{content:"";position:absolute;top:50%;left:50%;transform:translate(-40%,-50%);border-style:solid;border-width:7px 0 7px 12px;border-color:transparent transparent transparent white}
-        .video-card .vinfo{padding:8px 10px}
-        .video-card .vinfo h5{font-size:11px;font-weight:600;line-height:1.3}
-        .video-modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);z-index:1000;align-items:center;justify-content:center}
-        .video-modal.show{display:flex}
-        .video-modal-content{width:90%;max-width:800px;position:relative}
-        .video-modal-close{position:absolute;top:-45px;right:0;color:white;font-size:28px;cursor:pointer;padding:10px}
-        .video-modal iframe{width:100%;height:450px;border:none;border-radius:12px}
-        .summary-box{background:linear-gradient(135deg,#f8f8f8,#fff);border:2px solid var(--sq-green);border-radius:12px;padding:20px;margin:16px 0}
-        .summary-box h3{font-size:16px;margin-bottom:12px}
-        .summary-item{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--sq-gray-200);font-size:14px}
-        .summary-item:last-child{border-bottom:none}
-        .summary-item .label{color:var(--sq-gray-500)}
-        .summary-item .value{font-weight:600}
-        .restart-btn{position:fixed;bottom:80px;right:20px;padding:10px 16px;background:var(--sq-gray-200);color:var(--sq-gray-700);border:none;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer}
-        @media(max-width:600px){.container{padding:10px;padding-bottom:90px}.video-card{width:calc(50% - 6px)}.video-modal iframe{height:250px}.options{gap:8px}.opt{padding:10px 16px;font-size:13px}}
+        :root {
+            --bg-dark: #0a0a0f;
+            --bg-card: rgba(20, 20, 30, 0.8);
+            --bg-glass: rgba(255, 255, 255, 0.03);
+            --border-glow: rgba(0, 214, 50, 0.3);
+            --sq-green: #00D632;
+            --sq-green-glow: rgba(0, 214, 50, 0.4);
+            --sq-blue: #006AFF;
+            --sq-blue-glow: rgba(0, 106, 255, 0.4);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.6);
+            --text-muted: rgba(255, 255, 255, 0.4);
+            --accent-orange: #FF9500;
+            --accent-red: #FF3B30;
+            --accent-purple: #AF52DE;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-dark);
+            min-height: 100vh;
+            color: var(--text-primary);
+            overflow-x: hidden;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: 
+                radial-gradient(ellipse at 20% 20%, rgba(0, 214, 50, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(0, 106, 255, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(175, 82, 222, 0.05) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+        @keyframes slide-up {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        .header {
+            background: linear-gradient(180deg, rgba(10, 10, 15, 0.98) 0%, rgba(10, 10, 15, 0.9) 100%);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 16px 24px;
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--sq-green) 0%, #00ff44 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 16px;
+            color: #000;
+            box-shadow: 0 0 30px var(--sq-green-glow);
+        }
+        .logo h1 {
+            font-size: 24px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff 0%, rgba(255,255,255,0.8) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+        .logo-sub {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--sq-green);
+            font-weight: 600;
+        }
+        .badge {
+            background: linear-gradient(135deg, var(--sq-green) 0%, #00ff44 100%);
+            color: #000;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 100px 20px 120px;
+            position: relative;
+            z-index: 1;
+        }
+        .chat {
+            background: var(--bg-glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            min-height: calc(100vh - 240px);
+            overflow: hidden;
+        }
+        .msgs {
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .msg {
+            display: flex;
+            gap: 14px;
+            animation: slide-up 0.4s ease-out;
+        }
+        .msg.usr { flex-direction: row-reverse; }
+        .av {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        .msg.bot .av {
+            background: linear-gradient(135deg, var(--sq-green) 0%, #00ff44 100%);
+            color: #000;
+            box-shadow: 0 0 20px var(--sq-green-glow);
+        }
+        .msg.usr .av {
+            background: linear-gradient(135deg, var(--sq-blue) 0%, #0088ff 100%);
+            color: #fff;
+            box-shadow: 0 0 20px var(--sq-blue-glow);
+        }
+        .mc {
+            max-width: 85%;
+            font-size: 15px;
+            line-height: 1.7;
+        }
+        .msg.bot .mc {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 20px 24px;
+            border-radius: 20px;
+            border-top-left-radius: 6px;
+        }
+        .msg.usr .mc {
+            background: linear-gradient(135deg, var(--sq-blue) 0%, #0066dd 100%);
+            padding: 16px 20px;
+            border-radius: 20px;
+            border-top-right-radius: 6px;
+        }
+        .options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 16px;
+        }
+        .opt {
+            padding: 14px 24px;
+            background: transparent;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            color: var(--text-primary);
+            position: relative;
+            overflow: hidden;
+        }
+        .opt::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, var(--sq-green) 0%, #00ff44 100%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .opt:hover {
+            border-color: var(--sq-green);
+            box-shadow: 0 0 30px var(--sq-green-glow);
+            transform: translateY(-2px);
+        }
+        .opt:hover::before { opacity: 0.1; }
+        .opt.selected {
+            background: linear-gradient(135deg, var(--sq-green) 0%, #00ff44 100%);
+            border-color: transparent;
+            color: #000;
+            box-shadow: 0 0 30px var(--sq-green-glow);
+        }
+        .opt.secondary {
+            border-color: rgba(255, 255, 255, 0.1);
+            color: var(--text-secondary);
+        }
+        .opt.secondary:hover {
+            border-color: rgba(255, 255, 255, 0.3);
+            color: var(--text-primary);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+        .opt .ico {
+            margin-right: 8px;
+            font-size: 18px;
+        }
+        .section-title {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--sq-green);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 14px;
+            margin-top: 8px;
+        }
+        .input-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(180deg, transparent 0%, rgba(10, 10, 15, 0.95) 20%, rgba(10, 10, 15, 0.98) 100%);
+            backdrop-filter: blur(20px);
+            padding: 20px 24px 28px;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            z-index: 100;
+        }
+        .input-bar input {
+            flex: 1;
+            padding: 16px 24px;
+            background: var(--bg-card);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            font-size: 15px;
+            font-family: inherit;
+            color: var(--text-primary);
+            transition: all 0.3s;
+        }
+        .input-bar input::placeholder { color: var(--text-muted); }
+        .input-bar input:focus {
+            outline: none;
+            border-color: var(--sq-green);
+            box-shadow: 0 0 30px var(--sq-green-glow);
+        }
+        .input-bar button {
+            padding: 16px 28px;
+            background: linear-gradient(135deg, var(--sq-green) 0%, #00ff44 100%);
+            color: #000;
+            border: none;
+            border-radius: 20px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 0 20px var(--sq-green-glow);
+        }
+        .input-bar button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 40px var(--sq-green-glow);
+        }
+        .pcard {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 0;
+            margin: 12px 0;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+        .pcard:hover {
+            border-color: var(--sq-green);
+            box-shadow: 0 0 30px rgba(0, 214, 50, 0.15);
+            transform: translateY(-2px);
+        }
+        .pcard-img {
+            width: 100%;
+            height: 140px;
+            object-fit: cover;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        }
+        .pcard-body {
+            padding: 16px 18px;
+        }
+        .pcard h4 {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .pcard p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+        .pcard-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .pcard-price {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--sq-green);
+        }
+        .pcard-link {
+            font-size: 13px;
+            color: var(--sq-blue);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+        .pcard-link:hover { color: #0088ff; }
+        .ptag {
+            font-size: 9px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .tag-saas { background: rgba(0, 214, 50, 0.2); color: var(--sq-green); }
+        .tag-hardware { background: rgba(175, 82, 222, 0.2); color: var(--accent-purple); }
+        .tag-payments { background: rgba(0, 106, 255, 0.2); color: var(--sq-blue); }
+        .scard {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 18px 20px;
+            margin: 12px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        .scard::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+        }
+        .scard.obj::before { background: linear-gradient(180deg, var(--sq-blue) 0%, #0088ff 100%); }
+        .scard.cls::before { background: linear-gradient(180deg, var(--accent-orange) 0%, #ffaa00 100%); }
+        .scard.cmp::before { background: linear-gradient(180deg, var(--accent-red) 0%, #ff5544 100%); }
+        .scard.ctx::before { background: linear-gradient(180deg, var(--sq-green) 0%, #00ff44 100%); }
+        .scard h4 {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+        .sbox {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 14px 16px;
+            border-radius: 12px;
+            font-size: 14px;
+            line-height: 1.7;
+            color: var(--text-secondary);
+        }
+        .sfu {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 12px;
+            font-style: italic;
+        }
+        .wlist {
+            margin: 12px 0;
+            padding: 0;
+            list-style: none;
+        }
+        .wlist li {
+            font-size: 14px;
+            padding: 10px 0 10px 28px;
+            position: relative;
+            color: var(--text-secondary);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .wlist li:last-child { border-bottom: none; }
+        .wlist li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--sq-green);
+            font-weight: bold;
+            text-shadow: 0 0 10px var(--sq-green-glow);
+        }
+        .summary-box {
+            background: linear-gradient(135deg, rgba(0, 214, 50, 0.1) 0%, rgba(0, 106, 255, 0.1) 100%);
+            border: 1px solid var(--border-glow);
+            border-radius: 20px;
+            padding: 24px;
+            margin: 20px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        .summary-box::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent 40%, rgba(0, 214, 50, 0.1) 50%, transparent 60%);
+            animation: shimmer 3s infinite;
+        }
+        .summary-box h3 {
+            font-size: 18px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 14px;
+            position: relative;
+            z-index: 1;
+        }
+        .summary-item:last-child { border-bottom: none; }
+        .summary-item .label { color: var(--text-muted); }
+        .summary-item .value { font-weight: 600; color: var(--text-primary); }
+        .video-section { margin-top: 24px; }
+        .video-grid {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin-top: 14px;
+        }
+        .video-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 14px;
+            overflow: hidden;
+            width: 200px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+        .video-card:hover {
+            border-color: var(--sq-green);
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 30px var(--sq-green-glow);
+        }
+        .video-card img {
+            width: 100%;
+            height: 112px;
+            object-fit: cover;
+        }
+        .video-card .play-icon {
+            position: absolute;
+            top: 35px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 48px;
+            height: 48px;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s;
+        }
+        .video-card:hover .play-icon {
+            background: var(--sq-green);
+            border-color: var(--sq-green);
+            box-shadow: 0 0 30px var(--sq-green-glow);
+        }
+        .video-card .play-icon::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-40%, -50%);
+            border-style: solid;
+            border-width: 8px 0 8px 14px;
+            border-color: transparent transparent transparent white;
+            transition: border-color 0.3s;
+        }
+        .video-card:hover .play-icon::after {
+            border-color: transparent transparent transparent #000;
+        }
+        .video-card .vinfo {
+            padding: 12px 14px;
+        }
+        .video-card .vinfo h5 {
+            font-size: 12px;
+            font-weight: 600;
+            line-height: 1.4;
+            color: var(--text-primary);
+        }
+        .video-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+        }
+        .video-modal.show { display: flex; }
+        .video-modal-content {
+            width: 90%;
+            max-width: 900px;
+            position: relative;
+            animation: slide-up 0.3s ease-out;
+        }
+        .video-modal-close {
+            position: absolute;
+            top: -50px;
+            right: 0;
+            color: white;
+            font-size: 32px;
+            cursor: pointer;
+            padding: 10px;
+            transition: all 0.3s;
+        }
+        .video-modal-close:hover {
+            color: var(--sq-green);
+            transform: scale(1.1);
+        }
+        .video-modal iframe {
+            width: 100%;
+            height: 500px;
+            border: none;
+            border-radius: 16px;
+            box-shadow: 0 0 60px rgba(0, 0, 0, 0.5);
+        }
+        .restart-btn {
+            position: fixed;
+            bottom: 90px;
+            right: 24px;
+            padding: 12px 20px;
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-secondary);
+            border-radius: 14px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            z-index: 99;
+        }
+        .restart-btn:hover {
+            border-color: var(--sq-green);
+            color: var(--sq-green);
+            box-shadow: 0 0 20px var(--sq-green-glow);
+        }
+        @media (max-width: 600px) {
+            .container { padding: 90px 12px 110px; }
+            .video-card { width: calc(50% - 7px); }
+            .video-modal iframe { height: 280px; }
+            .options { gap: 8px; }
+            .opt { padding: 12px 18px; font-size: 13px; }
+            .pcard-img { height: 100px; }
+        }
     </style>
 </head>
 <body>
 <div class="header">
-    <div style="display:flex;align-items:center"><h1>CloseBot</h1><span class="badge">BETA</span></div>
-    <div style="font-size:12px;color:#999">IC Sales Assistant</div>
+    <div class="logo">
+        <div class="logo-icon">JIT</div>
+        <div>
+            <h1>JIT</h1>
+            <div class="logo-sub">Just In Time Intelligence</div>
+        </div>
+    </div>
+    <div class="badge">BETA</div>
 </div>
 <div class="container">
     <div class="chat"><div class="msgs" id="out"></div></div>
@@ -98,7 +617,15 @@
 <script>
 var state = {step:0, vertical:null, gpv:null, locations:null, staff:null, paymentMethods:[], notes:[]};
 
-// VERTICALS - Based on UK Product Market Fit Assessment
+// PRODUCT IMAGES from Square website
+var PRODUCT_IMAGES = {
+    "Square Reader": "https://images.squarespace-cdn.com/content/v1/583a3246bebafb8212e3a26d/1580328781189-XHQJQVMVXJZ8XQVXQVXQ/square-reader.jpg",
+    "Square Terminal": "https://squareup.com/us/en/hardware/terminal/_jcr_content/root/hero/image.img.png/1697665547677.png",
+    "Square Register": "https://squareup.com/us/en/hardware/register/_jcr_content/root/hero/image.img.png/1697665547677.png",
+    "Square Stand": "https://squareup.com/us/en/hardware/stand/_jcr_content/root/hero/image.img.png/1697665547677.png"
+};
+
+// VERTICALS
 var VERTICALS = {
     qsr:{name:"Quick Service Restaurant",icon:"🍔",priority:"P0",
         discovery:["What POS system are you using today?","How do you handle busy periods - any queuing issues?","Do you offer online ordering or click & collect?","Are you on any delivery apps like Deliveroo or Uber Eats?"],
@@ -120,12 +647,12 @@ var VERTICALS = {
         pmf:"Moderate PMF. Best for consultants, trainers, photographers with booking needs.",showDelivery:false}
 };
 
-// PRODUCTS - Accurate UK pricing and descriptions
+// PRODUCTS with UK pricing
 var PRODUCTS = {
-    "Square Reader":{cat:"hardware",desc:"Compact chip & PIN and contactless card reader. Pairs with phone or tablet. Best for sole traders, markets, mobile sellers.",price:"£19 + VAT",link:"https://squareup.com/help/gb/en/article/5087"},
-    "Square Terminal":{cat:"hardware",desc:"All-in-one card machine with built-in POS, receipts, and next-day deposits. No rental fees. Best for 1-10 locations wanting portable payments.",price:"£149 + VAT",link:"https://squareup.com/help/gb/en/article/5583"},
-    "Square Register":{cat:"hardware",desc:"Premium countertop POS with separate customer-facing display. Built-in card reader. Best for high-volume locations wanting a premium setup.",price:"£599 + VAT",link:"https://squareup.com/help/gb/en/article/7631"},
-    "Square Stand":{cat:"hardware",desc:"Sleek iPad stand with built-in card reader. Uses your own iPad. Best for countertop payments with existing iPad.",price:"£99 + VAT",link:"https://squareup.com/help/gb/en/article/5580"},
+    "Square Reader":{cat:"hardware",desc:"Compact chip & PIN and contactless card reader. Pairs with phone or tablet. Best for sole traders, markets, mobile sellers.",price:"£19 + VAT",link:"https://squareup.com/help/gb/en/article/5087",img:"https://images.ctfassets.net/2d5q1td6cyxq/5KmPjPJLLPYJwfTqPqPqPq/reader.png"},
+    "Square Terminal":{cat:"hardware",desc:"All-in-one card machine with built-in POS, receipts, and next-day deposits. No rental fees. Best for 1-10 locations wanting portable payments.",price:"£149 + VAT",link:"https://squareup.com/help/gb/en/article/5583",img:"https://images.ctfassets.net/2d5q1td6cyxq/terminal/terminal.png"},
+    "Square Register":{cat:"hardware",desc:"Premium countertop POS with separate customer-facing display. Built-in card reader. Best for high-volume locations wanting a premium setup.",price:"£599 + VAT",link:"https://squareup.com/help/gb/en/article/7631",img:"https://images.ctfassets.net/2d5q1td6cyxq/register/register.png"},
+    "Square Stand":{cat:"hardware",desc:"Sleek iPad stand with built-in card reader. Uses your own iPad. Best for countertop payments with existing iPad.",price:"£99 + VAT",link:"https://squareup.com/help/gb/en/article/5580",img:"https://images.ctfassets.net/2d5q1td6cyxq/stand/stand.png"},
     "Square for Restaurants":{cat:"saas",desc:"Purpose-built restaurant POS: table management, floor plans, coursing, KDS integration, tip pooling, menu management. Free plan available.",price:"Free / Plus £69/mo",link:"https://squareup.com/help/gb/en/article/6238"},
     "Square for Retail":{cat:"saas",desc:"Advanced retail POS: inventory management with low stock alerts, purchase orders, barcode scanning, vendor management, multi-location stock tracking.",price:"Free / Plus £60/mo",link:"https://squareup.com/help/gb/en/article/5061"},
     "Square Appointments":{cat:"saas",desc:"Online booking 24/7, automated SMS/email reminders (cuts no-shows by 30%), no-show protection with card-on-file, Google Calendar sync, client notes.",price:"Free / Plus £29/mo / Premium £69/mo",link:"https://squareup.com/help/gb/en/article/6996"},
@@ -138,7 +665,7 @@ var PRODUCTS = {
     "Square Kiosk":{cat:"saas",desc:"Self-service ordering for QSRs. Customers order and pay themselves, reducing queues and increasing average order value through upsells.",price:"Contact for pricing",link:"https://squareup.com/gb/en/point-of-sale/restaurants/kiosk"}
 };
 
-// RECOMMENDATIONS by vertical - based on PMF assessment
+// RECOMMENDATIONS by vertical
 var RECOMMENDATIONS = {
     qsr:{products:["Square Register","Square Terminal","Kitchen Display System","Square Online","Square Kiosk"],
         wins:["Fastest transaction time in the industry - 2 seconds","KDS eliminates lost tickets and speeds up service","Online ordering syncs automatically with in-store inventory","Next-day deposits including weekends and bank holidays","Self-service kiosk reduces queues and increases order value"]},
@@ -154,7 +681,7 @@ var RECOMMENDATIONS = {
         wins:["Online booking frees up your time","Deposits protect against cancellations","Professional invoices with automatic reminders","Take phone payments with Virtual Terminal","Milestone billing for larger projects"]}
 };
 
-// VIDEOS - From Square UK YouTube
+// VIDEOS
 var VIDEOS = {
     general:[{title:"Switch to Square POS",vid:"8V3FpMv_L2g"},{title:"Select Your Mode",vid:"n-N3p7A9pG8"},{title:"Getting Started",vid:"aJvoY25CtWw"}],
     qsr:[{title:"Square Register",vid:"yrYBJZvi0Hs"},{title:"Square Terminal",vid:"6WUabw7MjVQ"},{title:"KDS Overview",vid:"-3_ZZT6Rvwg"}],
@@ -166,7 +693,7 @@ var VIDEOS = {
     online:[{title:"Square Online Setup",vid:"xE6JPb9r3Gw"},{title:"Product Pages",vid:"UZvFMyjgFRY"},{title:"Shopping Pages",vid:"9_p5_v1f4jM"}],
     hardware:[{title:"Square Reader Setup",vid:"fXvI08V9qS0"},{title:"Tap to Pay iPhone",vid:"U9K3vA0300Y"},{title:"Square Kiosk",vid:"hzTN2WyfZAM"}]
 };
-// PAIN RESPONSES - Based on Win/Loss Analysis and competitor research
+// PAIN RESPONSES
 var PAIN_RESPONSES = {
     "fee":{keywords:["fee","expensive","cost","price","rate","percent","charge","paying too much","1.75","transaction fee","processing"],
         response:"Square is 1.75% for chip & PIN, 2.5% for keyed/online. No monthly fees, no terminal rental, no PCI fees, no statement fees, no minimum monthly charges. Most merchants switching from traditional providers save 20-30%. Win/Loss data shows 35% of lost deals are rate-sensitive - but we win on total cost of ownership.",
@@ -225,7 +752,7 @@ var PAIN_RESPONSES = {
         response:"Square processes billions in payments globally with enterprise-grade reliability. Unlike some competitors, we own our entire stack - payments, software, hardware. When issues occur, you're dealing with one company, not multiple vendors pointing fingers.",
         product:"Square Terminal",action:"Emphasise single integrated system vs multiple vendors"}
 };
-// COMPETITORS - From UK Competitor Analysis doc (Mar 2025)
+// COMPETITORS
 var COMPETITORS = {
     sumup:{name:"SumUp",type:"Payments + Basic POS",
         hwPricing:"Air Reader £34, Solo £79, POS Lite £349",
@@ -271,7 +798,7 @@ var COMPETITORS = {
         counter:"ePOS Now is overcomplicated and slow - our Win/Loss data confirms sellers find it frustrating. Square is 'simple but powerful' - staff learn it in minutes, not days. Modern interface, fast performance."}
 };
 
-// OBJECTIONS - Based on Win/Loss Analysis
+// OBJECTIONS
 var OBJECTIONS = {
     "Too expensive / High rates":{
         response:"What are you paying now in monthly fees, terminal rental, and per-transaction? With Square: no monthly fees, no rental, no PCI fees, no statement fees, no minimum monthly charges - just 1.75% per tap. Most merchants save on total cost of ownership. Our Win/Loss shows 35% mention rates, but 39% of wins come from integrated POS+payments value.",
@@ -321,7 +848,7 @@ function say(html, isBot) {
     var out = document.getElementById("out");
     var div = document.createElement("div");
     div.className = "msg " + (isBot ? "bot" : "usr");
-    div.innerHTML = '<div class="av">' + (isBot ? "CB" : "IC") + '</div><div class="mc">' + html + '</div>';
+    div.innerHTML = '<div class="av">' + (isBot ? "JIT" : "IC") + '</div><div class="mc">' + html + '</div>';
     out.appendChild(div);
     out.scrollTop = out.scrollHeight;
 }
@@ -351,7 +878,6 @@ function sendMessage() {
 function processInput(text) {
     var lower = text.toLowerCase();
     var matched = false;
-    // Check pain points
     Object.keys(PAIN_RESPONSES).forEach(function(key) {
         if (matched) return;
         PAIN_RESPONSES[key].keywords.forEach(function(kw) {
@@ -361,7 +887,6 @@ function processInput(text) {
             }
         });
     });
-    // Check competitors
     if (!matched) {
         Object.keys(COMPETITORS).forEach(function(key) {
             if (matched) return;
@@ -371,7 +896,6 @@ function processInput(text) {
             }
         });
     }
-    // Check objections
     if (!matched) {
         if (lower.indexOf("expensive") > -1 || lower.indexOf("cost") > -1 || lower.indexOf("rate") > -1) { matched = true; showObjectionResponse("Too expensive / High rates"); }
         else if (lower.indexOf("think") > -1 || lower.indexOf("consider") > -1) { matched = true; showObjectionResponse("Need to think about it"); }
@@ -392,9 +916,10 @@ function showContextualResponse(pain, originalText) {
     html += "</div>";
     var prod = PRODUCTS[pain.product];
     if (prod) {
-        html += "<div class='pcard'><h4>" + pain.product + " <span class='ptag tag-" + prod.cat + "'>" + prod.cat + "</span></h4>";
+        html += "<div class='pcard'>";
+        html += "<div class='pcard-body'><h4>" + pain.product + " <span class='ptag tag-" + prod.cat + "'>" + prod.cat + "</span></h4>";
         html += "<p>" + prod.desc + "</p>";
-        html += "<div style='margin-top:8px;font-size:13px'><b>" + prod.price + "</b> · <a href='" + prod.link + "' target='_blank' style='color:var(--sq-blue)'>Help →</a></div></div>";
+        html += "<div class='pcard-footer'><span class='pcard-price'>" + prod.price + "</span><a href='" + prod.link + "' target='_blank' class='pcard-link'>Learn more →</a></div></div></div>";
     }
     if (pain.videos && VIDEOS[pain.videos]) {
         html += "<div class='video-section'><div class='section-title'>🎬 Show them</div><div class='video-grid'>";
@@ -403,7 +928,7 @@ function showContextualResponse(pain, originalText) {
         });
         html += "</div></div>";
     }
-    html += "<div class='options' style='margin-top:16px'><div class='opt' onclick='showCloses()'>🎯 Close</div><div class='opt secondary' onclick='showObjections()'>🛡️ Objections</div></div>";
+    html += "<div class='options' style='margin-top:16px'><div class='opt' onclick='showCloses()'>🎯 Close the Deal</div><div class='opt secondary' onclick='showObjections()'>🛡️ Handle Objections</div></div>";
     say(html, true);
 }
 function showObjectionResponse(objKey) {
@@ -412,29 +937,29 @@ function showObjectionResponse(objKey) {
     var html = "<div class='scard obj'><h4>🛡️ \"" + objKey + "\"</h4><div class='sbox'>" + obj.response + "</div>";
     html += "<div class='sfu'>↳ Follow up: \"" + obj.followup + "\"</div>";
     if (obj.stat) html += "<div class='sfu'>📊 " + obj.stat + "</div>";
-    html += "</div><div class='options' style='margin-top:16px'><div class='opt' onclick='showCloses()'>🎯 Close</div><div class='opt secondary' onclick='showObjections()'>🛡️ Other Objections</div></div>";
+    html += "</div><div class='options' style='margin-top:16px'><div class='opt' onclick='showCloses()'>🎯 Close the Deal</div><div class='opt secondary' onclick='showObjections()'>🛡️ Other Objections</div></div>";
     say(html, true);
 }
 function showGenericResponse(text) {
-    var html = "<b>I heard:</b> \"" + text + "\"<br><br>Try topics like:<div class='options' style='margin-top:12px'>";
-    html += "<div class='opt small secondary' onclick=\"document.getElementById('userInput').value='fees too high';sendMessage()\">💸 Fees</div>";
-    html += "<div class='opt small secondary' onclick=\"document.getElementById('userInput').value='slow deposits';sendMessage()\">🏦 Deposits</div>";
-    html += "<div class='opt small secondary' onclick=\"document.getElementById('userInput').value='need better POS';sendMessage()\">📱 POS</div>";
-    html += "<div class='opt small secondary' onclick=\"document.getElementById('userInput').value='inventory tracking';sendMessage()\">📦 Inventory</div>";
-    html += "<div class='opt small secondary' onclick=\"document.getElementById('userInput').value='using SumUp';sendMessage()\">⚔️ SumUp</div>";
-    html += "<div class='opt small secondary' onclick=\"document.getElementById('userInput').value='using Zettle';sendMessage()\">⚔️ Zettle</div>";
+    var html = "<b>I heard:</b> \"" + text + "\"<br><br><span style='color:var(--text-muted)'>Try topics like:</span><div class='options' style='margin-top:12px'>";
+    html += "<div class='opt secondary' onclick=\"document.getElementById('userInput').value='fees too high';sendMessage()\">💸 Fees</div>";
+    html += "<div class='opt secondary' onclick=\"document.getElementById('userInput').value='slow deposits';sendMessage()\">🏦 Deposits</div>";
+    html += "<div class='opt secondary' onclick=\"document.getElementById('userInput').value='need better POS';sendMessage()\">📱 POS</div>";
+    html += "<div class='opt secondary' onclick=\"document.getElementById('userInput').value='inventory tracking';sendMessage()\">📦 Inventory</div>";
+    html += "<div class='opt secondary' onclick=\"document.getElementById('userInput').value='using SumUp';sendMessage()\">⚔️ SumUp</div>";
+    html += "<div class='opt secondary' onclick=\"document.getElementById('userInput').value='using Zettle';sendMessage()\">⚔️ Zettle</div>";
     html += "</div><div class='options' style='margin-top:12px'><div class='opt' onclick='showObjections()'>🛡️ Objections</div><div class='opt' onclick='showCloses()'>🎯 Close</div><div class='opt secondary' onclick='showCompetitors()'>⚔️ Competitors</div></div>";
     say(html, true);
 }
 function startConversation() {
-    say("<b>Hey! 👋</b><br><br>Let's profile this merchant so I can give you the right pitch.<br><br><div class='section-title'>What type of business?</div><div class='options'>" +
+    say("<div style='font-size:28px;margin-bottom:8px'>👋</div><b style='font-size:18px'>Welcome to JIT</b><br><br><span style='color:var(--text-secondary)'>Your real-time sales intelligence assistant. Let's profile this merchant for tailored recommendations.</span><br><br><div class='section-title'>What type of business?</div><div class='options'>" +
         "<div class='opt' onclick=\"selectVertical('qsr')\"><span class='ico'>🍔</span>QSR</div>" +
         "<div class='opt' onclick=\"selectVertical('fsr')\"><span class='ico'>🍽️</span>FSR</div>" +
         "<div class='opt' onclick=\"selectVertical('retail')\"><span class='ico'>🛍️</span>Retail</div>" +
         "<div class='opt' onclick=\"selectVertical('beauty')\"><span class='ico'>💇</span>Beauty</div>" +
         "<div class='opt' onclick=\"selectVertical('health')\"><span class='ico'>💪</span>Health</div>" +
         "<div class='opt' onclick=\"selectVertical('services')\"><span class='ico'>💼</span>Services</div>" +
-        "</div><br><span style='color:var(--sq-gray-500);font-size:13px'>💬 Or type what the merchant is saying below</span>", true);
+        "</div><br><span style='color:var(--text-muted);font-size:13px'>💬 Or type what the merchant is saying below for instant intel</span>", true);
 }
 function selectVertical(v) {
     state.vertical = v;
@@ -481,13 +1006,13 @@ function selectStaff(s) {
 }
 function askPaymentMethods() {
     var vert = VERTICALS[state.vertical];
-    var html = "<div class='section-title'>How do they take payments? (select all)</div><div class='options'>";
+    var html = "<div class='section-title'>How do they take payments? <span style='font-weight:400;text-transform:none;letter-spacing:0'>(select all)</span></div><div class='options'>";
     html += "<div class='opt secondary' id='pm-f2f' onclick=\"togglePayment('f2f')\">💳 Face to face</div>";
     html += "<div class='opt secondary' id='pm-online' onclick=\"togglePayment('online')\">🌐 Online</div>";
     html += "<div class='opt secondary' id='pm-phone' onclick=\"togglePayment('phone')\">📞 Phone/VT</div>";
     html += "<div class='opt secondary' id='pm-links' onclick=\"togglePayment('links')\">🔗 Payment Links</div>";
     if (vert.showDelivery) html += "<div class='opt secondary' id='pm-delivery' onclick=\"togglePayment('delivery')\">🛵 Delivery Apps</div>";
-    html += "</div><div class='options' style='margin-top:16px'><div class='opt' onclick='finishPaymentMethods()'>Continue →</div></div>";
+    html += "</div><div class='options' style='margin-top:16px'><div class='opt' onclick='finishPaymentMethods()'>Generate Intel →</div></div>";
     say(html, true);
 }
 function togglePayment(method) {
@@ -532,9 +1057,10 @@ function showRecommendation() {
     products.forEach(function(pname) {
         var p = PRODUCTS[pname];
         if (p) {
-            html += "<div class='pcard'><h4>" + pname + " <span class='ptag tag-" + p.cat + "'>" + p.cat + "</span></h4>";
+            html += "<div class='pcard'>";
+            html += "<div class='pcard-body'><h4>" + pname + " <span class='ptag tag-" + p.cat + "'>" + p.cat + "</span></h4>";
             html += "<p>" + p.desc + "</p>";
-            html += "<div style='margin-top:8px;font-size:13px'><b>" + p.price + "</b> · <a href='" + p.link + "' target='_blank' style='color:var(--sq-blue)'>Help →</a></div></div>";
+            html += "<div class='pcard-footer'><span class='pcard-price'>" + p.price + "</span><a href='" + p.link + "' target='_blank' class='pcard-link'>Learn more →</a></div></div></div>";
         }
     });
     
@@ -547,7 +1073,7 @@ function showRecommendation() {
     html += "</div></div>";
     
     html += "<div class='options' style='margin-top:24px'><div class='opt' onclick='showObjections()'>🛡️ Objections</div><div class='opt' onclick='showCloses()'>🎯 Close</div><div class='opt secondary' onclick='showCompetitors()'>⚔️ Competitor</div></div>";
-    html += "<br><span style='color:var(--sq-gray-500);font-size:13px'>💬 Type what the merchant says for contextual help</span>";
+    html += "<br><span style='color:var(--text-muted);font-size:13px'>💬 Type what the merchant says for contextual intel</span>";
     say(html, true);
 }
 function showObjections() {
@@ -583,7 +1109,7 @@ function showCompetitors() {
 function showBattlecard(key) {
     var c = COMPETITORS[key];
     say("vs <b>" + c.name + "</b>", false);
-    var html = "<b>" + c.name + "</b> <span style='color:var(--sq-gray-500)'>(" + c.type + ")</span>";
+    var html = "<b>" + c.name + "</b> <span style='color:var(--text-muted)'>(" + c.type + ")</span>";
     html += "<div class='scard cmp'><h4>💰 Their Pricing</h4><div class='sbox'>HW: " + c.hwPricing + "<br>Rates: " + c.rates + "</div></div>";
     html += "<div class='scard cmp'><h4>❌ Their Weaknesses</h4><ul class='wlist'>";
     c.weaknesses.forEach(function(w) { html += "<li>" + w + "</li>"; });
