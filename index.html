@@ -11,7 +11,8 @@
             --white: #FFFFFF;
             --black: #000000;
             --green: #00D632;
-            --green-dark: #00B82B;
+            --green-light: rgba(0, 214, 50, 0.1);
+            --green-glow: rgba(0, 214, 50, 0.3);
             --gray-50: #FAFAFA;
             --gray-100: #F5F5F5;
             --gray-200: #E5E5E5;
@@ -19,48 +20,72 @@
             --gray-400: #A3A3A3;
             --gray-500: #737373;
             --gray-600: #525252;
-            --gray-700: #404040;
             --gray-800: #262626;
-            --gray-900: #171717;
-            --blue: #006AFF;
-            --orange: #FF6B00;
-            --red: #FF3B30;
-            --gold: #FFD700;
+            --glass: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(0, 0, 0, 0.08);
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        
         body {
             font-family: 'Inter', -apple-system, sans-serif;
-            background: var(--black);
+            background: linear-gradient(180deg, #FAFAFA 0%, #FFFFFF 50%, #F5F5F5 100%);
             min-height: 100vh;
-            color: var(--white);
+            color: var(--black);
             -webkit-font-smoothing: antialiased;
             overflow-x: hidden;
         }
         
+        /* Futuristic background grid */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: 
+                linear-gradient(rgba(0,0,0,0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0,0,0,0.02) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        /* Floating orbs */
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.5;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .orb-1 { width: 400px; height: 400px; background: var(--green-glow); top: -100px; right: -100px; animation: float 8s ease-in-out infinite; }
+        .orb-2 { width: 300px; height: 300px; background: rgba(0, 106, 255, 0.15); bottom: -50px; left: -50px; animation: float 10s ease-in-out infinite reverse; }
+        
         /* Animations */
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes float { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-20px) rotate(5deg); } }
+        @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.05); opacity: 0.8; } }
+        @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+        @keyframes glow { 0%, 100% { box-shadow: 0 0 20px var(--green-glow); } 50% { box-shadow: 0 0 40px var(--green-glow), 0 0 60px var(--green-glow); } }
         @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        @keyframes glow { 0%, 100% { box-shadow: 0 0 20px rgba(0, 214, 50, 0.3); } 50% { box-shadow: 0 0 40px rgba(0, 214, 50, 0.6); } }
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-        @keyframes radarSweep { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        @keyframes ringPulse { 0% { transform: scale(0.8); opacity: 0; } 50% { opacity: 1; } 100% { transform: scale(1.2); opacity: 0; } }
+        @keyframes borderGlow { 0%, 100% { border-color: rgba(0, 214, 50, 0.3); } 50% { border-color: rgba(0, 214, 50, 0.8); } }
         
-        /* Header */
+        /* Glassmorphism Header */
         .header {
             position: fixed;
-            top: 0; left: 0; right: 0;
+            top: 16px; left: 16px; right: 16px;
             height: 64px;
-            background: rgba(0, 0, 0, 0.9);
+            background: var(--glass);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             padding: 0 24px;
             z-index: 1000;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
         }
         .logo {
             display: flex;
@@ -68,101 +93,149 @@
             gap: 12px;
         }
         .logo-mark {
-            width: 32px;
-            height: 32px;
-            background: var(--white);
-            border-radius: 8px;
-        }
-        .logo h1 {
-            font-size: 20px;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-        }
-        
-        /* Deal Radar */
-        .deal-radar {
+            width: 36px;
+            height: 36px;
+            background: var(--black);
+            border-radius: 10px;
             position: relative;
-            width: 48px;
-            height: 48px;
+            overflow: hidden;
         }
-        .radar-ring {
+        .logo-mark::after {
+            content: '';
             position: absolute;
             inset: 0;
-            border: 2px solid var(--green);
-            border-radius: 50%;
-            opacity: 0.3;
+            background: linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.2) 50%, transparent 60%);
+            animation: shimmer 3s infinite;
+            background-size: 200% 100%;
         }
-        .radar-ring.active {
-            opacity: 1;
-            animation: glow 2s ease-in-out infinite;
+        .logo h1 {
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            background: linear-gradient(135deg, var(--black) 0%, var(--gray-600) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
-        .radar-fill {
+        
+        /* Deal Radar - Futuristic circular progress */
+        .deal-radar {
+            position: relative;
+            width: 52px;
+            height: 52px;
+            cursor: pointer;
+        }
+        .radar-bg {
             position: absolute;
-            inset: 4px;
-            background: conic-gradient(var(--green) var(--progress), transparent var(--progress));
+            inset: 0;
             border-radius: 50%;
-            transition: all 0.5s ease;
+            background: conic-gradient(var(--gray-200) 0deg, var(--gray-200) 360deg);
         }
-        .radar-center {
+        .radar-progress {
             position: absolute;
-            inset: 8px;
-            background: var(--black);
+            inset: 0;
+            border-radius: 50%;
+            background: conic-gradient(var(--green) calc(var(--progress) * 3.6deg), transparent 0deg);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .radar-inner {
+            position: absolute;
+            inset: 6px;
+            background: var(--white);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 11px;
+            font-size: 12px;
             font-weight: 700;
-            color: var(--green);
+            color: var(--black);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .radar-glow {
+            position: absolute;
+            inset: -4px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            opacity: 0;
+            transition: all 0.3s;
+        }
+        .deal-radar.hot .radar-glow {
+            border-color: var(--green);
+            opacity: 1;
+            animation: borderGlow 1.5s infinite;
         }
         
         /* Main Layout */
         .main {
             display: grid;
-            grid-template-columns: 1fr 320px;
+            grid-template-columns: 1fr 340px;
             min-height: 100vh;
-            padding-top: 64px;
+            padding-top: 96px;
+            position: relative;
+            z-index: 1;
         }
-        @media (max-width: 1024px) {
+        @media (max-width: 1100px) {
             .main { grid-template-columns: 1fr; }
             .sidebar { display: none; }
         }
         
         /* Conversation Area */
         .conversation {
-            padding: 32px;
-            max-width: 800px;
+            padding: 24px 32px 160px;
+            max-width: 720px;
             margin: 0 auto;
             width: 100%;
         }
         
-        /* Hero Section */
+        /* Hero - Futuristic */
         .hero {
             text-align: center;
-            padding: 80px 20px 60px;
+            padding: 60px 20px 50px;
             animation: fadeIn 0.8s ease-out;
         }
         .hero h2 {
-            font-size: 56px;
+            font-size: 64px;
             font-weight: 800;
-            letter-spacing: -3px;
+            letter-spacing: -4px;
             line-height: 1;
             margin-bottom: 16px;
-            background: linear-gradient(180deg, var(--white) 0%, var(--gray-400) 100%);
+            background: linear-gradient(135deg, var(--black) 0%, var(--gray-500) 50%, var(--black) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            background-size: 200% auto;
+            animation: shimmer 4s linear infinite;
         }
         .hero p {
             font-size: 18px;
-            color: var(--gray-400);
+            color: var(--gray-500);
             font-weight: 400;
+        }
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 20px;
+            padding: 8px 16px;
+            background: var(--green-light);
+            border: 1px solid var(--green);
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--green);
+        }
+        .hero-badge::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: var(--green);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
         }
         
         /* Messages */
         .messages {
             display: flex;
             flex-direction: column;
-            gap: 24px;
+            gap: 20px;
         }
         .msg {
             animation: slideUp 0.4s ease-out;
@@ -172,21 +245,24 @@
             justify-content: flex-end;
         }
         .msg.user .bubble {
-            background: var(--green);
-            color: var(--black);
+            background: var(--black);
+            color: var(--white);
             padding: 14px 20px;
             border-radius: 20px 20px 4px 20px;
             max-width: 70%;
             font-weight: 500;
+            font-size: 15px;
         }
         .msg.bot .content {
-            background: var(--gray-900);
-            border: 1px solid var(--gray-800);
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
             border-radius: 24px;
             padding: 24px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
         }
         
-        /* Options Grid */
+        /* Futuristic Options */
         .options {
             display: flex;
             flex-wrap: wrap;
@@ -194,31 +270,43 @@
             margin-top: 16px;
         }
         .opt {
-            padding: 12px 20px;
-            background: var(--gray-800);
-            border: 1px solid var(--gray-700);
-            border-radius: 12px;
+            padding: 14px 22px;
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: 14px;
             font-size: 14px;
             font-weight: 500;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+        .opt::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, transparent 0%, rgba(0, 214, 50, 0.1) 100%);
+            opacity: 0;
+            transition: opacity 0.3s;
         }
         .opt:hover {
-            background: var(--gray-700);
-            border-color: var(--gray-600);
-            transform: translateY(-2px);
-        }
-        .opt.primary {
-            background: var(--green);
             border-color: var(--green);
-            color: var(--black);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 214, 50, 0.15);
+        }
+        .opt:hover::before { opacity: 1; }
+        .opt:active { transform: translateY(-1px); }
+        .opt.primary {
+            background: var(--black);
+            border-color: var(--black);
+            color: var(--white);
         }
         .opt.primary:hover {
-            background: var(--green-dark);
-            border-color: var(--green-dark);
+            background: var(--gray-800);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
         }
         .opt.selected {
             background: var(--green);
@@ -230,165 +318,218 @@
         /* Section Labels */
         .section-label {
             font-size: 11px;
-            font-weight: 600;
-            color: var(--gray-500);
+            font-weight: 700;
+            color: var(--gray-400);
             text-transform: uppercase;
-            letter-spacing: 1.5px;
-            margin-bottom: 12px;
+            letter-spacing: 2px;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .section-label::before {
+            content: '';
+            width: 12px;
+            height: 2px;
+            background: var(--green);
+            border-radius: 1px;
         }
         
-        /* Stack Builder */
+        /* Stack Builder - Glassmorphism */
         .stack-builder {
-            background: var(--gray-900);
-            border: 1px solid var(--gray-800);
+            background: var(--white);
+            border: 1px solid var(--gray-200);
             border-radius: 20px;
             padding: 20px;
             margin: 20px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        .stack-builder::before {
+            content: '';
+            position: absolute;
+            top: 0; right: 0;
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle, var(--green-light) 0%, transparent 70%);
+            pointer-events: none;
         }
         .stack-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 16px;
+            position: relative;
         }
         .stack-header h3 {
-            font-size: 14px;
-            font-weight: 600;
+            font-size: 15px;
+            font-weight: 700;
         }
         .stack-total {
-            font-size: 14px;
+            font-size: 18px;
             color: var(--green);
-            font-weight: 600;
+            font-weight: 700;
         }
         .stack-items {
             display: flex;
             flex-wrap: wrap;
             gap: 8px;
-            min-height: 50px;
-            padding: 12px;
-            background: var(--gray-800);
-            border-radius: 12px;
-            border: 2px dashed var(--gray-700);
+            min-height: 60px;
+            padding: 16px;
+            background: var(--gray-50);
+            border-radius: 14px;
+            border: 2px dashed var(--gray-200);
+            transition: all 0.3s;
+        }
+        .stack-items:hover {
+            border-color: var(--green);
+            background: var(--green-light);
         }
         .stack-item {
             display: flex;
             align-items: center;
-            gap: 8px;
-            padding: 8px 12px;
-            background: var(--black);
-            border-radius: 8px;
+            gap: 10px;
+            padding: 10px 14px;
+            background: var(--white);
+            border-radius: 10px;
             font-size: 13px;
+            font-weight: 500;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
             animation: fadeIn 0.3s ease;
         }
-        .stack-item img {
-            width: 32px;
-            height: 32px;
-            object-fit: contain;
-        }
         .stack-item .remove {
-            color: var(--gray-500);
+            color: var(--gray-400);
             cursor: pointer;
-            margin-left: 4px;
+            font-size: 18px;
+            line-height: 1;
+            transition: color 0.2s;
         }
         .stack-item .remove:hover { color: var(--red); }
         .stack-empty {
-            color: var(--gray-600);
+            color: var(--gray-400);
             font-size: 13px;
             text-align: center;
             width: 100%;
             padding: 8px;
         }
         
-        /* Product Cards */
+        /* Product Cards - Futuristic */
         .product-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-            gap: 12px;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 14px;
             margin: 16px 0;
         }
         .product-card {
-            background: var(--gray-900);
-            border: 1px solid var(--gray-800);
-            border-radius: 16px;
-            padding: 16px;
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: 18px;
+            padding: 18px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
         }
+        .product-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, transparent 50%, var(--green-light) 100%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
         .product-card:hover {
             border-color: var(--green);
-            transform: translateY(-4px);
-            box-shadow: 0 20px 40px rgba(0, 214, 50, 0.1);
+            transform: translateY(-6px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 214, 50, 0.12);
         }
+        .product-card:hover::after { opacity: 1; }
         .product-card.in-stack {
             border-color: var(--green);
-            background: rgba(0, 214, 50, 0.05);
+            background: var(--green-light);
         }
         .product-card .badge {
             position: absolute;
-            top: 8px;
-            right: 8px;
+            top: 10px;
+            right: 10px;
             background: var(--green);
             color: var(--black);
             font-size: 9px;
             font-weight: 700;
-            padding: 4px 8px;
-            border-radius: 4px;
+            padding: 5px 10px;
+            border-radius: 6px;
             text-transform: uppercase;
+            letter-spacing: 0.5px;
+            z-index: 1;
+        }
+        .product-card .img-wrap {
+            width: 100%;
+            height: 90px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 14px;
+            position: relative;
         }
         .product-card img {
-            width: 100%;
-            height: 100px;
+            max-width: 100%;
+            max-height: 90px;
             object-fit: contain;
-            margin-bottom: 12px;
-            transition: transform 0.3s ease;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            filter: drop-shadow(0 4px 12px rgba(0,0,0,0.1));
         }
         .product-card:hover img {
-            transform: scale(1.05);
+            transform: scale(1.1) translateY(-4px);
         }
         .product-card h4 {
             font-size: 14px;
             font-weight: 600;
             margin-bottom: 4px;
+            position: relative;
+            z-index: 1;
         }
         .product-card .price {
-            font-size: 13px;
+            font-size: 14px;
             color: var(--green);
-            font-weight: 600;
+            font-weight: 700;
+            position: relative;
+            z-index: 1;
         }
         .product-card .add-btn {
             margin-top: 12px;
             width: 100%;
-            padding: 8px;
-            background: var(--gray-800);
+            padding: 10px;
+            background: var(--gray-100);
             border: none;
-            border-radius: 8px;
-            color: var(--white);
+            border-radius: 10px;
+            color: var(--black);
             font-size: 12px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
+            position: relative;
+            z-index: 1;
         }
         .product-card .add-btn:hover {
-            background: var(--green);
-            color: var(--black);
+            background: var(--black);
+            color: var(--white);
         }
         .product-card.in-stack .add-btn {
             background: var(--green);
             color: var(--black);
         }
-        /* AR Preview */
+        
+        /* AR Preview - Futuristic */
         .ar-preview {
-            background: var(--gray-900);
-            border: 1px solid var(--gray-800);
+            background: var(--white);
+            border: 1px solid var(--gray-200);
             border-radius: 20px;
             overflow: hidden;
-            margin: 20px 0;
+            margin: 24px 0;
         }
         .ar-preview-header {
             padding: 16px 20px;
-            border-bottom: 1px solid var(--gray-800);
+            border-bottom: 1px solid var(--gray-100);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -398,59 +539,62 @@
             font-weight: 600;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
         .ar-canvas {
             position: relative;
-            height: 300px;
-            background: var(--gray-800);
+            height: 280px;
+            background: linear-gradient(135deg, var(--gray-50) 0%, var(--gray-100) 100%);
             display: flex;
             align-items: center;
             justify-content: center;
+            overflow: hidden;
         }
         .ar-canvas img.bg {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            opacity: 0.8;
         }
         .ar-canvas .placeholder {
             text-align: center;
-            color: var(--gray-500);
+            color: var(--gray-400);
         }
         .ar-canvas .placeholder .icon {
             font-size: 48px;
             margin-bottom: 12px;
+            opacity: 0.5;
+        }
+        .ar-canvas .placeholder p {
+            font-size: 14px;
         }
         .ar-product {
             position: absolute;
             cursor: move;
-            transition: transform 0.1s;
-            filter: drop-shadow(0 10px 30px rgba(0,0,0,0.5));
+            transition: transform 0.15s, filter 0.15s;
+            filter: drop-shadow(0 20px 40px rgba(0,0,0,0.3));
         }
         .ar-product img {
-            height: 120px;
+            height: 100px;
             pointer-events: none;
         }
-        .ar-product.dragging {
-            transform: scale(1.1);
-            z-index: 100;
+        .ar-product:hover {
+            transform: scale(1.05);
         }
         .ar-controls {
             padding: 16px 20px;
             display: flex;
             gap: 12px;
-            border-top: 1px solid var(--gray-800);
+            background: var(--gray-50);
         }
         .ar-btn {
             flex: 1;
-            padding: 12px;
-            background: var(--gray-800);
-            border: 1px solid var(--gray-700);
-            border-radius: 10px;
-            color: var(--white);
+            padding: 14px;
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: 12px;
+            color: var(--black);
             font-size: 13px;
-            font-weight: 500;
+            font-weight: 600;
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -459,7 +603,9 @@
             transition: all 0.2s;
         }
         .ar-btn:hover {
-            background: var(--gray-700);
+            border-color: var(--black);
+            background: var(--black);
+            color: var(--white);
         }
         .ar-btn.primary {
             background: var(--green);
@@ -467,180 +613,222 @@
             color: var(--black);
         }
         
-        /* Voice Button */
+        /* Voice Button - Futuristic floating */
         .voice-btn {
             position: fixed;
-            bottom: 100px;
+            bottom: 110px;
             right: 24px;
-            width: 56px;
-            height: 56px;
-            background: var(--green);
+            width: 60px;
+            height: 60px;
+            background: var(--black);
             border: none;
             border-radius: 50%;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 20px rgba(0, 214, 50, 0.4);
-            transition: all 0.3s ease;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             z-index: 100;
+        }
+        .voice-btn::before {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 50%;
+            border: 2px solid var(--green);
+            opacity: 0;
+            transition: all 0.3s;
         }
         .voice-btn:hover {
             transform: scale(1.1);
-            box-shadow: 0 6px 30px rgba(0, 214, 50, 0.5);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+        }
+        .voice-btn:hover::before {
+            opacity: 1;
         }
         .voice-btn.listening {
-            animation: glow 1s ease-in-out infinite;
+            background: var(--green);
+        }
+        .voice-btn.listening::before {
+            opacity: 1;
+            animation: pulse 1s infinite;
         }
         .voice-btn svg {
             width: 24px;
             height: 24px;
+            fill: var(--white);
+        }
+        .voice-btn.listening svg {
             fill: var(--black);
         }
         
-        /* Sidebar */
+        /* Sidebar - Glassmorphism */
         .sidebar {
-            background: var(--gray-900);
-            border-left: 1px solid var(--gray-800);
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-left: 1px solid var(--glass-border);
             padding: 24px;
             overflow-y: auto;
-            height: calc(100vh - 64px);
+            height: calc(100vh - 96px);
             position: sticky;
-            top: 64px;
+            top: 96px;
         }
         .sidebar-section {
-            margin-bottom: 32px;
+            margin-bottom: 28px;
         }
         .sidebar-section h3 {
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--gray-500);
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--gray-400);
             text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 16px;
+            letter-spacing: 1.5px;
+            margin-bottom: 14px;
         }
         
         /* Profile Card */
         .profile-card {
-            background: var(--gray-800);
+            background: var(--white);
             border-radius: 16px;
-            padding: 16px;
+            padding: 4px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
         }
         .profile-item {
             display: flex;
             justify-content: space-between;
-            padding: 10px 0;
-            border-bottom: 1px solid var(--gray-700);
+            padding: 12px 14px;
+            border-radius: 12px;
+            transition: background 0.2s;
         }
-        .profile-item:last-child { border: none; }
+        .profile-item:hover {
+            background: var(--gray-50);
+        }
         .profile-item .label {
             color: var(--gray-500);
             font-size: 13px;
         }
         .profile-item .value {
             font-size: 13px;
-            font-weight: 500;
+            font-weight: 600;
         }
         
-        /* Achievements */
+        /* Achievements - Futuristic */
         .achievements {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
+            gap: 10px;
         }
         .achievement {
-            width: 44px;
-            height: 44px;
-            background: var(--gray-800);
-            border-radius: 12px;
+            width: 48px;
+            height: 48px;
+            background: var(--gray-100);
+            border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 20px;
             opacity: 0.3;
-            transition: all 0.3s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
         }
         .achievement.unlocked {
             opacity: 1;
-            background: linear-gradient(135deg, var(--gold) 0%, #FFA500 100%);
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            box-shadow: 0 4px 16px rgba(255, 215, 0, 0.3);
         }
         .achievement.unlocked:hover {
-            transform: scale(1.1);
+            transform: scale(1.15) rotate(5deg);
         }
         
         /* Stats */
-        .stat-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 12px 0;
-            border-bottom: 1px solid var(--gray-800);
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
         }
-        .stat-row:last-child { border: none; }
-        .stat-label {
-            color: var(--gray-500);
-            font-size: 13px;
+        .stat-card {
+            background: var(--white);
+            border-radius: 14px;
+            padding: 14px;
+            text-align: center;
         }
         .stat-value {
-            font-size: 13px;
-            font-weight: 600;
+            font-size: 24px;
+            font-weight: 700;
             color: var(--green);
         }
+        .stat-label {
+            font-size: 11px;
+            color: var(--gray-500);
+            margin-top: 4px;
+        }
         
-        /* Input Area */
+        /* Input Area - Floating */
         .input-area {
             position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 320px;
-            padding: 20px 32px;
-            background: linear-gradient(transparent, var(--black) 20%);
+            bottom: 20px;
+            left: 20px;
+            right: 360px;
+            z-index: 100;
         }
-        @media (max-width: 1024px) {
-            .input-area { right: 0; }
+        @media (max-width: 1100px) {
+            .input-area { right: 20px; }
         }
         .input-container {
-            max-width: 800px;
+            max-width: 720px;
             margin: 0 auto;
             display: flex;
             gap: 12px;
-            background: var(--gray-900);
-            border: 1px solid var(--gray-800);
-            border-radius: 16px;
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: 18px;
             padding: 8px;
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+        }
+        .input-container:focus-within {
+            border-color: var(--green);
+            box-shadow: 0 8px 40px rgba(0, 214, 50, 0.15);
         }
         .input-container input {
             flex: 1;
             background: transparent;
             border: none;
-            padding: 12px 16px;
-            color: var(--white);
+            padding: 14px 18px;
+            color: var(--black);
             font-size: 15px;
             outline: none;
         }
         .input-container input::placeholder {
-            color: var(--gray-600);
+            color: var(--gray-400);
         }
         .send-btn {
-            padding: 12px 20px;
-            background: var(--green);
+            padding: 14px 24px;
+            background: var(--black);
             border: none;
-            border-radius: 10px;
-            color: var(--black);
+            border-radius: 12px;
+            color: var(--white);
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
         }
         .send-btn:hover {
-            background: var(--green-dark);
+            background: var(--green);
+            color: var(--black);
         }
         
-        /* Cards */
+        /* Cards - Futuristic */
         .card {
-            background: var(--gray-900);
-            border: 1px solid var(--gray-800);
-            border-radius: 16px;
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: 18px;
             padding: 20px;
             margin: 16px 0;
+            transition: all 0.3s;
+        }
+        .card:hover {
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
         }
         .card h4 {
             font-size: 14px;
@@ -648,36 +836,48 @@
             margin-bottom: 12px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
         .card-content {
-            background: var(--gray-800);
-            border-radius: 10px;
+            background: var(--gray-50);
+            border-radius: 12px;
             padding: 16px;
             font-size: 14px;
-            line-height: 1.6;
+            line-height: 1.7;
+            color: var(--gray-700);
         }
         .card-footer {
             margin-top: 12px;
             padding-top: 12px;
-            border-top: 1px solid var(--gray-800);
+            border-top: 1px solid var(--gray-100);
             font-size: 13px;
-            color: var(--gray-400);
+            color: var(--gray-500);
         }
         
-        /* Insight Banner */
+        /* Insight Banner - Futuristic */
         .insight {
-            background: linear-gradient(135deg, rgba(0, 214, 50, 0.1) 0%, rgba(0, 214, 50, 0.05) 100%);
-            border: 1px solid rgba(0, 214, 50, 0.3);
-            border-radius: 12px;
-            padding: 16px;
+            background: linear-gradient(135deg, var(--green-light) 0%, rgba(0, 214, 50, 0.05) 100%);
+            border: 1px solid rgba(0, 214, 50, 0.2);
+            border-radius: 16px;
+            padding: 18px;
             margin: 16px 0;
             display: flex;
             align-items: flex-start;
-            gap: 12px;
+            gap: 14px;
+            position: relative;
+            overflow: hidden;
+        }
+        .insight::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--green);
         }
         .insight .icon {
-            font-size: 20px;
+            font-size: 22px;
+            flex-shrink: 0;
         }
         .insight .text {
             flex: 1;
@@ -685,17 +885,19 @@
         .insight .text strong {
             display: block;
             margin-bottom: 4px;
+            font-size: 14px;
         }
         .insight .text p {
             font-size: 13px;
-            color: var(--gray-400);
+            color: var(--gray-500);
         }
         
         /* Video Modal */
         .modal {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.95);
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
             display: none;
             align-items: center;
             justify-content: center;
@@ -708,8 +910,9 @@
             max-width: 900px;
             aspect-ratio: 16/9;
             background: var(--black);
-            border-radius: 16px;
+            border-radius: 20px;
             overflow: hidden;
+            box-shadow: 0 40px 80px rgba(0,0,0,0.5);
         }
         .modal-content iframe {
             width: 100%;
@@ -718,26 +921,31 @@
         }
         .modal-close {
             position: absolute;
-            top: 20px;
-            right: 20px;
-            width: 44px;
-            height: 44px;
-            background: var(--gray-800);
+            top: 24px;
+            right: 24px;
+            width: 48px;
+            height: 48px;
+            background: var(--white);
             border: none;
             border-radius: 50%;
-            color: var(--white);
+            color: var(--black);
             font-size: 24px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: all 0.2s;
+        }
+        .modal-close:hover {
+            transform: scale(1.1);
         }
         
         /* Zoom Modal */
         .zoom-modal {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.98);
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
             display: none;
             align-items: center;
             justify-content: center;
@@ -749,40 +957,56 @@
             max-width: 90%;
             max-height: 90%;
             object-fit: contain;
+            border-radius: 20px;
+            box-shadow: 0 40px 80px rgba(0,0,0,0.15);
         }
         
-        /* Floating Data Points */
-        .float-data {
-            position: absolute;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--gray-700);
-            border-radius: 8px;
-            padding: 8px 12px;
-            font-size: 11px;
-            animation: float 3s ease-in-out infinite;
-            pointer-events: none;
+        /* Discovery Questions */
+        .discovery-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
         }
-        .float-data .label {
-            color: var(--gray-500);
-            margin-bottom: 2px;
+        .discovery-list li {
+            padding: 12px 0;
+            border-bottom: 1px solid var(--gray-100);
+            font-size: 14px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
         }
-        .float-data .value {
-            font-weight: 600;
+        .discovery-list li:last-child { border: none; }
+        .discovery-list li::before {
+            content: '→';
             color: var(--green);
+            font-weight: 700;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header { top: 8px; left: 8px; right: 8px; }
+            .hero h2 { font-size: 40px; letter-spacing: -2px; }
+            .conversation { padding: 16px 16px 140px; }
+            .input-area { left: 8px; right: 8px; bottom: 8px; }
+            .voice-btn { bottom: 90px; right: 16px; width: 52px; height: 52px; }
         }
     </style>
 </head><body>
+    <!-- Floating orbs for futuristic effect -->
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    
     <!-- Header -->
     <header class="header">
         <div class="logo">
             <div class="logo-mark"></div>
             <h1>JIT</h1>
         </div>
-        <div class="deal-radar" id="dealRadar" style="--progress: 0%">
-            <div class="radar-ring"></div>
-            <div class="radar-fill"></div>
-            <div class="radar-center" id="radarPercent">0%</div>
+        <div class="deal-radar" id="dealRadar" style="--progress: 0">
+            <div class="radar-bg"></div>
+            <div class="radar-progress"></div>
+            <div class="radar-inner" id="radarPercent">0%</div>
+            <div class="radar-glow"></div>
         </div>
     </header>
     
@@ -793,6 +1017,7 @@
             <div class="hero" id="hero">
                 <h2>Close smarter.</h2>
                 <p>Your AI-powered field sales companion</p>
+                <div class="hero-badge">Ready to assist</div>
             </div>
             <div class="messages" id="messages"></div>
         </div>
@@ -824,7 +1049,7 @@
             <div class="sidebar-section">
                 <h3>Your Stack</h3>
                 <div class="stack-items" id="sidebarStack">
-                    <div class="stack-empty">Drag products here</div>
+                    <div class="stack-empty">Build their solution</div>
                 </div>
             </div>
             
@@ -841,18 +1066,16 @@
             </div>
             
             <div class="sidebar-section">
-                <h3>Today's Stats</h3>
-                <div class="stat-row">
-                    <span class="stat-label">Deals Closed</span>
-                    <span class="stat-value" id="statDeals">0</span>
-                </div>
-                <div class="stat-row">
-                    <span class="stat-label">Avg Close Time</span>
-                    <span class="stat-value" id="statTime">—</span>
-                </div>
-                <div class="stat-row">
-                    <span class="stat-label">Win Rate</span>
-                    <span class="stat-value" id="statWinRate">—</span>
+                <h3>Today</h3>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="statDeals">0</div>
+                        <div class="stat-label">Deals</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="statWinRate">—</div>
+                        <div class="stat-label">Win Rate</div>
+                    </div>
                 </div>
             </div>
         </aside>
@@ -867,7 +1090,7 @@
     </div>
     
     <!-- Voice Button -->
-    <button class="voice-btn" id="voiceBtn" onclick="toggleVoice()">
+    <button class="voice-btn" id="voiceBtn" onclick="toggleVoice()" title="Voice commands">
         <svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm-1 1.93c-3.94-.49-7-3.85-7-7.93h2c0 3.31 2.69 6 6 6s6-2.69 6-6h2c0 4.08-3.06 7.44-7 7.93V20h4v2H8v-2h4v-4.07z"/></svg>
     </button>
     
@@ -896,7 +1119,8 @@ var state = {
     stack: [],
     dealScore: 0,
     startTime: Date.now(),
-    achievements: []
+    achievements: [],
+    arImage: null
 };
 
 // ==================== DATA ====================
@@ -914,70 +1138,46 @@ var VERTICALS = {
 };
 
 var PRODUCTS = {
-    "Square Reader": {
-        cat:"hardware",price:"£19",
+    "Square Reader": {cat:"hardware",price:"£19",priceNum:19,
         desc:"Accept contactless and chip & PIN anywhere",
-        img:"https://images.squarespace-cdn.com/content/v1/583a3dce197aea02c6e2b998/1596558555498-JQPNPQPQPQPQPQPQPQPQ/Square-Reader.png",
-        features:["Contactless & Chip","Connects via Bluetooth","10hr battery","Pocket-sized"],
-        link:"https://squareup.com/gb/en/hardware/reader",
-        video:"dQw4w9WgXcQ"
-    },
-    "Square Terminal": {
-        cat:"hardware",price:"£149",
-        desc:"All-in-one card machine with receipts",
-        img:"https://images.squarespace-cdn.com/content/v1/5d5e1b5e8d7e2a0001f1d0c5/1566389955498-Terminal.png",
-        features:["Built-in printer","All-day battery","WiFi + 4G ready","Accept tips"],
-        link:"https://squareup.com/gb/en/hardware/terminal",
-        video:"Nl3gHjaT-Gk"
-    },
-    "Square Register": {
-        cat:"hardware",price:"£599",
-        desc:"Powerful POS with dual screens",
-        img:"https://images.squarespace-cdn.com/content/v1/5d5e1b5e8d7e2a0001f1d0c5/Register.png",
-        features:["Customer-facing display","Built-in payments","No iPad needed","Enterprise ready"],
-        link:"https://squareup.com/gb/en/hardware/register",
-        video:"Nl3gHjaT-Gk"
-    },
-    "Square Stand": {
-        cat:"hardware",price:"£99",
-        desc:"Turn your iPad into a point of sale",
-        img:"https://images.squarespace-cdn.com/content/v1/5d5e1b5e8d7e2a0001f1d0c5/Stand.png",
+        img:"https://squareup.com/favicon.ico",
+        features:["Contactless & Chip","Bluetooth","10hr battery","Pocket-sized"],
+        link:"https://squareup.com/gb/en/hardware/reader",video:"dQw4w9WgXcQ"},
+    "Square Terminal": {cat:"hardware",price:"£149 + VAT",priceNum:149,
+        desc:"All-in-one card machine with built-in printer",
+        img:"https://squareup.com/favicon.ico",
+        features:["Built-in printer","All-day battery","WiFi + 4G","Accept tips"],
+        link:"https://squareup.com/gb/en/hardware/terminal",video:"Nl3gHjaT-Gk"},
+    "Square Register": {cat:"hardware",price:"£599 + VAT",priceNum:599,
+        desc:"Powerful POS with customer-facing display",
+        img:"https://squareup.com/favicon.ico",
+        features:["Dual screens","Built-in payments","No iPad needed","Enterprise ready"],
+        link:"https://squareup.com/gb/en/hardware/register",video:"Nl3gHjaT-Gk"},
+    "Square Stand": {cat:"hardware",price:"£99 + VAT",priceNum:99,
+        desc:"Turn your iPad into a powerful point of sale",
+        img:"https://squareup.com/favicon.ico",
         features:["Swivel design","Built-in reader","USB hub","Works with iPad"],
-        link:"https://squareup.com/gb/en/hardware/stand",
-        video:"Nl3gHjaT-Gk"
-    },
-    "Square POS": {
-        cat:"software",price:"Free",
-        desc:"Free point of sale app",
-        img:"https://images.squarespace-cdn.com/content/v1/POS-App.png",
-        features:["Inventory management","Staff permissions","Sales reports","Offline mode"],
-        link:"https://squareup.com/gb/en/point-of-sale",
-        video:"Nl3gHjaT-Gk"
-    },
-    "Square Online": {
-        cat:"software",price:"Free - £49/mo",
+        link:"https://squareup.com/gb/en/hardware/stand",video:"Nl3gHjaT-Gk"},
+    "Square POS": {cat:"software",price:"Free",priceNum:0,
+        desc:"Free point of sale app - everything you need",
+        img:"https://squareup.com/favicon.ico",
+        features:["Inventory","Staff permissions","Reports","Offline mode"],
+        link:"https://squareup.com/gb/en/point-of-sale",video:"Nl3gHjaT-Gk"},
+    "Square Online": {cat:"software",price:"Free - £49/mo",priceNum:0,
         desc:"Sell online with a free website",
-        img:"https://images.squarespace-cdn.com/content/v1/Online.png",
+        img:"https://squareup.com/favicon.ico",
         features:["Free website","Click & collect","Delivery zones","Sync inventory"],
-        link:"https://squareup.com/gb/en/online-store",
-        video:"Nl3gHjaT-Gk"
-    },
-    "Square Appointments": {
-        cat:"software",price:"Free - £69/mo",
-        desc:"Online booking and calendar",
-        img:"https://images.squarespace-cdn.com/content/v1/Appointments.png",
-        features:["24/7 booking","Automated reminders","No-show protection","Staff calendars"],
-        link:"https://squareup.com/gb/en/appointments",
-        video:"EuZu25DifQY"
-    },
-    "Square Invoices": {
-        cat:"software",price:"Free",
-        desc:"Send professional invoices",
-        img:"https://images.squarespace-cdn.com/content/v1/Invoices.png",
+        link:"https://squareup.com/gb/en/online-store",video:"Nl3gHjaT-Gk"},
+    "Square Appointments": {cat:"software",price:"Free - £69/mo",priceNum:0,
+        desc:"Online booking and calendar management",
+        img:"https://squareup.com/favicon.ico",
+        features:["24/7 booking","Auto reminders","No-show protection","Staff calendars"],
+        link:"https://squareup.com/gb/en/appointments",video:"EuZu25DifQY"},
+    "Square Invoices": {cat:"software",price:"Free",priceNum:0,
+        desc:"Send professional invoices in seconds",
+        img:"https://squareup.com/favicon.ico",
         features:["Custom templates","Auto reminders","Milestone payments","Track status"],
-        link:"https://squareup.com/gb/en/invoices",
-        video:"GmE9I6yl_Ro"
-    }
+        link:"https://squareup.com/gb/en/invoices",video:"GmE9I6yl_Ro"}
 };
 
 var GPV_LOGIC = {
@@ -990,93 +1190,47 @@ var GPV_LOGIC = {
 };
 
 var COMPETITORS = {
-    sumup:{name:"SumUp",rates:"1.69%",settlement:"3 days",weakness:"Basic POS, slow deposits",
-        counter:"SumUp takes 3 days for your money. Their POS is basic - fine for market stalls, not real businesses."},
-    zettle:{name:"Zettle",rates:"1.75%",settlement:"3 days",weakness:"Discontinued apps, PayPal priorities",
-        counter:"Zettle pulled back from POS. Same 3-day settlement. We're all-in on helping businesses grow."},
-    dojo:{name:"Dojo",rates:"From 1%",settlement:"Next day (sometimes)",weakness:"No POS, contracts required",
-        counter:"Dojo is payments only. You need separate POS, loyalty, online - hope they talk to each other. We're one system."},
-    clover:{name:"Clover",rates:"1.49%",settlement:"2-3 days",weakness:"Monthly rental, US-focused",
-        counter:"Clover is American with monthly rental forever. Loyalty and Marketing are extra apps - ours are included."}
+    sumup:{name:"SumUp",rates:"1.69%",monthly:"None",settlement:"1-3 days",weakness:"Basic POS, slow deposits, limited features",
+        counter:"SumUp takes up to 3 days for your money and their POS is very basic. Great for market stalls, but you need more."},
+    zettle:{name:"Zettle (PayPal)",rates:"1.75%",monthly:"None",settlement:"1-2 days",weakness:"Discontinued features, PayPal priorities",
+        counter:"Zettle has pulled back on POS development - they're focused on PayPal. We're all-in on helping businesses like yours grow."},
+    dojo:{name:"Dojo",rates:"From 1.4%",monthly:"From £20",settlement:"Next day",weakness:"Payments only, contracts, hidden fees",
+        counter:"Dojo is payments only. You'll need separate systems for POS, inventory, online - and hope they talk to each other. We're one unified system."},
+    clover:{name:"Clover",rates:"Variable",monthly:"From £30",settlement:"2-3 days",weakness:"Monthly rental forever, US-focused",
+        counter:"Clover means monthly rental forever - you never own it. Plus they're American-focused. We're built for UK businesses."}
 };
 
 var OBJECTIONS = {
-    "Too expensive":{response:"What are you paying in monthly fees, rental, and per-transaction? Square: no monthly fees, no rental - just 1.75%.",followup:"Can I see a recent statement? 2 minute comparison."},
-    "Happy with current":{response:"When did you last review your statement? Many find hidden fees - PCI charges, minimum monthly.",followup:"Quick look costs nothing - might save you thousands."},
-    "Need to think":{response:"What specific concerns do you have? I might address them right now.",followup:"What would make this a yes today?"},
-    "In a contract":{response:"When does it end? We can set you up to switch the day it ends.",followup:"What's your exit fee? Often less than people think."},
-    "No time":{response:"Setup takes 10 minutes. I can do it now while we chat.",followup:"Try it alongside your current system - zero risk."}
+    "Too expensive":{response:"Let's compare. What are you paying in monthly fees, rental, and per-transaction? With Square: no monthly fees, no rental, no PCI charges - just 1.75% per transaction.",followup:"Can I see a recent statement? Takes 2 minutes to compare."},
+    "Happy with current":{response:"When did you last review your statement? Most merchants find hidden fees they didn't know about - PCI charges, minimum monthly fees, statement fees.",followup:"A quick look costs nothing and might save you thousands a year."},
+    "Need to think":{response:"Completely understand. What specific concerns do you have? I might be able to address them right now.",followup:"What would make this a yes today?"},
+    "In a contract":{response:"When does it end? We can get you set up and ready to switch the day your contract ends - zero downtime.",followup:"What's your exit fee? It's often less than people think, and the savings usually cover it."},
+    "No time right now":{response:"Setup takes 10 minutes. I can do it right now while we chat - you don't need to do anything.",followup:"Try it alongside your current system - zero risk, no commitment."}
 };
 
 var CLOSES = {
-    assumptive:{name:"Assumptive",icon:"✓",script:"Let's get you set up. You'll be taking payments before I leave.",when:"Positive signals"},
-    urgency:{name:"Urgency",icon:"⚡",script:"Get live today, first deposit hits tomorrow morning.",when:"Cash flow pain"},
-    trial:{name:"Trial",icon:"↻",script:"Try it alongside your current system. No contract, no risk.",when:"Hesitant"},
-    comparison:{name:"Comparison",icon:"⇄",script:"You're paying X now. With Square you'd save Y per month.",when:"After statement review"}
+    assumptive:{name:"Assumptive",icon:"✓",script:"Let's get you set up. You'll be taking payments before I leave - takes 10 minutes.",when:"Positive signals throughout"},
+    urgency:{name:"Urgency",icon:"⚡",script:"Get live today and your first deposit hits tomorrow morning. Your current provider? 3 days.",when:"Cash flow is a pain point"},
+    trial:{name:"Trial",icon:"↻",script:"Try it alongside your current system. No contract, cancel anytime. What's the risk?",when:"Hesitant or risk-averse"},
+    comparison:{name:"Comparison",icon:"⚖️",script:"You're paying X per month now. With Square you'd save Y - that's Z per year back in your pocket.",when:"After reviewing their statement"}
 };
 
 var PAIN_KEYWORDS = {
-    fee:["fee","expensive","cost","price","rate","percent","1.75","charge"],
-    deposit:["deposit","settlement","money","cash","wait","days","payout"],
-    pos:["pos","till","system","software","clunky","old","slow"],
-    inventory:["inventory","stock","sku","track","count"],
-    booking:["booking","appointment","schedule","no-show","cancel"],
-    online:["online","website","ecommerce","delivery","click"]
+    fee:["fee","expensive","cost","price","rate","percent","1.75","charge","paying"],
+    deposit:["deposit","settlement","money","cash","wait","days","payout","funds"],
+    pos:["pos","till","system","software","clunky","old","slow","crash"],
+    inventory:["inventory","stock","sku","track","count","ordering"],
+    booking:["booking","appointment","schedule","no-show","cancel","diary"],
+    online:["online","website","ecommerce","delivery","click","collect"]
 };
 
 // ==================== CORE FUNCTIONS ====================
 
-function updateDealScore(points) {
-    state.dealScore = Math.min(100, Math.max(0, state.dealScore + points));
-    var radar = document.getElementById("dealRadar");
-    var percent = document.getElementById("radarPercent");
-    radar.style.setProperty("--progress", state.dealScore + "%");
-    percent.textContent = state.dealScore + "%";
-    
-    if (state.dealScore >= 80) {
-        radar.querySelector(".radar-ring").classList.add("active");
-    } else {
-        radar.querySelector(".radar-ring").classList.remove("active");
-    }
-}
-
-function updateProfile(field, value) {
-    var el = document.getElementById("prof" + field);
-    if (el) el.textContent = value;
-}
-
-function addToStack(productName) {
-    if (state.stack.indexOf(productName) === -1) {
-        state.stack.push(productName);
-        renderStack();
-        updateDealScore(10);
-    }
-}
-
-function removeFromStack(productName) {
-    var idx = state.stack.indexOf(productName);
-    if (idx > -1) {
-        state.stack.splice(idx, 1);
-        renderStack();
-    }
-}
-
-function renderStack() {
-    var container = document.getElementById("sidebarStack");
-    if (state.stack.length === 0) {
-        container.innerHTML = '<div class="stack-empty">Drag products here</div>';
-        return;
-    }
-    var html = "";
-    state.stack.forEach(function(name) {
-        var p = PRODUCTS[name];
-        html += '<div class="stack-item"><span>' + name + '</span><span class="remove" onclick="removeFromStack(\'' + name + '\')">&times;</span></div>';
-    });
-    container.innerHTML = html;
-}
-
 function say(html, isBot) {
     var msgs = document.getElementById("messages");
+    var hero = document.getElementById("hero");
+    if (hero) hero.style.display = "none";
+    
     var div = document.createElement("div");
     div.className = "msg " + (isBot ? "bot" : "user");
     
@@ -1087,57 +1241,86 @@ function say(html, isBot) {
     }
     
     msgs.appendChild(div);
-    msgs.scrollTop = msgs.scrollHeight;
-    document.getElementById("hero").style.display = "none";
+    setTimeout(function() {
+        div.scrollIntoView({behavior: "smooth", block: "end"});
+    }, 100);
 }
 
-function playVideo(vid) {
-    document.getElementById("videoFrame").src = "https://www.youtube-nocookie.com/embed/" + vid + "?autoplay=1&rel=0";
-    document.getElementById("videoModal").classList.add("show");
-}
-
-function closeVideo() {
-    document.getElementById("videoModal").classList.remove("show");
-    document.getElementById("videoFrame").src = "";
-}
-
-function zoomImage(src) {
-    document.getElementById("zoomImg").src = src;
-    document.getElementById("zoomModal").classList.add("show");
-}
-
-function closeZoom() {
-    document.getElementById("zoomModal").classList.remove("show");
-}
-
-function unlockAchievement(id) {
-    if (state.achievements.indexOf(id) === -1) {
-        state.achievements.push(id);
-        var el = document.getElementById("ach-" + id);
-        if (el) el.classList.add("unlocked");
+function updateDealScore(points) {
+    state.dealScore = Math.min(100, Math.max(0, state.dealScore + points));
+    var radar = document.getElementById("dealRadar");
+    var percent = document.getElementById("radarPercent");
+    
+    radar.style.setProperty("--progress", state.dealScore);
+    percent.textContent = state.dealScore + "%";
+    
+    if (state.dealScore >= 70) {
+        radar.classList.add("hot");
+    } else {
+        radar.classList.remove("hot");
     }
 }
 
-// Voice recognition
-var recognition = null;
+function updateProfile(field, value) {
+    var map = {Business:"profBusiness",GPV:"profGPV",Locations:"profLocations",Staff:"profStaff"};
+    var el = document.getElementById(map[field]);
+    if (el) el.textContent = value;
+}
+
+function renderStack() {
+    var sidebar = document.getElementById("sidebarStack");
+    if (!sidebar) return;
+    
+    if (state.stack.length === 0) {
+        sidebar.innerHTML = '<div class="stack-empty">Build their solution</div>';
+        return;
+    }
+    
+    var html = "";
+    state.stack.forEach(function(name) {
+        html += '<div class="stack-item"><span>' + name.replace("Square ", "") + '</span><span class="remove" onclick="event.stopPropagation();toggleProduct(\'' + name + '\')">&times;</span></div>';
+    });
+    sidebar.innerHTML = html;
+}
+
+function unlockAchievement(id) {
+    if (state.achievements.indexOf(id) > -1) return;
+    state.achievements.push(id);
+    var el = document.getElementById("ach-" + id);
+    if (el) {
+        el.classList.add("unlocked");
+        el.style.animation = "pulse 0.5s";
+    }
+}
+
+// ==================== VOICE ====================
+
 var isListening = false;
+var recognition = null;
 
 function toggleVoice() {
-    if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-        alert("Voice not supported in this browser. Try Chrome.");
+    var btn = document.getElementById("voiceBtn");
+    
+    if (!("webkitSpeechRecognition" in window) && !("SpeechRecognition" in window)) {
+        alert("Voice not supported in this browser. Try Chrome or Safari.");
         return;
     }
     
     if (isListening) {
-        recognition.stop();
+        if (recognition) recognition.stop();
         isListening = false;
-        document.getElementById("voiceBtn").classList.remove("listening");
+        btn.classList.remove("listening");
         return;
     }
     
     recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
     recognition.lang = "en-GB";
     recognition.continuous = false;
+    
+    recognition.onstart = function() {
+        isListening = true;
+        btn.classList.add("listening");
+    };
     
     recognition.onresult = function(event) {
         var text = event.results[0][0].transcript;
@@ -1147,129 +1330,169 @@ function toggleVoice() {
     
     recognition.onend = function() {
         isListening = false;
-        document.getElementById("voiceBtn").classList.remove("listening");
+        btn.classList.remove("listening");
+    };
+    
+    recognition.onerror = function() {
+        isListening = false;
+        btn.classList.remove("listening");
     };
     
     recognition.start();
-    isListening = true;
-    document.getElementById("voiceBtn").classList.add("listening");
 }
+
+// ==================== MESSAGE HANDLING ====================
 
 function sendMessage() {
     var input = document.getElementById("userInput");
     var text = input.value.trim();
     if (!text) return;
+    
     input.value = "";
     say(text, false);
-    updateDealScore(5);
-    setTimeout(function() { processInput(text); }, 200);
+    processInput(text);
 }
 
 function processInput(text) {
     var lower = text.toLowerCase();
-    var matched = false;
     
-    // Check for pain points
-    Object.keys(PAIN_KEYWORDS).forEach(function(pain) {
-        if (matched) return;
-        PAIN_KEYWORDS[pain].forEach(function(kw) {
-            if (lower.indexOf(kw) > -1 && !matched) {
-                matched = true;
-                updateDealScore(15);
-                showPainResponse(pain, text);
-            }
-        });
-    });
-    
-    // Check for competitors
-    if (!matched) {
-        Object.keys(COMPETITORS).forEach(function(key) {
-            if (matched) return;
-            if (lower.indexOf(key) > -1 || lower.indexOf(COMPETITORS[key].name.toLowerCase()) > -1) {
-                matched = true;
-                updateDealScore(10);
-                unlockAchievement("competitor");
-                showBattlecard(key);
-            }
-        });
+    // Check for competitor mentions
+    var competitors = Object.keys(COMPETITORS);
+    for (var i = 0; i < competitors.length; i++) {
+        if (lower.indexOf(competitors[i]) > -1 || lower.indexOf(COMPETITORS[competitors[i]].name.toLowerCase()) > -1) {
+            showBattlecard(competitors[i]);
+            return;
+        }
     }
     
-    // Check for buying signals
-    if (!matched) {
-        if (lower.indexOf("yes") > -1 || lower.indexOf("interested") > -1 || lower.indexOf("sounds good") > -1 || lower.indexOf("let's do it") > -1) {
-            matched = true;
-            updateDealScore(25);
-            showCloseOpportunity();
+    // Check for pain points
+    var pains = Object.keys(PAIN_KEYWORDS);
+    for (var j = 0; j < pains.length; j++) {
+        var keywords = PAIN_KEYWORDS[pains[j]];
+        for (var k = 0; k < keywords.length; k++) {
+            if (lower.indexOf(keywords[k]) > -1) {
+                showPainResponse(pains[j], text);
+                return;
+            }
         }
     }
     
     // Check for product mentions
-    if (!matched) {
-        Object.keys(PRODUCTS).forEach(function(name) {
-            if (matched) return;
-            if (lower.indexOf(name.toLowerCase()) > -1) {
-                matched = true;
-                showProductDetail(name);
-            }
-        });
+    var products = Object.keys(PRODUCTS);
+    for (var p = 0; p < products.length; p++) {
+        if (lower.indexOf(products[p].toLowerCase()) > -1 || lower.indexOf(products[p].replace("Square ", "").toLowerCase()) > -1) {
+            showProductDetail(products[p]);
+            return;
+        }
     }
     
-    if (!matched) {
-        showGenericResponse(text);
+    // Check for buying signals
+    if (lower.indexOf("yes") > -1 || lower.indexOf("interested") > -1 || lower.indexOf("sign up") > -1 || lower.indexOf("let\'s do it") > -1) {
+        updateDealScore(20);
+        showCloseOpportunity();
+        return;
     }
+    
+    // Check for objections
+    if (lower.indexOf("expensive") > -1 || lower.indexOf("too much") > -1) {
+        showObjectionResponse("Too expensive");
+        return;
+    }
+    if (lower.indexOf("think about") > -1 || lower.indexOf("not sure") > -1) {
+        showObjectionResponse("Need to think");
+        return;
+    }
+    if (lower.indexOf("contract") > -1) {
+        showObjectionResponse("In a contract");
+        return;
+    }
+    if (lower.indexOf("no time") > -1 || lower.indexOf("busy") > -1) {
+        showObjectionResponse("No time right now");
+        return;
+    }
+    if (lower.indexOf("happy") > -1 && (lower.indexOf("current") > -1 || lower.indexOf("provider") > -1)) {
+        showObjectionResponse("Happy with current");
+        return;
+    }
+    
+    // Default response
+    showGenericResponse(text);
 }
+
+function showObjectionResponse(objection) {
+    var o = OBJECTIONS[objection];
+    if (!o) return showGenericResponse(objection);
+    
+    say("Handling: " + objection, false);
+    unlockAchievement("objection");
+    updateDealScore(5);
+    
+    var html = '<div class="insight"><span class="icon">🛡️</span><div class="text"><strong>Objection detected</strong><p>"' + objection + '"</p></div></div>';
+    html += '<div class="card"><h4>💬 Your response</h4><div class="card-content">' + o.response + '</div></div>';
+    html += '<div class="card"><h4>↳ Follow up</h4><div class="card-content">"' + o.followup + '"</div></div>';
+    html += '<div class="options"><div class="opt primary" onclick="showCloses()">🎯 Close</div><div class="opt" onclick="showObjections()">More objections</div></div>';
+    say(html, true);
+}
+
+// ==================== RESPONSES ====================
 
 function showPainResponse(pain, originalText) {
     var responses = {
-        fee: {title:"Fees & Pricing",response:"1.75% for chip & PIN. No monthly fees. No rental. No PCI fees. Most merchants save 20-30% switching to Square.",action:"Pull up their statement - do a live comparison"},
-        deposit: {title:"Cash Flow",response:"Next-day deposits. Every day. Including weekends and bank holidays. SumUp and Zettle? 3 business days.",action:"Their money tomorrow vs 3 days with competitors"},
-        pos: {title:"POS System",response:"Square POS is free. Staff learn it in minutes, not days. Includes inventory, reporting, team management.",action:"Demo it right now on your device"},
-        inventory: {title:"Inventory",response:"Real-time inventory across all locations. Low stock alerts. Purchase orders. Barcode scanning. All synced.",action:"Show the inventory dashboard"},
-        booking: {title:"Appointments",response:"24/7 online booking. Automated reminders cut no-shows by 30%. Card-on-file for protection.",action:"Show them the booking page"},
-        online: {title:"Online Sales",response:"Free online store. Syncs with in-store inventory automatically. Click & collect, delivery, shipping.",action:"Show Square Online builder"}
+        fee: {title:"Fees & Pricing",response:"1.75% for card payments. No monthly fees. No rental. No PCI charges. No hidden costs. Most merchants save 20-30% when they switch to Square.",action:"Ask to see their statement - do a live comparison"},
+        deposit: {title:"Cash Flow",response:"Next-day deposits. Every single day - including weekends and bank holidays. SumUp and Zettle? Up to 3 business days. That's your money sitting in their account, not yours.",action:"Calculate how much cash they're losing access to"},
+        pos: {title:"POS System",response:"Square POS is completely free. Your staff will learn it in minutes, not days. Includes inventory management, reporting, team permissions - everything.",action:"Demo it right now on your device"},
+        inventory: {title:"Inventory",response:"Real-time inventory tracking across all locations. Low stock alerts. Purchase orders. Barcode scanning. Everything synced automatically.",action:"Show the inventory dashboard"},
+        booking: {title:"Appointments",response:"24/7 online booking - clients book while you sleep. Automated reminders cut no-shows by up to 30%. Card-on-file protects you from cancellations.",action:"Show them the booking widget"},
+        online: {title:"Online Sales",response:"Free online store that syncs with your in-store inventory automatically. Click & collect, delivery, shipping - all built in.",action:"Show Square Online builder"}
     };
     
     var r = responses[pain];
+    updateDealScore(15);
+    
     var html = '<div class="insight"><span class="icon">💡</span><div class="text"><strong>Buying signal: ' + r.title + '</strong><p>They mentioned a key pain point</p></div></div>';
     html += '<div class="card"><h4>💬 They said</h4><div class="card-content">"' + originalText + '"</div></div>';
     html += '<div class="card"><h4>✅ Your response</h4><div class="card-content">' + r.response + '</div><div class="card-footer">👉 ' + r.action + '</div></div>';
     
     if (state.dealScore >= 60) {
-        html += '<div class="insight"><span class="icon">🔥</span><div class="text"><strong>Deal is hot!</strong><p>Consider closing now</p></div></div>';
+        html += '<div class="insight"><span class="icon">🔥</span><div class="text"><strong>Deal is heating up!</strong><p>Consider moving to close</p></div></div>';
     }
     
-    html += '<div class="options"><div class="opt primary" onclick="showCloses()">🎯 Close the deal</div><div class="opt" onclick="showObjections()">🛡️ Objections</div></div>';
+    html += '<div class="options"><div class="opt primary" onclick="showCloses()">🎯 Close the deal</div><div class="opt" onclick="showObjections()">🛡️ Objections</div><div class="opt" onclick="showCompetitors()">⚔️ Competitors</div></div>';
     say(html, true);
 }
 
 function showGenericResponse(text) {
     var html = '<p>I heard: <strong>"' + text + '"</strong></p>';
-    html += '<p style="color:var(--gray-400);margin-top:12px">Try mentioning:</p>';
+    html += '<p style="color:var(--gray-500);margin-top:16px">Try mentioning specific topics:</p>';
     html += '<div class="options" style="margin-top:12px">';
     html += '<div class="opt" onclick="document.getElementById(\'userInput\').value=\'fees are too high\';sendMessage()">💸 Fees</div>';
     html += '<div class="opt" onclick="document.getElementById(\'userInput\').value=\'deposits take too long\';sendMessage()">🏦 Deposits</div>';
     html += '<div class="opt" onclick="document.getElementById(\'userInput\').value=\'need a better POS\';sendMessage()">📱 POS</div>';
     html += '<div class="opt" onclick="document.getElementById(\'userInput\').value=\'we use SumUp\';sendMessage()">⚔️ Competitor</div>';
     html += '</div>';
-    html += '<div class="options" style="margin-top:12px"><div class="opt" onclick="showObjections()">🛡️ Objections</div><div class="opt" onclick="showCloses()">🎯 Close</div><div class="opt" onclick="showCompetitors()">⚔️ Battlecards</div></div>';
+    html += '<div class="options" style="margin-top:16px"><div class="opt" onclick="showObjections()">🛡️ Objections</div><div class="opt" onclick="showCloses()">🎯 Close</div><div class="opt" onclick="showCompetitors()">⚔️ Battlecards</div></div>';
     say(html, true);
 }
 
 function showCloseOpportunity() {
-    var html = '<div class="insight"><span class="icon">🔥</span><div class="text"><strong>They\'re interested!</strong><p>This is your moment to close</p></div></div>';
-    html += '<div class="card"><h4>🎯 Recommended: Assumptive Close</h4><div class="card-content">"Let\'s get you set up right now. You\'ll be taking payments before I leave - takes 10 minutes."</div></div>';
-    showCloses();
+    unlockAchievement("first");
+    var html = '<div class="insight"><span class="icon">🔥</span><div class="text"><strong>They\'re interested!</strong><p>This is your moment</p></div></div>';
+    html += '<div class="card"><h4>🎯 Recommended: Assumptive Close</h4><div class="card-content">"Let\'s get you set up right now. You\'ll be taking payments before I leave - takes about 10 minutes."</div></div>';
+    html += '<div class="options"><div class="opt primary" onclick="showCloses()">See all closes</div><div class="opt" onclick="showObjections()">🛡️ Objections</div></div>';
+    say(html, true);
 }
 
 function showObjections() {
     say("🛡️ Objection handling", false);
     unlockAchievement("objection");
-    var html = "";
+    
+    var html = '<p style="margin-bottom:16px">Select an objection to see the response:</p>';
+    html += '<div class="options">';
     Object.keys(OBJECTIONS).forEach(function(obj) {
-        var o = OBJECTIONS[obj];
-        html += '<div class="card"><h4>"' + obj + '"</h4><div class="card-content">' + o.response + '</div><div class="card-footer">↳ "' + o.followup + '"</div></div>';
+        html += '<div class="opt" onclick="showObjectionResponse(\'' + obj + '\')">' + obj + '</div>';
     });
-    html += '<div class="options"><div class="opt primary" onclick="showCloses()">🎯 Close the deal</div><div class="opt" onclick="showCompetitors()">⚔️ Competitors</div></div>';
+    html += '</div>';
+    html += '<div class="options" style="margin-top:16px"><div class="opt primary" onclick="showCloses()">🎯 Close</div><div class="opt" onclick="showCompetitors()">⚔️ Competitors</div></div>';
     say(html, true);
 }
 
@@ -1292,8 +1515,11 @@ function showCloses() {
 }
 
 function showCompetitors() {
-    say("⚔️ Competitors", false);
-    var html = '<div class="options">';
+    say("⚔️ Competitor battlecards", false);
+    unlockAchievement("competitor");
+    
+    var html = '<p style="margin-bottom:16px">Select a competitor:</p>';
+    html += '<div class="options">';
     Object.keys(COMPETITORS).forEach(function(key) {
         html += '<div class="opt" onclick="showBattlecard(\'' + key + '\')">' + COMPETITORS[key].name + '</div>';
     });
@@ -1305,18 +1531,24 @@ function showBattlecard(key) {
     var c = COMPETITORS[key];
     say("⚔️ vs " + c.name, false);
     updateDealScore(10);
+    unlockAchievement("competitor");
     
-    var html = '<div class="card"><h4>💰 Their pricing</h4><div class="card-content">Rates: ' + c.rates + '<br>Settlement: ' + c.settlement + '</div></div>';
-    html += '<div class="card"><h4>❌ Weakness</h4><div class="card-content">' + c.weakness + '</div></div>';
+    var html = '<div class="card"><h4>📊 ' + c.name + ' Overview</h4><div class="card-content">';
+    html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">';
+    html += '<div><strong style="color:var(--gray-500)">Rates</strong><br>' + c.rates + '</div>';
+    html += '<div><strong style="color:var(--gray-500)">Monthly</strong><br>' + c.monthly + '</div>';
+    html += '<div><strong style="color:var(--gray-500)">Settlement</strong><br>' + c.settlement + '</div>';
+    html += '</div></div></div>';
+    html += '<div class="card"><h4>❌ Their weakness</h4><div class="card-content">' + c.weakness + '</div></div>';
     html += '<div class="card"><h4>💬 Say this</h4><div class="card-content">"' + c.counter + '"</div></div>';
-    html += '<div class="options"><div class="opt primary" onclick="showCloses()">🎯 Close the deal</div><div class="opt" onclick="showCompetitors()">← Back</div></div>';
+    html += '<div class="options"><div class="opt primary" onclick="showCloses()">🎯 Close</div><div class="opt" onclick="showCompetitors()">← Back</div></div>';
     say(html, true);
 }
 
 // ==================== CONVERSATION FLOW ====================
 
 function startConversation() {
-    var html = '<p style="color:var(--gray-400);margin-bottom:20px">Let\'s profile this merchant</p>';
+    var html = '<p style="color:var(--gray-500);margin-bottom:20px">Let\'s profile this merchant and build their perfect solution.</p>';
     html += '<div class="section-label">What type of business?</div>';
     html += '<div class="options">';
     Object.keys(VERTICALS).forEach(function(key) {
@@ -1324,7 +1556,7 @@ function startConversation() {
         html += '<div class="opt" onclick="selectVertical(\'' + key + '\')"><span class="icon">' + v.icon + '</span>' + v.name + '</div>';
     });
     html += '</div>';
-    html += '<p style="color:var(--gray-500);font-size:13px;margin-top:16px">💬 Or type what the merchant says below</p>';
+    html += '<p style="color:var(--gray-400);font-size:13px;margin-top:20px">💬 Or type what the merchant says below</p>';
     say(html, true);
 }
 
@@ -1335,14 +1567,11 @@ function selectVertical(v) {
     say(VERTICALS[v].icon + " " + VERTICALS[v].name, false);
     
     setTimeout(function() {
-        var html = '<div class="section-label">Annual card turnover</div>';
+        var html = '<div class="section-label">Annual card turnover (GPV)</div>';
         html += '<div class="options">';
-        html += '<div class="opt" onclick="selectGPV(\'Under £50k\')">Under £50k</div>';
-        html += '<div class="opt" onclick="selectGPV(\'£50k-£100k\')">£50k-£100k</div>';
-        html += '<div class="opt" onclick="selectGPV(\'£100k-£250k\')">£100k-£250k</div>';
-        html += '<div class="opt" onclick="selectGPV(\'£250k-£500k\')">£250k-£500k</div>';
-        html += '<div class="opt" onclick="selectGPV(\'£500k-£1m\')">£500k-£1m</div>';
-        html += '<div class="opt" onclick="selectGPV(\'£1m+\')">£1m+</div>';
+        ["Under £50k","£50k-£100k","£100k-£250k","£250k-£500k","£500k-£1m","£1m+"].forEach(function(g) {
+            html += '<div class="opt" onclick="selectGPV(\'' + g + '\')">' + g + '</div>';
+        });
         html += '</div>';
         say(html, true);
     }, 150);
@@ -1357,18 +1586,16 @@ function selectGPV(g) {
     var logic = GPV_LOGIC[g];
     var insight = "";
     if (g === "£1m+" || g === "£500k-£1m") {
-        insight = '<div class="insight"><span class="icon">💡</span><div class="text"><strong>High-value opportunity</strong><p>At ' + g + ' GPV, focus on Register and enterprise features</p></div></div>';
+        insight = '<div class="insight"><span class="icon">💎</span><div class="text"><strong>High-value opportunity</strong><p>At ' + g + ' GPV, focus on Square Register and enterprise features</p></div></div>';
     }
     
     setTimeout(function() {
         var html = insight;
         html += '<div class="section-label">How many locations?</div>';
         html += '<div class="options">';
-        html += '<div class="opt" onclick="selectLocations(\'1\')">1</div>';
-        html += '<div class="opt" onclick="selectLocations(\'2-3\')">2-3</div>';
-        html += '<div class="opt" onclick="selectLocations(\'4-5\')">4-5</div>';
-        html += '<div class="opt" onclick="selectLocations(\'6-10\')">6-10</div>';
-        html += '<div class="opt" onclick="selectLocations(\'10+\')">10+</div>';
+        ["1","2-3","4-5","6-10","10+"].forEach(function(l) {
+            html += '<div class="opt" onclick="selectLocations(\'' + l + '\')">' + l + '</div>';
+        });
         html += '</div>';
         say(html, true);
     }, 150);
@@ -1381,28 +1608,22 @@ function selectLocations(l) {
     say(l + " location" + (l === "1" ? "" : "s"), false);
     
     // Smart staff options based on GPV
-    var staffOptions = "";
+    var staffOptions = [];
     if (state.gpv === "£1m+" || state.gpv === "£500k-£1m") {
-        staffOptions = '<div class="opt" onclick="selectStaff(\'5-10\')">5-10</div>';
-        staffOptions += '<div class="opt" onclick="selectStaff(\'11-20\')">11-20</div>';
-        staffOptions += '<div class="opt" onclick="selectStaff(\'21-50\')">21-50</div>';
-        staffOptions += '<div class="opt" onclick="selectStaff(\'50+\')">50+</div>';
+        staffOptions = ["5-10","11-20","21-50","50+"];
     } else if (state.gpv === "£250k-£500k") {
-        staffOptions = '<div class="opt" onclick="selectStaff(\'2-5\')">2-5</div>';
-        staffOptions += '<div class="opt" onclick="selectStaff(\'6-10\')">6-10</div>';
-        staffOptions += '<div class="opt" onclick="selectStaff(\'11-20\')">11-20</div>';
-        staffOptions += '<div class="opt" onclick="selectStaff(\'20+\')">20+</div>';
+        staffOptions = ["2-5","6-10","11-20","20+"];
     } else {
-        staffOptions = '<div class="opt" onclick="selectStaff(\'Just me\')">Just me</div>';
-        staffOptions += '<div class="opt" onclick="selectStaff(\'2-5\')">2-5</div>';
-        staffOptions += '<div class="opt" onclick="selectStaff(\'6-10\')">6-10</div>';
-        staffOptions += '<div class="opt" onclick="selectStaff(\'11-20\')">11-20</div>';
-        staffOptions += '<div class="opt" onclick="selectStaff(\'20+\')">20+</div>';
+        staffOptions = ["Just me","2-5","6-10","11-20","20+"];
     }
     
     setTimeout(function() {
         var html = '<div class="section-label">How many staff?</div>';
-        html += '<div class="options">' + staffOptions + '</div>';
+        html += '<div class="options">';
+        staffOptions.forEach(function(s) {
+            html += '<div class="opt" onclick="selectStaff(\'' + s + '\')">' + s + '</div>';
+        });
+        html += '</div>';
         say(html, true);
     }, 150);
 }
@@ -1418,21 +1639,24 @@ function selectStaff(s) {
 function askPaymentMethods() {
     var vert = VERTICALS[state.vertical];
     var html = '<div class="section-label">How do they take payments?</div>';
+    html += '<p style="color:var(--gray-500);font-size:13px;margin-bottom:12px">Select all that apply</p>';
     html += '<div class="options">';
     html += '<div class="opt" id="pm-f2f" onclick="togglePayment(\'f2f\')">💳 Face to face</div>';
     html += '<div class="opt" id="pm-online" onclick="togglePayment(\'online\')">🌐 Online</div>';
-    html += '<div class="opt" id="pm-phone" onclick="togglePayment(\'phone\')">📞 Phone</div>';
+    html += '<div class="opt" id="pm-phone" onclick="togglePayment(\'phone\')">📞 Phone / MOTO</div>';
     html += '<div class="opt" id="pm-links" onclick="togglePayment(\'links\')">🔗 Payment links</div>';
-    if (vert.showDelivery) {
+    if (vert && vert.showDelivery) {
         html += '<div class="opt" id="pm-delivery" onclick="togglePayment(\'delivery\')">🛵 Delivery apps</div>';
     }
     html += '</div>';
-    html += '<div class="options" style="margin-top:16px"><div class="opt primary" onclick="finishPaymentMethods()">Build their stack →</div></div>';
+    html += '<div class="options" style="margin-top:20px"><div class="opt primary" onclick="finishPaymentMethods()">Build their stack →</div></div>';
     say(html, true);
 }
 
 function togglePayment(method) {
     var btn = document.getElementById("pm-" + method);
+    if (!btn) return;
+    
     var idx = state.paymentMethods.indexOf(method);
     if (idx > -1) {
         state.paymentMethods.splice(idx, 1);
@@ -1446,7 +1670,7 @@ function togglePayment(method) {
 
 function finishPaymentMethods() {
     var methods = state.paymentMethods.length ? state.paymentMethods : ["f2f"];
-    var labels = {f2f:"Face to face",online:"Online",phone:"Phone",links:"Links",delivery:"Delivery"};
+    var labels = {f2f:"Face to face",online:"Online",phone:"Phone/MOTO",links:"Payment links",delivery:"Delivery apps"};
     say(methods.map(function(m){return labels[m]}).join(", "), false);
     updateDealScore(10);
     setTimeout(showStackBuilder, 200);
@@ -1457,18 +1681,16 @@ function finishPaymentMethods() {
 function showStackBuilder() {
     var vert = VERTICALS[state.vertical];
     var logic = GPV_LOGIC[state.gpv] || {hardware:["Square Terminal"]};
-    
-    // Determine recommended hardware
     var primaryHW = logic.hardware[0];
     
-    var html = '<div class="insight"><span class="icon">🎯</span><div class="text"><strong>Profile complete!</strong><p>' + vert.pmf + '</p></div></div>';
+    var html = '<div class="insight"><span class="icon">✅</span><div class="text"><strong>Profile complete!</strong><p>' + vert.pmf + '</p></div></div>';
     
     // Discovery questions
-    html += '<div class="card"><h4>🔍 Discovery questions</h4><div class="card-content"><ul style="margin:0;padding-left:20px">';
+    html += '<div class="card"><h4>🔍 Discovery questions to ask</h4><ul class="discovery-list">';
     vert.discovery.forEach(function(q) {
-        html += '<li style="margin-bottom:8px">' + q + '</li>';
+        html += '<li>' + q + '</li>';
     });
-    html += '</ul></div></div>';
+    html += '</ul></div>';
     
     // Stack builder
     html += '<div class="stack-builder">';
@@ -1476,7 +1698,7 @@ function showStackBuilder() {
     html += '<div class="stack-items" id="mainStack"><div class="stack-empty">Tap products below to add</div></div>';
     html += '</div>';
     
-    // Product grid - Hardware
+    // Hardware products
     html += '<div class="section-label">Hardware</div>';
     html += '<div class="product-grid">';
     ["Square Reader", "Square Terminal", "Square Register", "Square Stand"].forEach(function(name) {
@@ -1484,29 +1706,29 @@ function showStackBuilder() {
         var isRec = name === primaryHW;
         html += '<div class="product-card' + (isRec ? ' recommended' : '') + '" onclick="toggleProduct(\'' + name + '\')">';
         if (isRec) html += '<div class="badge">Recommended</div>';
-        html += '<img src="https://squareup.com/favicon.ico" alt="' + name + '">';
+        html += '<div class="img-wrap"><img src="' + p.img + '" alt="' + name + '"></div>';
         html += '<h4>' + name.replace("Square ", "") + '</h4>';
         html += '<div class="price">' + p.price + '</div>';
-        html += '<button class="add-btn">+ Add to stack</button>';
+        html += '<button class="add-btn">+ Add</button>';
         html += '</div>';
     });
     html += '</div>';
     
-    // Product grid - Software
+    // Software products
     html += '<div class="section-label" style="margin-top:24px">Software</div>';
     html += '<div class="product-grid">';
     ["Square POS", "Square Online", "Square Appointments", "Square Invoices"].forEach(function(name) {
         var p = PRODUCTS[name];
         html += '<div class="product-card" onclick="toggleProduct(\'' + name + '\')">';
-        html += '<img src="https://squareup.com/favicon.ico" alt="' + name + '">';
+        html += '<div class="img-wrap"><img src="' + p.img + '" alt="' + name + '"></div>';
         html += '<h4>' + name.replace("Square ", "") + '</h4>';
         html += '<div class="price">' + p.price + '</div>';
-        html += '<button class="add-btn">+ Add to stack</button>';
+        html += '<button class="add-btn">+ Add</button>';
         html += '</div>';
     });
     html += '</div>';
     
-    // AR Preview section
+    // AR Preview
     html += '<div class="ar-preview">';
     html += '<div class="ar-preview-header"><h3>📸 See it in their space</h3></div>';
     html += '<div class="ar-canvas" id="arCanvas">';
@@ -1518,18 +1740,19 @@ function showStackBuilder() {
     html += '</div>';
     html += '</div>';
     
-    // Actions
+    // Deal score insight
     if (state.dealScore >= 50) {
-        html += '<div class="insight"><span class="icon">✅</span><div class="text"><strong>Ready to recommend!</strong><p>You have enough info to close</p></div></div>';
+        html += '<div class="insight"><span class="icon">🎯</span><div class="text"><strong>Ready to recommend!</strong><p>You have enough info to close this deal</p></div></div>';
     }
     
+    // Actions
     html += '<div class="options" style="margin-top:24px">';
     html += '<div class="opt primary" onclick="showCloses()">🎯 Close the deal</div>';
     html += '<div class="opt" onclick="showObjections()">🛡️ Objections</div>';
     html += '<div class="opt" onclick="showCompetitors()">⚔️ Competitors</div>';
     html += '</div>';
     
-    html += '<p style="color:var(--gray-500);font-size:13px;margin-top:16px">💬 Type what the merchant says for real-time help</p>';
+    html += '<p style="color:var(--gray-400);font-size:13px;margin-top:20px">💬 Type what the merchant says for real-time help</p>';
     
     say(html, true);
 }
@@ -1562,8 +1785,7 @@ function updateStackDisplay() {
     var totalPrice = 0;
     state.stack.forEach(function(name) {
         var p = PRODUCTS[name];
-        var price = parseInt(p.price.replace(/[^0-9]/g, "")) || 0;
-        totalPrice += price;
+        totalPrice += p.priceNum || 0;
         html += '<div class="stack-item"><span>' + name.replace("Square ", "") + '</span><span class="remove" onclick="event.stopPropagation();toggleProduct(\'' + name + '\')">&times;</span></div>';
     });
     container.innerHTML = html;
@@ -1571,13 +1793,16 @@ function updateStackDisplay() {
     
     // Update product cards
     document.querySelectorAll(".product-card").forEach(function(card) {
-        var name = "Square " + card.querySelector("h4").textContent;
+        var h4 = card.querySelector("h4");
+        if (!h4) return;
+        var name = "Square " + h4.textContent;
+        var btn = card.querySelector(".add-btn");
         if (state.stack.indexOf(name) > -1) {
             card.classList.add("in-stack");
-            card.querySelector(".add-btn").textContent = "✓ Added";
+            if (btn) btn.textContent = "✓ Added";
         } else {
             card.classList.remove("in-stack");
-            card.querySelector(".add-btn").textContent = "+ Add to stack";
+            if (btn) btn.textContent = "+ Add";
         }
     });
 }
@@ -1590,19 +1815,19 @@ function showProductDetail(name) {
     updateDealScore(10);
     
     var html = '<div class="card" style="text-align:center;padding:32px">';
-    html += '<img src="https://squareup.com/favicon.ico" alt="' + name + '" style="width:120px;height:120px;margin-bottom:20px">';
+    html += '<img src="' + p.img + '" alt="' + name + '" style="width:120px;height:120px;margin-bottom:20px">';
     html += '<h3 style="font-size:24px;margin-bottom:8px">' + name + '</h3>';
-    html += '<div class="price" style="font-size:20px;margin-bottom:16px">' + p.price + '</div>';
-    html += '<p style="color:var(--gray-400)">' + p.desc + '</p>';
+    html += '<div class="price" style="font-size:20px;color:var(--green);font-weight:700;margin-bottom:16px">' + p.price + '</div>';
+    html += '<p style="color:var(--gray-500)">' + p.desc + '</p>';
     html += '<div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:20px">';
     p.features.forEach(function(f) {
-        html += '<span style="background:var(--gray-800);padding:6px 12px;border-radius:20px;font-size:12px">' + f + '</span>';
+        html += '<span style="background:var(--gray-100);padding:8px 14px;border-radius:20px;font-size:12px;font-weight:500">' + f + '</span>';
     });
     html += '</div>';
-    html += '<a href="' + p.link + '" target="_blank" style="display:inline-block;margin-top:20px;color:var(--green)">View on Square.com →</a>';
+    html += '<a href="' + p.link + '" target="_blank" style="display:inline-block;margin-top:20px;color:var(--green);font-weight:600">View on Square.com →</a>';
     html += '</div>';
     
-    html += '<div class="options"><div class="opt primary" onclick="toggleProduct(\'' + name + '\');showStackBuilder()">Add to stack</div><div class="opt" onclick="showStackBuilder()">← Back</div></div>';
+    html += '<div class="options"><div class="opt primary" onclick="toggleProduct(\'' + name + '\');showStackBuilder()">Add to stack</div><div class="opt" onclick="playVideo(\'' + p.video + '\')">▶ Watch demo</div><div class="opt" onclick="showStackBuilder()">← Back</div></div>';
     
     say(html, true);
 }
@@ -1610,33 +1835,14 @@ function showProductDetail(name) {
 // ==================== AR PREVIEW ====================
 
 function takePhoto() {
-    // Check for camera support
-    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-        alert("Camera not supported. Try uploading a photo instead.");
-        return;
-    }
-    
-    navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
-        .then(function(stream) {
-            var video = document.createElement("video");
-            video.srcObject = stream;
-            video.play();
-            
-            setTimeout(function() {
-                var canvas = document.createElement("canvas");
-                canvas.width = video.videoWidth;
-                canvas.height = video.videoHeight;
-                canvas.getContext("2d").drawImage(video, 0, 0);
-                
-                var img = canvas.toDataURL("image/jpeg");
-                setARBackground(img);
-                
-                stream.getTracks().forEach(function(track) { track.stop(); });
-            }, 500);
-        })
-        .catch(function(err) {
-            alert("Could not access camera: " + err.message);
-        });
+    var input = document.createElement("input");
+    input.type = "file";
+    input.accept = "image/*";
+    input.capture = "environment";
+    input.onchange = function(e) {
+        handlePhotoUpload(e.target.files[0]);
+    };
+    input.click();
 }
 
 function uploadPhoto() {
@@ -1644,62 +1850,94 @@ function uploadPhoto() {
     input.type = "file";
     input.accept = "image/*";
     input.onchange = function(e) {
-        var file = e.target.files[0];
-        if (file) {
-            var reader = new FileReader();
-            reader.onload = function(ev) {
-                setARBackground(ev.target.result);
-            };
-            reader.readAsDataURL(file);
-        }
+        handlePhotoUpload(e.target.files[0]);
     };
     input.click();
 }
 
-function setARBackground(imgSrc) {
+function handlePhotoUpload(file) {
+    if (!file) return;
+    
+    var reader = new FileReader();
+    reader.onload = function(e) {
+        state.arImage = e.target.result;
+        renderARCanvas();
+    };
+    reader.readAsDataURL(file);
+}
+
+function renderARCanvas() {
     var canvas = document.getElementById("arCanvas");
-    canvas.innerHTML = '<img class="bg" src="' + imgSrc + '">';
+    if (!canvas || !state.arImage) return;
+    
+    var html = '<img class="bg" src="' + state.arImage + '" alt="Your space">';
     
     // Add draggable products from stack
-    state.stack.forEach(function(name, i) {
-        if (PRODUCTS[name].cat === "hardware") {
-            var div = document.createElement("div");
-            div.className = "ar-product";
-            div.style.left = (100 + i * 80) + "px";
-            div.style.top = "100px";
-            div.innerHTML = '<img src="https://squareup.com/favicon.ico" alt="' + name + '">';
-            div.draggable = true;
-            
-            div.addEventListener("dragstart", function(e) {
-                div.classList.add("dragging");
-            });
-            div.addEventListener("dragend", function(e) {
-                div.classList.remove("dragging");
-                div.style.left = e.offsetX + "px";
-                div.style.top = e.offsetY + "px";
-            });
-            
-            // Touch support
-            var touchStartX, touchStartY;
-            div.addEventListener("touchstart", function(e) {
-                touchStartX = e.touches[0].clientX - div.offsetLeft;
-                touchStartY = e.touches[0].clientY - div.offsetTop;
-                div.classList.add("dragging");
-            });
-            div.addEventListener("touchmove", function(e) {
-                e.preventDefault();
-                div.style.left = (e.touches[0].clientX - touchStartX) + "px";
-                div.style.top = (e.touches[0].clientY - touchStartY) + "px";
-            });
-            div.addEventListener("touchend", function() {
-                div.classList.remove("dragging");
-            });
-            
-            canvas.appendChild(div);
+    var xPos = 30;
+    state.stack.forEach(function(name) {
+        if (PRODUCTS[name] && PRODUCTS[name].cat === "hardware") {
+            html += '<div class="ar-product" style="left:' + xPos + '%;top:50%;transform:translate(-50%,-50%)" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)">';
+            html += '<img src="' + PRODUCTS[name].img + '" alt="' + name + '">';
+            html += '</div>';
+            xPos += 25;
         }
     });
     
-    updateDealScore(15);
+    if (state.stack.length === 0) {
+        html += '<div style="position:absolute;bottom:20px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.7);color:white;padding:10px 20px;border-radius:10px;font-size:13px">Add products to see them here</div>';
+    }
+    
+    canvas.innerHTML = html;
+}
+
+var draggedElement = null;
+
+function dragStart(e) {
+    draggedElement = e.target.closest(".ar-product");
+    if (draggedElement) draggedElement.classList.add("dragging");
+}
+
+function dragEnd(e) {
+    if (draggedElement) {
+        draggedElement.classList.remove("dragging");
+        var canvas = document.getElementById("arCanvas");
+        var rect = canvas.getBoundingClientRect();
+        var x = ((e.clientX - rect.left) / rect.width) * 100;
+        var y = ((e.clientY - rect.top) / rect.height) * 100;
+        draggedElement.style.left = x + "%";
+        draggedElement.style.top = y + "%";
+    }
+    draggedElement = null;
+}
+
+// ==================== VIDEO ====================
+
+function playVideo(videoId) {
+    var modal = document.getElementById("videoModal");
+    var frame = document.getElementById("videoFrame");
+    frame.src = "https://www.youtube-nocookie.com/embed/" + videoId + "?autoplay=1";
+    modal.classList.add("show");
+}
+
+function closeVideo() {
+    var modal = document.getElementById("videoModal");
+    var frame = document.getElementById("videoFrame");
+    frame.src = "";
+    modal.classList.remove("show");
+}
+
+// ==================== ZOOM ====================
+
+function zoomImage(src) {
+    var modal = document.getElementById("zoomModal");
+    var img = document.getElementById("zoomImg");
+    img.src = src;
+    modal.classList.add("show");
+}
+
+function closeZoom() {
+    var modal = document.getElementById("zoomModal");
+    modal.classList.remove("show");
 }
 
 // ==================== UTILITIES ====================
@@ -1715,31 +1953,35 @@ function restart() {
         stack: [],
         dealScore: 0,
         startTime: Date.now(),
-        achievements: state.achievements // Keep achievements
+        achievements: state.achievements,
+        arImage: null
     };
     
     document.getElementById("messages").innerHTML = "";
-    document.getElementById("userInput").value = "";
     document.getElementById("hero").style.display = "block";
+    updateDealScore(0);
     updateProfile("Business", "—");
     updateProfile("GPV", "—");
     updateProfile("Locations", "—");
     updateProfile("Staff", "—");
     renderStack();
-    updateDealScore(0);
-    startConversation();
+    
+    setTimeout(startConversation, 300);
 }
 
-// Keyboard shortcuts
+// ==================== INIT ====================
+
+document.addEventListener("DOMContentLoaded", function() {
+    startConversation();
+});
+
+// Close modals on escape
 document.addEventListener("keydown", function(e) {
     if (e.key === "Escape") {
         closeVideo();
         closeZoom();
     }
 });
-
-// Initialize
-startConversation();
 </script>
 </body>
 </html>
