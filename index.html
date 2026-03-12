@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <title>JIT</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Square+Sans+Text:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --white: #FFFFFF;
@@ -19,40 +19,30 @@
             --gray-400: #A3A3A3;
             --gray-500: #737373;
             --gray-600: #525252;
-            --gray-700: #404040;
             --gray-800: #262626;
             --gray-900: #171717;
             --blue: #006AFF;
-            --radius-sm: 8px;
-            --radius-md: 12px;
-            --radius-lg: 16px;
-            --radius-xl: 24px;
+            --orange: #FF9500;
+            --red: #FF3B30;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Inter', -apple-system, sans-serif;
             background: var(--white);
             min-height: 100vh;
             color: var(--black);
             -webkit-font-smoothing: antialiased;
-            letter-spacing: -0.01em;
         }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes scaleIn {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
-        }
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-4px); }
-        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+        @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+        @keyframes urgentPulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(0, 214, 50, 0.4); } 50% { box-shadow: 0 0 0 12px rgba(0, 214, 50, 0); } }
+        
         .header {
             background: var(--black);
-            padding: 0 24px;
-            height: 60px;
+            padding: 0 20px;
+            height: 56px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -63,80 +53,85 @@
         .logo {
             display: flex;
             align-items: center;
-            gap: 16px;
+            gap: 12px;
         }
         .logo-icon {
-            width: 32px;
-            height: 32px;
+            width: 28px;
+            height: 28px;
             background: var(--white);
             border-radius: 6px;
         }
         .logo h1 {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 700;
             color: var(--white);
-            letter-spacing: -0.5px;
         }
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-        .status {
+        .deal-score {
             display: flex;
             align-items: center;
             gap: 8px;
-            padding: 6px 12px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 20px;
+            padding: 6px 14px;
+            background: rgba(0, 214, 50, 0.15);
+            border-radius: 100px;
+            border: 1px solid rgba(0, 214, 50, 0.3);
         }
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            background: var(--green);
-            border-radius: 50%;
-            animation: float 2s ease-in-out infinite;
+        .deal-score.hot {
+            animation: urgentPulse 2s infinite;
         }
-        .status span {
+        .deal-score span {
             font-size: 12px;
-            font-weight: 600;
-            color: var(--white);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            font-weight: 700;
+            color: var(--green);
         }
+        .score-bar {
+            width: 60px;
+            height: 6px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .score-fill {
+            height: 100%;
+            background: var(--green);
+            border-radius: 3px;
+            transition: width 0.5s ease;
+        }
+        
         .container {
-            max-width: 800px;
+            max-width: 840px;
             margin: 0 auto;
-            padding: 76px 16px 120px;
+            padding: 72px 16px 140px;
         }
         .hero {
             text-align: center;
-            padding: 40px 20px 32px;
+            padding: 48px 20px 40px;
             animation: fadeIn 0.6s ease-out;
         }
         .hero h2 {
-            font-size: 40px;
-            font-weight: 700;
-            letter-spacing: -1.5px;
-            line-height: 1.1;
-            margin-bottom: 12px;
+            font-size: 48px;
+            font-weight: 800;
+            letter-spacing: -2px;
+            line-height: 1.05;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, var(--black) 0%, var(--gray-600) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
         .hero p {
-            font-size: 18px;
+            font-size: 20px;
             color: var(--gray-500);
-            font-weight: 400;
         }
+        
         .chat {
             background: var(--gray-50);
-            border-radius: var(--radius-xl);
-            min-height: 60vh;
-            overflow: hidden;
+            border-radius: 24px;
+            min-height: 50vh;
         }
         .msgs {
             padding: 24px;
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 20px;
         }
         .msg {
             display: flex;
@@ -147,41 +142,36 @@
         .av {
             width: 40px;
             height: 40px;
-            border-radius: var(--radius-md);
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 700;
             flex-shrink: 0;
         }
-        .msg.bot .av {
-            background: var(--black);
-            color: var(--white);
-        }
-        .msg.usr .av {
-            background: var(--green);
-            color: var(--black);
-        }
+        .msg.bot .av { background: var(--black); color: var(--white); }
+        .msg.usr .av { background: var(--green); color: var(--black); }
         .mc {
-            max-width: 85%;
+            max-width: 88%;
             font-size: 15px;
             line-height: 1.7;
         }
         .msg.bot .mc {
             background: var(--white);
             padding: 20px 24px;
-            border-radius: var(--radius-lg);
+            border-radius: 20px;
             border-top-left-radius: 4px;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
         }
         .msg.usr .mc {
             background: var(--black);
             color: var(--white);
-            padding: 16px 20px;
-            border-radius: var(--radius-lg);
+            padding: 14px 20px;
+            border-radius: 20px;
             border-top-right-radius: 4px;
         }
+        
         .section-label {
             font-size: 11px;
             font-weight: 700;
@@ -189,8 +179,34 @@
             text-transform: uppercase;
             letter-spacing: 1.5px;
             margin-bottom: 16px;
-            margin-top: 8px;
+            margin-top: 12px;
         }
+        
+        .insight-banner {
+            background: linear-gradient(135deg, #FFF9E6 0%, #FFF3CC 100%);
+            border: 1px solid #FFE066;
+            border-radius: 12px;
+            padding: 14px 18px;
+            margin: 16px 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+            color: #8B6914;
+            font-weight: 500;
+        }
+        .insight-banner.success {
+            background: linear-gradient(135deg, var(--green-light) 0%, #D4F5D9 100%);
+            border-color: var(--green);
+            color: #0A6B1D;
+        }
+        .insight-banner.hot {
+            background: linear-gradient(135deg, #FFE5E5 0%, #FFCCCC 100%);
+            border-color: var(--red);
+            color: #CC0000;
+            animation: pulse 2s infinite;
+        }
+        
         .options {
             display: flex;
             flex-wrap: wrap;
@@ -211,13 +227,23 @@
         .opt:hover {
             border-color: var(--black);
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
-        .opt:active { transform: translateY(0); }
         .opt.selected {
             background: var(--black);
             border-color: var(--black);
             color: var(--white);
+        }
+        .opt.primary {
+            background: var(--green);
+            border-color: var(--green);
+            color: var(--black);
+        }
+        .opt.primary:hover {
+            background: #00C02D;
+            border-color: #00C02D;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0, 214, 50, 0.3);
         }
         .opt.secondary {
             background: transparent;
@@ -226,24 +252,19 @@
             padding: 12px 20px;
             font-size: 14px;
         }
-        .opt.secondary:hover {
-            border-color: var(--gray-400);
-            background: var(--gray-50);
+        .opt.close-now {
+            background: var(--green);
+            border-color: var(--green);
+            color: var(--black);
+            animation: urgentPulse 2s infinite;
+            font-weight: 700;
         }
-        .opt.primary {
-            background: var(--black);
-            border-color: var(--black);
-            color: var(--white);
-        }
-        .opt.primary:hover {
-            background: var(--gray-800);
-            border-color: var(--gray-800);
-        }
-        .opt .ico { margin-right: 8px; font-size: 18px; }
+        .opt .ico { margin-right: 8px; }
+        
         .input-bar {
             position: fixed;
             bottom: 0; left: 0; right: 0;
-            background: linear-gradient(to top, var(--white) 85%, rgba(255,255,255,0));
+            background: linear-gradient(to top, var(--white) 90%, rgba(255,255,255,0));
             padding: 16px 20px 28px;
             display: flex;
             gap: 12px;
@@ -280,116 +301,334 @@
         }
         .input-bar button:hover {
             background: var(--gray-800);
-            transform: translateY(-1px);
         }
-        /* Product Cards - Square Style */
-        .product-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 16px;
-            margin: 16px 0;
+        /* Product Showcase - Tesla/Apple Style */
+        .product-showcase {
+            margin: 20px 0;
         }
-        .pcard {
-            background: var(--white);
-            border-radius: var(--radius-lg);
-            overflow: hidden;
-            transition: all 0.3s ease;
-            border: 1px solid var(--gray-200);
-            animation: scaleIn 0.4s ease-out;
-        }
-        .pcard:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 40px rgba(0,0,0,0.12);
-        }
-        .pcard-img {
-            width: 100%;
-            height: 160px;
-            background: linear-gradient(135deg, var(--gray-100) 0%, var(--gray-50) 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .product-hero {
+            background: linear-gradient(180deg, var(--gray-100) 0%, var(--white) 100%);
+            border-radius: 24px;
+            padding: 32px;
+            text-align: center;
+            margin-bottom: 16px;
+            position: relative;
             overflow: hidden;
         }
-        .pcard-img img {
+        .product-hero-img {
             width: 100%;
-            height: 100%;
-            object-fit: cover;
+            max-width: 400px;
+            height: auto;
+            margin: 0 auto 24px;
+            display: block;
+            transition: transform 0.3s ease;
+            cursor: zoom-in;
         }
-        .pcard-body {
-            padding: 20px;
+        .product-hero-img:hover {
+            transform: scale(1.05);
         }
-        .pcard h4 {
-            font-size: 18px;
-            font-weight: 700;
+        .product-hero h3 {
+            font-size: 32px;
+            font-weight: 800;
+            letter-spacing: -1px;
             margin-bottom: 8px;
-            letter-spacing: -0.3px;
         }
-        .pcard p {
-            font-size: 14px;
-            color: var(--gray-500);
-            line-height: 1.6;
+        .product-hero .price {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--gray-600);
             margin-bottom: 16px;
         }
-        .pcard-footer {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding-top: 16px;
-            border-top: 1px solid var(--gray-100);
+        .product-hero .tagline {
+            font-size: 16px;
+            color: var(--gray-500);
+            max-width: 400px;
+            margin: 0 auto;
+            line-height: 1.6;
         }
-        .pcard-price {
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--black);
+        .product-features {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-top: 24px;
         }
-        .pcard-link {
+        .product-feature {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid var(--gray-200);
+        }
+        .product-feature .icon {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+        .product-feature h4 {
             font-size: 14px;
-            color: var(--blue);
-            text-decoration: none;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 4px;
+            font-weight: 700;
+            margin-bottom: 4px;
         }
-        .pcard-link:hover { text-decoration: underline; }
-        .ptag {
-            display: inline-block;
+        .product-feature p {
+            font-size: 12px;
+            color: var(--gray-500);
+        }
+        
+        /* Product Gallery */
+        .product-gallery {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding: 8px 0;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+        }
+        .product-gallery::-webkit-scrollbar { display: none; }
+        .gallery-item {
+            flex: 0 0 280px;
+            scroll-snap-align: start;
+            background: var(--gray-50);
+            border-radius: 20px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        .gallery-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(0,0,0,0.12);
+            border-color: var(--black);
+        }
+        .gallery-item.recommended {
+            border-color: var(--green);
+            position: relative;
+        }
+        .gallery-item.recommended::before {
+            content: "RECOMMENDED";
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: var(--green);
+            color: var(--black);
             font-size: 10px;
             font-weight: 700;
             padding: 4px 10px;
             border-radius: 100px;
+            z-index: 2;
+        }
+        .gallery-img {
+            width: 100%;
+            height: 180px;
+            object-fit: contain;
+            background: linear-gradient(180deg, var(--gray-100) 0%, var(--white) 100%);
+            padding: 20px;
+        }
+        .gallery-info {
+            padding: 20px;
+        }
+        .gallery-info h4 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+        .gallery-info .price {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--black);
+            margin-bottom: 8px;
+        }
+        .gallery-info p {
+            font-size: 13px;
+            color: var(--gray-500);
+            line-height: 1.5;
+        }
+        .gallery-info .cta {
+            display: inline-block;
+            margin-top: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--blue);
+            text-decoration: none;
+        }
+        
+        /* Profile Card */
+        .profile-card {
+            background: var(--black);
+            color: var(--white);
+            border-radius: 24px;
+            padding: 28px;
+            margin: 20px 0;
+        }
+        .profile-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .profile-header h3 {
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--gray-400);
+        }
+        .close-probability {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .close-probability span {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--green);
+        }
+        .profile-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+        .profile-item .label {
+            font-size: 11px;
+            color: var(--gray-400);
+            margin-bottom: 4px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            margin-left: 8px;
         }
-        .tag-hardware { background: var(--black); color: var(--white); }
-        .tag-saas { background: var(--green-light); color: #0A6B1D; }
-        .tag-payments { background: #E8F4FF; color: #0052CC; }
-
-        /* Info Cards */
+        .profile-item .value {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        /* Smart Suggestions */
+        .smart-suggestion {
+            background: linear-gradient(135deg, #F0F7FF 0%, #E0EFFF 100%);
+            border: 1px solid var(--blue);
+            border-radius: 16px;
+            padding: 18px 20px;
+            margin: 16px 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+        }
+        .smart-suggestion .icon {
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+        .smart-suggestion .content h4 {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--blue);
+            margin-bottom: 4px;
+        }
+        .smart-suggestion .content p {
+            font-size: 14px;
+            color: var(--gray-600);
+            line-height: 1.5;
+        }
+        
+        /* Video Showcase */
+        .video-showcase {
+            margin: 20px 0;
+        }
+        .video-main {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            cursor: pointer;
+            margin-bottom: 12px;
+        }
+        .video-main img {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+        }
+        .video-main .play-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        .video-main:hover .play-overlay {
+            background: rgba(0,0,0,0.5);
+        }
+        .play-btn-large {
+            width: 80px;
+            height: 80px;
+            background: var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        .video-main:hover .play-btn-large {
+            transform: scale(1.1);
+        }
+        .play-btn-large::after {
+            content: "";
+            border-style: solid;
+            border-width: 14px 0 14px 24px;
+            border-color: transparent transparent transparent var(--black);
+            margin-left: 6px;
+        }
+        .video-thumbs {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+        }
+        .video-thumb {
+            flex: 0 0 140px;
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            position: relative;
+            border: 2px solid transparent;
+            transition: all 0.2s;
+        }
+        .video-thumb:hover {
+            border-color: var(--black);
+        }
+        .video-thumb img {
+            width: 100%;
+            height: 80px;
+            object-fit: cover;
+        }
+        .video-thumb .duration {
+            position: absolute;
+            bottom: 6px;
+            right: 6px;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            font-size: 10px;
+            font-weight: 600;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+        
+        /* Cards */
         .scard {
             background: var(--white);
-            border-radius: var(--radius-lg);
+            border-radius: 16px;
             padding: 20px 24px;
             margin: 12px 0;
             border-left: 4px solid var(--gray-300);
-            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
         }
-        .scard:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.06); }
         .scard.obj { border-left-color: var(--blue); }
         .scard.cls { border-left-color: var(--black); }
-        .scard.cmp { border-left-color: #FF6B00; }
+        .scard.cmp { border-left-color: var(--orange); }
         .scard.ctx { border-left-color: var(--green); }
         .scard h4 {
             font-size: 16px;
             font-weight: 700;
             margin-bottom: 12px;
-            color: var(--black);
         }
         .sbox {
             background: var(--gray-50);
             padding: 16px 20px;
-            border-radius: var(--radius-md);
+            border-radius: 12px;
             font-size: 15px;
             line-height: 1.7;
             color: var(--gray-700);
@@ -399,8 +638,7 @@
             color: var(--gray-500);
             margin-top: 12px;
         }
-
-        /* Lists */
+        
         .wlist {
             margin: 12px 0;
             padding: 0;
@@ -424,114 +662,13 @@
             background: var(--green);
             color: var(--white);
             border-radius: 50%;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 700;
             display: flex;
             align-items: center;
             justify-content: center;
         }
-
-        /* Profile Summary */
-        .profile-card {
-            background: var(--black);
-            color: var(--white);
-            border-radius: var(--radius-xl);
-            padding: 28px;
-            margin: 20px 0;
-        }
-        .profile-card h3 {
-            font-size: 14px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            color: var(--gray-400);
-            margin-bottom: 20px;
-        }
-        .profile-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 16px;
-        }
-        .profile-item {
-            padding: 12px 0;
-        }
-        .profile-item .label {
-            font-size: 12px;
-            color: var(--gray-400);
-            margin-bottom: 4px;
-        }
-        .profile-item .value {
-            font-size: 18px;
-            font-weight: 600;
-        }
-
-        /* Videos */
-        .video-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 16px;
-            margin: 16px 0;
-        }
-        .video-card {
-            background: var(--white);
-            border-radius: var(--radius-lg);
-            overflow: hidden;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: 1px solid var(--gray-200);
-        }
-        .video-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 32px rgba(0,0,0,0.1);
-        }
-        .video-thumb {
-            position: relative;
-            height: 120px;
-            overflow: hidden;
-        }
-        .video-thumb img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .play-btn {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 48px;
-            height: 48px;
-            background: var(--black);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s;
-        }
-        .video-card:hover .play-btn {
-            transform: translate(-50%, -50%) scale(1.1);
-            background: var(--green);
-        }
-        .play-btn::after {
-            content: "";
-            border-style: solid;
-            border-width: 8px 0 8px 14px;
-            border-color: transparent transparent transparent white;
-            margin-left: 3px;
-        }
-        .video-card:hover .play-btn::after {
-            border-color: transparent transparent transparent var(--black);
-        }
-        .video-info {
-            padding: 16px;
-        }
-        .video-info h5 {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--black);
-        }
-
-        /* Modal */
+        
         .video-modal {
             display: none;
             position: fixed;
@@ -545,7 +682,6 @@
         .video-modal-content {
             width: 90%;
             max-width: 900px;
-            animation: scaleIn 0.3s ease-out;
         }
         .video-modal-close {
             position: absolute;
@@ -561,16 +697,14 @@
             color: white;
             font-size: 24px;
             cursor: pointer;
-            transition: all 0.2s;
         }
-        .video-modal-close:hover { background: rgba(255,255,255,0.2); }
         .video-modal iframe {
             width: 100%;
             height: 500px;
             border: none;
-            border-radius: var(--radius-lg);
+            border-radius: 16px;
         }
-
+        
         .restart-btn {
             position: fixed;
             bottom: 88px;
@@ -583,23 +717,38 @@
             font-size: 14px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s;
             z-index: 99;
         }
-        .restart-btn:hover {
-            border-color: var(--black);
-            color: var(--black);
+        
+        /* Image Zoom Modal */
+        .zoom-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.95);
+            z-index: 1001;
+            align-items: center;
+            justify-content: center;
+            cursor: zoom-out;
         }
-
+        .zoom-modal.show { display: flex; }
+        .zoom-modal img {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+            transform: scale(1);
+            transition: transform 0.3s;
+        }
+        .zoom-modal img:hover {
+            transform: scale(1.5);
+        }
+        
         @media (max-width: 640px) {
-            .hero h2 { font-size: 32px; }
-            .hero p { font-size: 16px; }
-            .container { padding: 68px 12px 110px; }
-            .product-grid { grid-template-columns: 1fr; }
-            .video-grid { grid-template-columns: repeat(2, 1fr); }
-            .profile-grid { grid-template-columns: 1fr; }
+            .hero h2 { font-size: 36px; }
+            .product-features { grid-template-columns: 1fr; }
+            .profile-grid { grid-template-columns: repeat(2, 1fr); }
+            .gallery-item { flex: 0 0 240px; }
             .video-modal iframe { height: 280px; }
-            .opt { padding: 12px 20px; font-size: 14px; }
         }
     </style>
 </head>
@@ -609,23 +758,21 @@
         <div class="logo-icon"></div>
         <h1>JIT</h1>
     </div>
-    <div class="header-right">
-        <div class="status">
-            <div class="status-dot"></div>
-            <span>Ready</span>
-        </div>
+    <div class="deal-score" id="dealScore">
+        <span id="scoreText">Ready</span>
+        <div class="score-bar"><div class="score-fill" id="scoreFill" style="width: 0%"></div></div>
     </div>
 </div>
 
 <div class="container">
     <div class="hero" id="hero">
-        <h2>Close more deals,<br>faster.</h2>
-        <p>Real-time sales intelligence for Square</p>
+        <h2>Close more.<br>Faster.</h2>
+        <p>Real-time intelligence that adapts to every conversation</p>
     </div>
     <div class="chat"><div class="msgs" id="out"></div></div>
 </div>
 
-<button class="restart-btn" onclick="restart()">↺ Start over</button>
+<button class="restart-btn" onclick="restart()">↺ New</button>
 
 <div class="input-bar">
     <input type="text" id="userInput" placeholder="Type what the merchant said..." onkeypress="if(event.key==='Enter')sendMessage()">
@@ -639,124 +786,223 @@
     </div>
 </div>
 
+<div class="zoom-modal" id="zoomModal" onclick="closeZoom()">
+    <img id="zoomImg" src="">
+</div>
+
 <script>
-var state = {step:0, vertical:null, gpv:null, locations:null, staff:null, paymentMethods:[], notes:[]};
+var state = {step:0, vertical:null, gpv:null, locations:null, staff:null, paymentMethods:[], notes:[], dealScore:0};
+
+// Square Product Images - Official URLs
+var IMAGES = {
+    reader: "https://images.squareup-cdn.com/content/v1/54f4e580e4b0c6e9f7b2a982/reader-2nd-gen.png",
+    terminal: "https://images.squareup-cdn.com/content/v1/54f4e580e4b0c6e9f7b2a982/square-terminal.png",
+    register: "https://images.squareup-cdn.com/content/v1/54f4e580e4b0c6e9f7b2a982/square-register.png",
+    stand: "https://images.squareup-cdn.com/content/v1/54f4e580e4b0c6e9f7b2a982/square-stand.png",
+    readerHero: "https://squareup.com/us/en/hardware/reader/_jcr_content/root/hero/image.img.png",
+    terminalHero: "https://squareup.com/us/en/hardware/terminal/_jcr_content/root/hero/image.img.png",
+    registerHero: "https://squareup.com/us/en/hardware/register/_jcr_content/root/hero/image.img.png"
+};
+
+// Smart defaults based on GPV
+var GPV_LOGIC = {
+    "Under £50k": {minStaff: 1, maxStaff: 2, typicalLocs: 1, hardware: ["Square Reader", "Square Terminal"], dealSize: "small"},
+    "£50k–£100k": {minStaff: 1, maxStaff: 5, typicalLocs: 1, hardware: ["Square Terminal"], dealSize: "small"},
+    "£100k–£250k": {minStaff: 2, maxStaff: 10, typicalLocs: 1, hardware: ["Square Terminal", "Square Register"], dealSize: "medium"},
+    "£250k–£500k": {minStaff: 3, maxStaff: 15, typicalLocs: "1-2", hardware: ["Square Register", "Square Terminal"], dealSize: "medium"},
+    "£500k–£1m": {minStaff: 5, maxStaff: 25, typicalLocs: "1-3", hardware: ["Square Register"], dealSize: "large"},
+    "£1m+": {minStaff: 10, maxStaff: 100, typicalLocs: "2+", hardware: ["Square Register"], dealSize: "enterprise"}
+};
 
 var VERTICALS = {
-    qsr:{name:"Quick Service",icon:"🍔",priority:"P0",img:"https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400",
-        discovery:["What POS are you using today?","How do you handle busy periods?","Do you offer online ordering?","Are you on delivery apps?"],
-        pmf:"Strong PMF up to £5M GPV",showDelivery:true},
-    fsr:{name:"Full Service Restaurant",icon:"🍽️",priority:"P0",img:"https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400",
-        discovery:["How do you manage table service?","Do staff take orders at the table?","How do you handle bill splitting?","Kitchen display or paper tickets?"],
-        pmf:"Strong PMF for 1-10 locations",showDelivery:true},
-    retail:{name:"Retail",icon:"🛍️",priority:"P1",img:"https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400",
-        discovery:["How do you track inventory?","Do you sell online too?","How many SKUs?","Do you use barcode scanning?"],
-        pmf:"Strong PMF up to 5 locations",showDelivery:false},
-    beauty:{name:"Beauty & Wellness",icon:"💇",priority:"P1",img:"https://images.unsplash.com/photo-1560066984-138dadb4c035?w=400",
-        discovery:["How do clients book appointments?","Do you take deposits?","How do you handle no-shows?","Do you sell retail products?"],
-        pmf:"Strong PMF up to £1M GPV",showDelivery:false},
-    health:{name:"Health & Fitness",icon:"💪",priority:"P1",img:"https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=400",
-        discovery:["How do clients book sessions?","Do you offer memberships?","How do you manage recurring clients?","Do you invoice corporate?"],
-        pmf:"Strong PMF up to £5M GPV",showDelivery:false},
-    services:{name:"Professional Services",icon:"💼",priority:"P2",img:"https://images.unsplash.com/photo-1497366216548-37526070297c?w=400",
-        discovery:["How do you invoice clients?","Do clients book online?","How do you handle deposits?","Do you take phone payments?"],
-        pmf:"Moderate PMF",showDelivery:false}
+    qsr:{name:"Quick Service",icon:"🍔",priority:"P0",
+        discovery:["What POS are you using today?","How do you handle the lunch rush?","Online ordering or delivery apps?","How many transactions per day?"],
+        pmf:"Strong PMF up to £5M GPV",showDelivery:true,
+        topProduct:"Square Register",topReason:"Handles high-volume with dual screens"},
+    fsr:{name:"Full Service Restaurant",icon:"🍽️",priority:"P0",
+        discovery:["How do you manage table service?","Tableside ordering or central POS?","How do you split bills?","Kitchen display or paper tickets?"],
+        pmf:"Strong PMF for 1-10 locations",showDelivery:true,
+        topProduct:"Square Terminal",topReason:"Tableside ordering AND payments in one"},
+    retail:{name:"Retail",icon:"🛍️",priority:"P1",
+        discovery:["How do you track inventory?","Sell online too?","How many SKUs?","Barcode scanning?"],
+        pmf:"Strong PMF up to 5 locations",showDelivery:false,
+        topProduct:"Square Register",topReason:"Built-in inventory with customer display"},
+    beauty:{name:"Beauty & Wellness",icon:"💇",priority:"P1",
+        discovery:["How do clients book?","Take deposits?","Handle no-shows?","Sell retail products?"],
+        pmf:"Strong PMF up to £1M GPV",showDelivery:false,
+        topProduct:"Square Terminal",topReason:"Portable for chair-side payments"},
+    health:{name:"Health & Fitness",icon:"💪",priority:"P1",
+        discovery:["How do clients book sessions?","Memberships or packages?","Recurring clients?","Invoice corporate?"],
+        pmf:"Strong PMF up to £5M GPV",showDelivery:false,
+        topProduct:"Square Terminal",topReason:"Take payments anywhere in the gym"},
+    services:{name:"Professional Services",icon:"💼",priority:"P2",
+        discovery:["How do you invoice?","Online booking?","Handle deposits?","Phone payments?"],
+        pmf:"Moderate PMF",showDelivery:false,
+        topProduct:"Square Reader",topReason:"Low cost, professional setup"}
 };
 
 var PRODUCTS = {
-    "Square Reader":{cat:"hardware",desc:"Chip & PIN and contactless. Pairs with any device.",price:"£19",link:"https://squareup.com/gb/en/hardware/reader",img:"https://images.ctfassets.net/2d5q1td6cyxq/4JWvJRBVhCoimaqsQ0W2Aq/reader.png"},
-    "Square Terminal":{cat:"hardware",desc:"All-in-one card machine with built-in POS and receipts.",price:"£149",link:"https://squareup.com/gb/en/hardware/terminal",img:"https://images.ctfassets.net/2d5q1td6cyxq/terminal/terminal.png"},
-    "Square Register":{cat:"hardware",desc:"Premium countertop POS with customer display.",price:"£599",link:"https://squareup.com/gb/en/hardware/register",img:"https://images.ctfassets.net/2d5q1td6cyxq/register/register.png"},
-    "Square Stand":{cat:"hardware",desc:"Turn your iPad into a powerful POS.",price:"£99",link:"https://squareup.com/gb/en/hardware/stand",img:"https://images.ctfassets.net/2d5q1td6cyxq/stand/stand.png"},
-    "Square for Restaurants":{cat:"saas",desc:"Table management, floor plans, KDS, tip pooling.",price:"Free–£69/mo",link:"https://squareup.com/gb/en/point-of-sale/restaurants"},
-    "Square for Retail":{cat:"saas",desc:"Inventory management, purchase orders, barcode scanning.",price:"Free–£60/mo",link:"https://squareup.com/gb/en/point-of-sale/retail"},
-    "Square Appointments":{cat:"saas",desc:"Online booking, reminders, no-show protection.",price:"Free–£69/mo",link:"https://squareup.com/gb/en/appointments"},
-    "Square Invoices":{cat:"saas",desc:"Professional invoices with online payment.",price:"Free",link:"https://squareup.com/gb/en/invoices"},
-    "Square Online":{cat:"saas",desc:"Free online store synced with in-store inventory.",price:"Free–£64/mo",link:"https://squareup.com/gb/en/online-store"},
-    "Virtual Terminal":{cat:"payments",desc:"Take card payments over the phone.",price:"2.5%/txn",link:"https://squareup.com/gb/en/payments/virtual-terminal"},
-    "Payment Links":{cat:"payments",desc:"Send payment links via text, email, WhatsApp.",price:"2.5%/txn",link:"https://squareup.com/gb/en/payments/payment-links"},
-    "Kitchen Display":{cat:"saas",desc:"Digital ticket management for kitchens.",price:"£15/mo",link:"https://squareup.com/gb/en/point-of-sale/restaurants/kitchen-display-system"},
-    "Square Loyalty":{cat:"saas",desc:"Digital loyalty program with automatic enrolment.",price:"From £45/mo",link:"https://squareup.com/gb/en/software/loyalty"}
+    "Square Reader":{cat:"hardware",price:"£19",
+        desc:"Accept chip & PIN and contactless anywhere",
+        tagline:"The simplest way to get paid",
+        img:"https://images.squareup-cdn.com/content/v1/5fb5d54bfb1c1a5e46a54a54/square-reader-2nd-gen-702702.png",
+        features:[
+            {icon:"💳",title:"All cards",desc:"Chip, PIN, contactless"},
+            {icon:"📱",title:"Any device",desc:"Pairs with phone or tablet"},
+            {icon:"⚡",title:"Fast",desc:"2-second transactions"}
+        ],
+        link:"https://squareup.com/gb/en/hardware/reader",
+        video:"fXvI08V9qS0"},
+    "Square Terminal":{cat:"hardware",price:"£149",
+        desc:"All-in-one payment device with built-in POS",
+        tagline:"Everything you need in one device",
+        img:"https://images.squareup-cdn.com/content/v1/5fb5d54bfb1c1a5e46a54a54/square-terminal-702702.png",
+        features:[
+            {icon:"🖨️",title:"Built-in printer",desc:"Receipts included"},
+            {icon:"📊",title:"Full POS",desc:"Not just payments"},
+            {icon:"🔋",title:"All-day battery",desc:"Truly portable"}
+        ],
+        link:"https://squareup.com/gb/en/hardware/terminal",
+        video:"6WUabw7MjVQ"},
+    "Square Register":{cat:"hardware",price:"£599",
+        desc:"Premium dual-screen POS for high-volume businesses",
+        tagline:"The most powerful Square hardware",
+        img:"https://images.squareup-cdn.com/content/v1/5fb5d54bfb1c1a5e46a54a54/square-register-702702.png",
+        features:[
+            {icon:"🖥️",title:"Dual screens",desc:"Staff + customer displays"},
+            {icon:"💳",title:"Built-in reader",desc:"No extra hardware"},
+            {icon:"⚡",title:"Instant",desc:"Fastest checkout"}
+        ],
+        link:"https://squareup.com/gb/en/hardware/register",
+        video:"yrYBJZvi0Hs"},
+    "Square Stand":{cat:"hardware",price:"£99",
+        desc:"Turn your iPad into a powerful countertop POS",
+        tagline:"Your iPad, supercharged",
+        img:"https://images.squareup-cdn.com/content/v1/5fb5d54bfb1c1a5e46a54a54/square-stand-702702.png",
+        features:[
+            {icon:"📱",title:"Uses iPad",desc:"Your existing device"},
+            {icon:"💳",title:"Built-in reader",desc:"Contactless ready"},
+            {icon:"🔌",title:"USB hub",desc:"Connect accessories"}
+        ],
+        link:"https://squareup.com/gb/en/hardware/stand",
+        video:"n-N3p7A9pG8"},
+    "Square for Restaurants":{cat:"saas",price:"Free–£69/mo",
+        desc:"Purpose-built restaurant POS with table management, KDS, and tip pooling",
+        link:"https://squareup.com/gb/en/point-of-sale/restaurants",video:"5AMjTpDP-fk"},
+    "Square for Retail":{cat:"saas",price:"Free–£60/mo",
+        desc:"Inventory management, purchase orders, barcode scanning, vendor management",
+        link:"https://squareup.com/gb/en/point-of-sale/retail",video:"Dk-x80KJz2U"},
+    "Square Appointments":{cat:"saas",price:"Free–£69/mo",
+        desc:"Online booking, automated reminders, no-show protection",
+        link:"https://squareup.com/gb/en/appointments",video:"EuZu25DifQY"},
+    "Square Online":{cat:"saas",price:"Free–£64/mo",
+        desc:"Free online store synced with in-store inventory",
+        link:"https://squareup.com/gb/en/online-store",video:"xE6JPb9r3Gw"},
+    "Kitchen Display":{cat:"saas",price:"£15/mo",
+        desc:"Digital ticket management for kitchens",
+        link:"https://squareup.com/gb/en/point-of-sale/restaurants/kitchen-display-system",video:"-3_ZZT6Rvwg"}
 };
 
 var RECOMMENDATIONS = {
     qsr:{products:["Square Register","Square Terminal","Kitchen Display","Square Online"],wins:["2-second transactions","KDS eliminates lost tickets","Online ordering syncs inventory","Next-day deposits inc. weekends"]},
-    fsr:{products:["Square for Restaurants","Square Terminal","Kitchen Display","Square Loyalty"],wins:["Tableside ordering & payments","Visual floor plan","Automatic tip pooling","Course firing to kitchen"]},
-    retail:{products:["Square for Retail","Square Register","Square Terminal","Square Online"],wins:["Real-time inventory everywhere","Low stock alerts","Barcode scanning built-in","Sell online & in-store"]},
-    beauty:{products:["Square Appointments","Square Terminal","Square Loyalty"],wins:["24/7 online booking","Reminders cut no-shows 30%","Card-on-file protection","Google Calendar sync"]},
+    fsr:{products:["Square for Restaurants","Square Terminal","Kitchen Display"],wins:["Tableside ordering & payments","Visual floor plan","Automatic tip pooling","Course firing to kitchen"]},
+    retail:{products:["Square for Retail","Square Register","Square Online"],wins:["Real-time inventory everywhere","Low stock alerts","Barcode scanning built-in","Sell online & in-store"]},
+    beauty:{products:["Square Appointments","Square Terminal"],wins:["24/7 online booking","Reminders cut no-shows 30%","Card-on-file protection","Google Calendar sync"]},
     health:{products:["Square Appointments","Square Terminal","Square Invoices"],wins:["Recurring appointments","Class booking built-in","Professional invoices","Deposits for protection"]},
-    services:{products:["Square Appointments","Square Invoices","Virtual Terminal"],wins:["Online booking","Automatic reminders","Phone payments","Milestone billing"]}
+    services:{products:["Square Appointments","Square Reader","Square Invoices"],wins:["Online booking","Automatic reminders","Phone payments","Milestone billing"]}
 };
 
 var VIDEOS = {
-    general:[{title:"Why Square",vid:"8V3FpMv_L2g"},{title:"Getting Started",vid:"aJvoY25CtWw"}],
-    qsr:[{title:"Square Register",vid:"yrYBJZvi0Hs"},{title:"Square Terminal",vid:"6WUabw7MjVQ"},{title:"Kitchen Display",vid:"-3_ZZT6Rvwg"}],
-    fsr:[{title:"Restaurants POS",vid:"5AMjTpDP-fk"},{title:"Square Terminal",vid:"6WUabw7MjVQ"},{title:"Kitchen Display",vid:"-3_ZZT6Rvwg"}],
-    retail:[{title:"Retail POS",vid:"Dk-x80KJz2U"},{title:"Inventory",vid:"WF_OANcPv60"}],
-    beauty:[{title:"Appointments",vid:"EuZu25DifQY"},{title:"Setup Guide",vid:"fbDAUQRMWZc"}],
-    health:[{title:"Appointments",vid:"EuZu25DifQY"},{title:"Invoices",vid:"GmE9I6yl_Ro"}],
-    services:[{title:"Invoices",vid:"GmE9I6yl_Ro"},{title:"Appointments",vid:"EuZu25DifQY"}],
-    online:[{title:"Square Online",vid:"xE6JPb9r3Gw"}]
+    qsr:[{title:"Square Register Overview",vid:"yrYBJZvi0Hs",duration:"2:34"},{title:"Square Terminal",vid:"6WUabw7MjVQ",duration:"1:45"},{title:"Kitchen Display System",vid:"-3_ZZT6Rvwg",duration:"2:12"}],
+    fsr:[{title:"Square for Restaurants",vid:"5AMjTpDP-fk",duration:"3:21"},{title:"Table Management",vid:"6WUabw7MjVQ",duration:"1:45"}],
+    retail:[{title:"Square for Retail",vid:"Dk-x80KJz2U",duration:"2:45"},{title:"Inventory Management",vid:"WF_OANcPv60",duration:"3:12"}],
+    beauty:[{title:"Square Appointments",vid:"EuZu25DifQY",duration:"2:18"},{title:"Online Booking",vid:"fbDAUQRMWZc",duration:"1:56"}],
+    health:[{title:"Square Appointments",vid:"EuZu25DifQY",duration:"2:18"},{title:"Square Invoices",vid:"GmE9I6yl_Ro",duration:"2:05"}],
+    services:[{title:"Square Invoices",vid:"GmE9I6yl_Ro",duration:"2:05"},{title:"Virtual Terminal",vid:"pS3t2T5M2pA",duration:"1:32"}]
 };
-
 var PAIN_RESPONSES = {
     "fee":{keywords:["fee","expensive","cost","price","rate","percent","1.75"],
-        response:"1.75% for chip & PIN, no monthly fees, no rental, no PCI fees. Most merchants save 20-30% switching to Square.",
-        product:"Square Terminal",action:"Ask to see their statement for a quick comparison"},
+        response:"1.75% for chip & PIN. No monthly fees. No rental. No PCI fees. No statement fees. Most merchants save 20-30% switching to Square.",
+        product:"Square Terminal",action:"Pull up their statement - do a live comparison",urgency:"high"},
     "deposit":{keywords:["deposit","settlement","money","cash flow","wait","days","payout"],
-        response:"Next-day deposits including weekends and bank holidays. SumUp and Zettle are 3 business days.",
-        product:"Square Terminal",action:"Your money tomorrow vs 3 days with competitors"},
+        response:"Next-day deposits. Every day. Including weekends and bank holidays. SumUp and Zettle? 3 business days.",
+        product:"Square Terminal",action:"Their money tomorrow vs 3 days with competitors",urgency:"high"},
     "pos":{keywords:["pos","till","system","software","clunky","old"],
-        response:"Square POS is free and staff learn it in minutes. Includes inventory, reporting, team management.",
-        product:"Square Register",action:"Demo it right now - show how simple it is"},
+        response:"Square POS is free. Staff learn it in minutes, not days. Includes inventory, reporting, team management - all free.",
+        product:"Square Register",action:"Demo it right now on your device",urgency:"medium"},
     "inventory":{keywords:["inventory","stock","sku","track"],
-        response:"Real-time inventory across all locations. Low stock alerts, purchase orders, barcode scanning.",
-        product:"Square for Retail",action:"Show the inventory management"},
+        response:"Real-time inventory across all locations. Low stock alerts. Purchase orders. Barcode scanning. All synced.",
+        product:"Square for Retail",action:"Show the inventory dashboard",urgency:"medium"},
     "booking":{keywords:["booking","appointment","schedule","no-show"],
-        response:"24/7 online booking, automated reminders cut no-shows by 30%, card-on-file protection.",
-        product:"Square Appointments",action:"Show the booking page"},
+        response:"24/7 online booking. Automated reminders cut no-shows by 30%. Card-on-file for protection.",
+        product:"Square Appointments",action:"Show them the booking page",urgency:"medium"},
     "online":{keywords:["online","website","ecommerce","delivery"],
-        response:"Free online store that syncs with in-store inventory. Click & collect, delivery, shipping.",
-        product:"Square Online",action:"Show Square Online",videos:"online"}
+        response:"Free online store. Syncs with in-store inventory automatically. Click & collect, delivery, shipping.",
+        product:"Square Online",action:"Show Square Online builder",urgency:"medium"}
 };
 
 var COMPETITORS = {
     sumup:{name:"SumUp",type:"Payments + Basic POS",
-        hwPricing:"Reader £34, Solo £79",rates:"1.69% or 0.99% + £19/mo",
-        weaknesses:["3-day settlement","Basic POS, no inventory","No invoicing","2.4★ TrustPilot"],
-        wins:["Next-day deposits","Full POS ecosystem","No contracts"],
+        hwPricing:"Reader £34 • Solo £79",rates:"1.69% or 0.99% + £19/mo",
+        weaknesses:["3-day settlement","Basic POS, no real inventory","No invoicing","2.4★ TrustPilot for GoodTill"],
+        wins:["Next-day deposits inc. weekends","Full POS ecosystem","No contracts","Better hardware"],
         counter:"SumUp is 3 days for your money. Their POS is basic - fine for market stalls, not real businesses."},
     zettle:{name:"Zettle",type:"Payments",
-        hwPricing:"Reader £29, Terminal £149",rates:"1.75%",
-        weaknesses:["3-day settlement","Discontinued apps","Limited POS"],
-        wins:["Next-day deposits","Full ecosystem","UK support"],
-        counter:"Zettle pulled back from POS. Same 3-day settlement as SumUp."},
+        hwPricing:"Reader £29 • Terminal £149",rates:"1.75%",
+        weaknesses:["3-day settlement","Discontinued apps","Limited POS","PayPal priorities"],
+        wins:["Next-day deposits","Full ecosystem","UK support","Committed to SMB"],
+        counter:"Zettle pulled back from POS. Same 3-day settlement. We're all-in on helping businesses grow."},
     dojo:{name:"Dojo",type:"Payments Only",
         hwPricing:"£15/mo or £179 upfront",rates:"From 1%",
-        weaknesses:["No POS software","Need separate EPOS","6-18 month contracts"],
-        wins:["All-in-one system","No contracts","Next-day deposits"],
-        counter:"Dojo is payments only. You need separate POS, loyalty, online - hope they talk to each other."},
+        weaknesses:["No POS software","Need separate EPOS","6-18 month contracts","Rolled back next-day"],
+        wins:["All-in-one system","No contracts","True next-day deposits","One company"],
+        counter:"Dojo is payments only. You need separate POS, loyalty, online - hope they talk to each other. We're one system."},
     clover:{name:"Clover",type:"POS + Payments",
         hwPricing:"£20+/mo rental",rates:"1.49%",
-        weaknesses:["US-focused","Monthly rental fees","Extra apps for features"],
-        wins:["No rental - buy once","Features included","UK support"],
-        counter:"Clover is American with monthly rental. Loyalty and Marketing are extra apps - ours are included."}
+        weaknesses:["US-focused","Monthly rental fees","Extra apps for features","Complex pricing"],
+        wins:["No rental - buy once","Features included","UK support","Simple pricing"],
+        counter:"Clover is American with monthly rental forever. Loyalty and Marketing are extra apps - ours are included."}
 };
 
 var OBJECTIONS = {
-    "Too expensive":{response:"What are you paying in monthly fees, rental, and per-transaction? Square: no monthly fees, no rental - just 1.75%.",followup:"Can I see a recent statement? 2 minute comparison."},
-    "Happy with current":{response:"When did you last review your statement? Many find hidden fees - PCI charges, minimum monthly.",followup:"Quick look costs nothing."},
-    "Need to think":{response:"What specific concerns do you have? I might address them right now.",followup:"What would make this a yes today?"},
-    "In a contract":{response:"When does it end? We can set you up to switch the day it ends.",followup:"What's your exit fee?"},
-    "No time":{response:"Setup takes 10 minutes. I can do it now or leave the kit.",followup:"Try it alongside your current system?"}
+    "Too expensive":{response:"What are you paying in monthly fees, rental, and per-transaction? Square: no monthly fees, no rental - just 1.75%.",followup:"Can I see a recent statement? 2 minute comparison.",urgency:"high"},
+    "Happy with current":{response:"When did you last review your statement? Many find hidden fees - PCI charges, minimum monthly.",followup:"Quick look costs nothing - might save you thousands.",urgency:"medium"},
+    "Need to think":{response:"What specific concerns do you have? I might address them right now and save you the back-and-forth.",followup:"What would make this a yes today?",urgency:"medium"},
+    "In a contract":{response:"When does it end? We can set you up to switch the day it ends - no gap in service.",followup:"What's your exit fee? Often less than people think.",urgency:"low"},
+    "No time":{response:"Setup takes 10 minutes. I can do it now while we chat, or leave the kit for you.",followup:"Try it alongside your current system - zero risk.",urgency:"high"}
 };
 
 var CLOSES = {
-    assumptive:{name:"Assumptive",icon:"✓",script:"Let's get you set up. You'll be taking payments before I leave.",when:"Positive signals throughout"},
-    trial:{name:"Trial",icon:"↻",script:"Try it alongside your current system for a week. No contract.",when:"Hesitant to commit"},
-    urgency:{name:"Urgency",icon:"⚡",script:"Get live today, first deposit tomorrow morning.",when:"Cash flow is the pain"},
-    comparison:{name:"Comparison",icon:"⇄",script:"You're paying X now. With Square you'd save Y per month.",when:"After reviewing statement"}
+    assumptive:{name:"Assumptive",icon:"✓",script:"Let's get you set up. You'll be taking payments before I leave - takes 10 minutes.",when:"Positive signals, no major objections",power:5},
+    urgency:{name:"Urgency",icon:"⚡",script:"Get live today, first deposit hits your account tomorrow morning.",when:"Cash flow is the pain point",power:5},
+    trial:{name:"Trial",icon:"↻",script:"Try it alongside your current system for a week. No contract, no commitment, no risk.",when:"Hesitant to fully commit",power:3},
+    comparison:{name:"Comparison",icon:"⇄",script:"You're paying X now. With Square at 1.75% and no monthly fees, you'd save Y per month. That's Z per year.",when:"After reviewing their statement",power:4},
+    puppy:{name:"Puppy Dog",icon:"🐕",script:"Take the Terminal, try it for a few transactions. If you don't love it, I'll come back and collect it.",when:"Very hesitant, needs to experience it",power:4}
 };
+
+// Update deal score
+function updateDealScore(points) {
+    state.dealScore = Math.min(100, Math.max(0, state.dealScore + points));
+    var fill = document.getElementById("scoreFill");
+    var text = document.getElementById("scoreText");
+    var container = document.getElementById("dealScore");
+    fill.style.width = state.dealScore + "%";
+    
+    if (state.dealScore >= 80) {
+        text.textContent = "HOT 🔥";
+        container.classList.add("hot");
+    } else if (state.dealScore >= 60) {
+        text.textContent = "Warm";
+        container.classList.remove("hot");
+    } else if (state.dealScore >= 30) {
+        text.textContent = "Building";
+        container.classList.remove("hot");
+    } else {
+        text.textContent = "Ready";
+        container.classList.remove("hot");
+    }
+}
+
 function say(html, isBot) {
     var out = document.getElementById("out");
     var div = document.createElement("div");
@@ -766,6 +1012,7 @@ function say(html, isBot) {
     out.scrollTop = out.scrollHeight;
     document.getElementById("hero").style.display = "none";
 }
+
 function playVideo(vid) {
     document.getElementById("vframe").src = "https://www.youtube-nocookie.com/embed/" + vid + "?autoplay=1&rel=0";
     document.getElementById("vmodal").classList.add("show");
@@ -774,11 +1021,19 @@ function closeVideo() {
     document.getElementById("vmodal").classList.remove("show");
     document.getElementById("vframe").src = "";
 }
+function zoomImage(src) {
+    document.getElementById("zoomImg").src = src;
+    document.getElementById("zoomModal").classList.add("show");
+}
+function closeZoom() {
+    document.getElementById("zoomModal").classList.remove("show");
+}
 function restart() {
-    state = {step:0, vertical:null, gpv:null, locations:null, staff:null, paymentMethods:[], notes:[]};
+    state = {step:0, vertical:null, gpv:null, locations:null, staff:null, paymentMethods:[], notes:[], dealScore:0};
     document.getElementById("out").innerHTML = "";
     document.getElementById("userInput").value = "";
     document.getElementById("hero").style.display = "block";
+    updateDealScore(0);
     startConversation();
 }
 function sendMessage() {
@@ -788,6 +1043,7 @@ function sendMessage() {
     input.value = "";
     say(text, false);
     state.notes.push(text);
+    updateDealScore(5);
     setTimeout(function() { processInput(text); }, 200);
 }
 function processInput(text) {
@@ -796,67 +1052,109 @@ function processInput(text) {
     Object.keys(PAIN_RESPONSES).forEach(function(key) {
         if (matched) return;
         PAIN_RESPONSES[key].keywords.forEach(function(kw) {
-            if (lower.indexOf(kw) > -1 && !matched) { matched = true; showContextualResponse(PAIN_RESPONSES[key], text); }
+            if (lower.indexOf(kw) > -1 && !matched) { 
+                matched = true; 
+                updateDealScore(15);
+                showContextualResponse(PAIN_RESPONSES[key], text); 
+            }
         });
     });
     if (!matched) {
         Object.keys(COMPETITORS).forEach(function(key) {
             if (matched) return;
-            if (lower.indexOf(key) > -1 || lower.indexOf(COMPETITORS[key].name.toLowerCase()) > -1) { matched = true; showBattlecard(key); }
+            if (lower.indexOf(key) > -1 || lower.indexOf(COMPETITORS[key].name.toLowerCase()) > -1) { 
+                matched = true; 
+                updateDealScore(10);
+                showBattlecard(key); 
+            }
         });
     }
     if (!matched) {
-        if (lower.indexOf("expensive") > -1 || lower.indexOf("cost") > -1) { matched = true; showObjectionResponse("Too expensive"); }
-        else if (lower.indexOf("think") > -1) { matched = true; showObjectionResponse("Need to think"); }
-        else if (lower.indexOf("happy") > -1) { matched = true; showObjectionResponse("Happy with current"); }
-        else if (lower.indexOf("contract") > -1) { matched = true; showObjectionResponse("In a contract"); }
-        else if (lower.indexOf("time") > -1) { matched = true; showObjectionResponse("No time"); }
+        if (lower.indexOf("yes") > -1 || lower.indexOf("interested") > -1 || lower.indexOf("tell me more") > -1) {
+            matched = true;
+            updateDealScore(20);
+            showCloseOpportunity();
+        }
     }
     if (!matched) showGenericResponse(text);
 }
 function showContextualResponse(pain, originalText) {
-    var html = "<div class='scard ctx'><h4>💬 They said</h4><div class='sbox'>\"" + originalText + "\"</div>";
+    var html = "<div class='insight-banner success'>💡 <strong>Buying signal detected!</strong> They mentioned " + originalText.split(" ")[0] + " - this is a key pain point.</div>";
+    html += "<div class='scard ctx'><h4>💬 They said</h4><div class='sbox'>\"" + originalText + "\"</div>";
     html += "<h4 style='margin-top:16px'>✅ Your response</h4><div class='sbox'>" + pain.response + "</div>";
-    html += "<div class='sfu'>👉 " + pain.action + "</div></div>";
+    html += "<div class='sfu'>👉 <strong>Action:</strong> " + pain.action + "</div></div>";
+    
+    // Show product showcase
     var prod = PRODUCTS[pain.product];
     if (prod) {
-        html += "<div class='product-grid'><div class='pcard'><div class='pcard-body'><h4>" + pain.product + "<span class='ptag tag-" + prod.cat + "'>" + prod.cat + "</span></h4>";
-        html += "<p>" + prod.desc + "</p>";
-        html += "<div class='pcard-footer'><span class='pcard-price'>" + prod.price + "</span><a href='" + prod.link + "' target='_blank' class='pcard-link'>Learn more →</a></div></div></div></div>";
+        html += showProductHero(pain.product, prod);
     }
-    html += "<div class='options'><div class='opt primary' onclick='showCloses()'>Close the deal</div><div class='opt secondary' onclick='showObjections()'>Handle objections</div></div>";
+    
+    if (state.dealScore >= 60) {
+        html += "<div class='insight-banner hot'>🔥 <strong>Deal is hot!</strong> Consider closing now.</div>";
+        html += "<div class='options'><div class='opt close-now' onclick='showCloses()'>🎯 Close now</div><div class='opt secondary' onclick='showObjections()'>Handle objections</div></div>";
+    } else {
+        html += "<div class='options'><div class='opt primary' onclick='showCloses()'>🎯 Close the deal</div><div class='opt secondary' onclick='showObjections()'>Handle objections</div></div>";
+    }
     say(html, true);
 }
-function showObjectionResponse(objKey) {
-    var obj = OBJECTIONS[objKey];
-    if (!obj) return;
-    var html = "<div class='scard obj'><h4>🛡️ \"" + objKey + "\"</h4><div class='sbox'>" + obj.response + "</div>";
-    html += "<div class='sfu'>↳ Follow up: \"" + obj.followup + "\"</div></div>";
-    html += "<div class='options'><div class='opt primary' onclick='showCloses()'>Close the deal</div><div class='opt secondary' onclick='showObjections()'>More objections</div></div>";
-    say(html, true);
+
+function showProductHero(name, prod) {
+    var html = "<div class='product-showcase'>";
+    html += "<div class='product-hero'>";
+    html += "<img class='product-hero-img' src='" + prod.img + "' alt='" + name + "' onclick=\"zoomImage('" + prod.img + "')\" onerror=\"this.style.display='none'\">";
+    html += "<h3>" + name + "</h3>";
+    html += "<div class='price'>" + prod.price + " + VAT</div>";
+    html += "<div class='tagline'>" + prod.tagline + "</div>";
+    if (prod.features) {
+        html += "<div class='product-features'>";
+        prod.features.forEach(function(f) {
+            html += "<div class='product-feature'><div class='icon'>" + f.icon + "</div><h4>" + f.title + "</h4><p>" + f.desc + "</p></div>";
+        });
+        html += "</div>";
+    }
+    html += "</div>";
+    if (prod.video) {
+        html += "<div class='video-main' onclick=\"playVideo('" + prod.video + "')\">";
+        html += "<img src='https://img.youtube.com/vi/" + prod.video + "/maxresdefault.jpg'>";
+        html += "<div class='play-overlay'><div class='play-btn-large'></div></div>";
+        html += "</div>";
+    }
+    html += "<a href='" + prod.link + "' target='_blank' style='display:block;text-align:center;color:var(--blue);font-weight:600;margin-top:12px'>View on Square.com →</a>";
+    html += "</div>";
+    return html;
 }
+
+function showCloseOpportunity() {
+    var html = "<div class='insight-banner hot'>🔥 <strong>They're interested!</strong> This is your moment to close.</div>";
+    html += "<div class='smart-suggestion'><div class='icon'>🎯</div><div class='content'><h4>Recommended: Assumptive Close</h4><p>They've shown interest - don't ask IF, tell them HOW. \"Let's get you set up right now.\"</p></div></div>";
+    showCloses();
+}
+
 function showGenericResponse(text) {
     var html = "I heard: <strong>\"" + text + "\"</strong><br><br>Try one of these:<div class='options' style='margin-top:12px'>";
-    html += "<div class='opt secondary' onclick=\"document.getElementById('userInput').value='fees';sendMessage()\">💸 Fees</div>";
-    html += "<div class='opt secondary' onclick=\"document.getElementById('userInput').value='deposits';sendMessage()\">🏦 Deposits</div>";
-    html += "<div class='opt secondary' onclick=\"document.getElementById('userInput').value='POS';sendMessage()\">📱 POS</div>";
-    html += "<div class='opt secondary' onclick=\"document.getElementById('userInput').value='SumUp';sendMessage()\">⚔️ SumUp</div>";
-    html += "<div class='opt secondary' onclick=\"document.getElementById('userInput').value='Zettle';sendMessage()\">⚔️ Zettle</div>";
-    html += "</div><div class='options' style='margin-top:12px'><div class='opt' onclick='showObjections()'>Objections</div><div class='opt' onclick='showCloses()'>Close</div><div class='opt secondary' onclick='showCompetitors()'>Competitors</div></div>";
+    html += "<div class='opt secondary' onclick=\"document.getElementById('userInput').value='fees are too high';sendMessage()\">💸 Fees</div>";
+    html += "<div class='opt secondary' onclick=\"document.getElementById('userInput').value='deposits take too long';sendMessage()\">🏦 Deposits</div>";
+    html += "<div class='opt secondary' onclick=\"document.getElementById('userInput').value='need a better POS';sendMessage()\">📱 POS</div>";
+    html += "<div class='opt secondary' onclick=\"document.getElementById('userInput').value='we use SumUp';sendMessage()\">⚔️ SumUp</div>";
+    html += "</div><div class='options' style='margin-top:12px'><div class='opt' onclick='showObjections()'>🛡️ Objections</div><div class='opt' onclick='showCloses()'>🎯 Close</div><div class='opt secondary' onclick='showCompetitors()'>⚔️ Competitors</div></div>";
     say(html, true);
 }
+
 function startConversation() {
-    var html = "<span style='font-size:15px;color:var(--gray-500)'>Let's profile this merchant</span><br><br>";
-    html += "<div class='section-label'>Business type</div><div class='options'>";
+    var html = "<span style='font-size:16px;color:var(--gray-500)'>Let's profile this merchant</span><br><br>";
+    html += "<div class='section-label'>What type of business?</div><div class='options'>";
     Object.keys(VERTICALS).forEach(function(key) {
         var v = VERTICALS[key];
         html += "<div class='opt' onclick=\"selectVertical('" + key + "')\"><span class='ico'>" + v.icon + "</span>" + v.name + "</div>";
     });
-    html += "</div><br><span style='color:var(--gray-400);font-size:13px'>Or type what the merchant says below</span>";
+    html += "</div><br><span style='color:var(--gray-400);font-size:13px'>💬 Or type what the merchant says below</span>";
     say(html, true);
 }
+
 function selectVertical(v) {
     state.vertical = v;
+    updateDealScore(10);
     say(VERTICALS[v].icon + " " + VERTICALS[v].name, false);
     setTimeout(function() {
         say("<div class='section-label'>Annual card turnover</div><div class='options'>" +
@@ -868,11 +1166,21 @@ function selectVertical(v) {
             "<div class='opt' onclick=\"selectGPV('£1m+')\">£1m+</div></div>", true);
     }, 150);
 }
+
 function selectGPV(g) {
     state.gpv = g;
-    say(g, false);
+    updateDealScore(10);
+    say(g + " annual GPV", false);
+    
+    // Smart logic for locations based on GPV
+    var logic = GPV_LOGIC[g];
+    var insight = "";
+    if (g === "£1m+" || g === "£500k–£1m") {
+        insight = "<div class='smart-suggestion'><div class='icon'>💡</div><div class='content'><h4>High-value opportunity</h4><p>At " + g + " GPV, this is likely a multi-location or high-volume business. Focus on Register and enterprise features.</p></div></div>";
+    }
+    
     setTimeout(function() {
-        say("<div class='section-label'>Locations</div><div class='options'>" +
+        say(insight + "<div class='section-label'>How many locations?</div><div class='options'>" +
             "<div class='opt' onclick=\"selectLocations('1')\">1</div>" +
             "<div class='opt' onclick=\"selectLocations('2–3')\">2–3</div>" +
             "<div class='opt' onclick=\"selectLocations('4–5')\">4–5</div>" +
@@ -880,23 +1188,48 @@ function selectGPV(g) {
             "<div class='opt' onclick=\"selectLocations('10+')\">10+</div></div>", true);
     }, 150);
 }
+
 function selectLocations(l) {
     state.locations = l;
+    updateDealScore(5);
     say(l + " location" + (l === "1" ? "" : "s"), false);
-    setTimeout(function() {
-        say("<div class='section-label'>Staff</div><div class='options'>" +
-            "<div class='opt' onclick=\"selectStaff('Just me')\">Just me</div>" +
+    
+    // Smart staff options based on GPV
+    var logic = GPV_LOGIC[state.gpv] || {minStaff: 1};
+    var staffOptions = "";
+    
+    if (state.gpv === "£1m+" || state.gpv === "£500k–£1m") {
+        // Don't show "Just me" for high GPV
+        staffOptions = "<div class='opt' onclick=\"selectStaff('2–5')\">2–5</div>" +
+            "<div class='opt' onclick=\"selectStaff('6–10')\">6–10</div>" +
+            "<div class='opt' onclick=\"selectStaff('11–20')\">11–20</div>" +
+            "<div class='opt' onclick=\"selectStaff('20–50')\">20–50</div>" +
+            "<div class='opt' onclick=\"selectStaff('50+')\">50+</div>";
+    } else if (state.gpv === "£250k–£500k") {
+        staffOptions = "<div class='opt' onclick=\"selectStaff('2–5')\">2–5</div>" +
+            "<div class='opt' onclick=\"selectStaff('6–10')\">6–10</div>" +
+            "<div class='opt' onclick=\"selectStaff('11–20')\">11–20</div>" +
+            "<div class='opt' onclick=\"selectStaff('20+')\">20+</div>";
+    } else {
+        staffOptions = "<div class='opt' onclick=\"selectStaff('Just me')\">Just me</div>" +
             "<div class='opt' onclick=\"selectStaff('2–5')\">2–5</div>" +
             "<div class='opt' onclick=\"selectStaff('6–10')\">6–10</div>" +
             "<div class='opt' onclick=\"selectStaff('11–20')\">11–20</div>" +
-            "<div class='opt' onclick=\"selectStaff('20+')\">20+</div></div>", true);
+            "<div class='opt' onclick=\"selectStaff('20+')\">20+</div>";
+    }
+    
+    setTimeout(function() {
+        say("<div class='section-label'>How many staff?</div><div class='options'>" + staffOptions + "</div>", true);
     }, 150);
 }
+
 function selectStaff(s) {
     state.staff = s;
-    say(s, false);
+    updateDealScore(5);
+    say(s + (s === "Just me" ? "" : " staff"), false);
     setTimeout(askPaymentMethods, 150);
 }
+
 function askPaymentMethods() {
     var vert = VERTICALS[state.vertical];
     var html = "<div class='section-label'>How do they take payments?</div><div class='options'>";
@@ -908,26 +1241,40 @@ function askPaymentMethods() {
     html += "</div><div class='options' style='margin-top:16px'><div class='opt primary' onclick='finishPaymentMethods()'>Get recommendations →</div></div>";
     say(html, true);
 }
+
 function togglePayment(method) {
     var btn = document.getElementById('pm-' + method);
     var idx = state.paymentMethods.indexOf(method);
     if (idx > -1) { state.paymentMethods.splice(idx, 1); btn.classList.remove('selected'); btn.classList.add('secondary'); }
-    else { state.paymentMethods.push(method); btn.classList.add('selected'); btn.classList.remove('secondary'); }
+    else { state.paymentMethods.push(method); btn.classList.add('selected'); btn.classList.remove('secondary'); updateDealScore(3); }
 }
+
 function finishPaymentMethods() {
     var methods = state.paymentMethods.length ? state.paymentMethods : ['f2f'];
     var labels = {f2f:'Face to face',online:'Online',phone:'Phone',links:'Links',delivery:'Delivery'};
     say(methods.map(function(m){return labels[m]}).join(', '), false);
+    updateDealScore(10);
     setTimeout(showRecommendation, 200);
 }
 function showRecommendation() {
-    var v = state.vertical, vert = VERTICALS[v], rec = RECOMMENDATIONS[v], vids = VIDEOS[v] || VIDEOS.general;
+    var v = state.vertical, vert = VERTICALS[v], rec = RECOMMENDATIONS[v], vids = VIDEOS[v] || [];
     var products = rec.products.slice();
     if (state.paymentMethods.indexOf('online') > -1 && products.indexOf('Square Online') === -1) products.push('Square Online');
-    if (state.paymentMethods.indexOf('phone') > -1 && products.indexOf('Virtual Terminal') === -1) products.push('Virtual Terminal');
-    if (state.paymentMethods.indexOf('links') > -1 && products.indexOf('Payment Links') === -1) products.push('Payment Links');
     
-    var html = "<div class='profile-card'><h3>Merchant Profile</h3><div class='profile-grid'>";
+    // Determine primary hardware recommendation based on GPV
+    var primaryHW = "Square Terminal";
+    var hwReason = "Perfect balance of features and value";
+    if (state.gpv === "£1m+" || state.gpv === "£500k–£1m" || state.gpv === "£250k–£500k") {
+        primaryHW = "Square Register";
+        hwReason = "Dual screens handle high volume with ease";
+    } else if (state.gpv === "Under £50k") {
+        primaryHW = "Square Reader";
+        hwReason = "Low cost to start, upgrade anytime";
+    }
+    
+    var html = "<div class='profile-card'><div class='profile-header'><h3>Merchant Profile</h3>";
+    html += "<div class='close-probability'><span>" + state.dealScore + "%</span></div></div>";
+    html += "<div class='profile-grid'>";
     html += "<div class='profile-item'><div class='label'>Business</div><div class='value'>" + vert.icon + " " + vert.name + "</div></div>";
     html += "<div class='profile-item'><div class='label'>Priority</div><div class='value'>" + vert.priority + "</div></div>";
     html += "<div class='profile-item'><div class='label'>Annual GPV</div><div class='value'>" + state.gpv + "</div></div>";
@@ -937,6 +1284,9 @@ function showRecommendation() {
     html += "<div class='profile-item'><div class='label'>Payments</div><div class='value'>" + (state.paymentMethods.length ? state.paymentMethods.map(function(m){return labels[m]}).join(', ') : 'F2F') + "</div></div>";
     html += "</div></div>";
     
+    // Smart insight
+    html += "<div class='smart-suggestion'><div class='icon'>🎯</div><div class='content'><h4>Top recommendation: " + primaryHW + "</h4><p>" + hwReason + ". " + vert.pmf + ".</p></div></div>";
+    
     html += "<div class='section-label'>🎯 Discovery questions</div><ul class='wlist'>";
     vert.discovery.forEach(function(q) { html += "<li>" + q + "</li>"; });
     html += "</ul>";
@@ -945,27 +1295,63 @@ function showRecommendation() {
     rec.wins.forEach(function(w) { html += "<li>" + w + "</li>"; });
     html += "</ul>";
     
-    html += "<div class='section-label'>📦 Recommended products</div><div class='product-grid'>";
-    products.forEach(function(pname) {
+    // Product gallery - scrollable like car configurator
+    html += "<div class='section-label'>📦 Recommended hardware</div>";
+    html += "<p style='color:var(--gray-500);font-size:13px;margin-bottom:12px'>Swipe to explore • Tap for details</p>";
+    html += "<div class='product-gallery'>";
+    
+    var hwProducts = ["Square Reader", "Square Terminal", "Square Register", "Square Stand"];
+    hwProducts.forEach(function(pname) {
         var p = PRODUCTS[pname];
         if (p) {
-            html += "<div class='pcard'><div class='pcard-body'><h4>" + pname + "<span class='ptag tag-" + p.cat + "'>" + p.cat + "</span></h4>";
+            var isRec = pname === primaryHW;
+            html += "<div class='gallery-item" + (isRec ? " recommended" : "") + "' onclick=\"showProductDetail('" + pname + "')\">";
+            html += "<img class='gallery-img' src='" + p.img + "' alt='" + pname + "' onerror=\"this.src='https://via.placeholder.com/280x180?text=" + encodeURIComponent(pname) + "'\">";
+            html += "<div class='gallery-info'><h4>" + pname + "</h4>";
+            html += "<div class='price'>" + p.price + " + VAT</div>";
             html += "<p>" + p.desc + "</p>";
-            html += "<div class='pcard-footer'><span class='pcard-price'>" + p.price + "</span><a href='" + p.link + "' target='_blank' class='pcard-link'>Learn more →</a></div></div></div>";
+            html += "<span class='cta'>View details →</span></div></div>";
         }
     });
     html += "</div>";
     
-    html += "<div class='section-label'>🎬 Demo videos</div><div class='video-grid'>";
-    vids.forEach(function(vid) {
-        html += "<div class='video-card' onclick=\"playVideo('" + vid.vid + "')\"><div class='video-thumb'><img src='https://img.youtube.com/vi/" + vid.vid + "/mqdefault.jpg'><div class='play-btn'></div></div><div class='video-info'><h5>" + vid.title + "</h5></div></div>";
-    });
-    html += "</div>";
+    // Videos
+    if (vids.length > 0) {
+        html += "<div class='section-label'>🎬 Demo videos</div>";
+        html += "<div class='video-main' onclick=\"playVideo('" + vids[0].vid + "')\">";
+        html += "<img src='https://img.youtube.com/vi/" + vids[0].vid + "/maxresdefault.jpg' onerror=\"this.src='https://img.youtube.com/vi/" + vids[0].vid + "/hqdefault.jpg'\">";
+        html += "<div class='play-overlay'><div class='play-btn-large'></div></div></div>";
+        if (vids.length > 1) {
+            html += "<div class='video-thumbs'>";
+            vids.slice(1).forEach(function(vid) {
+                html += "<div class='video-thumb' onclick=\"playVideo('" + vid.vid + "')\">";
+                html += "<img src='https://img.youtube.com/vi/" + vid.vid + "/mqdefault.jpg'>";
+                html += "<div class='duration'>" + vid.duration + "</div></div>";
+            });
+            html += "</div>";
+        }
+    }
+    
+    // Close prompt based on deal score
+    if (state.dealScore >= 50) {
+        html += "<div class='insight-banner success'>✅ <strong>Good profile!</strong> You have enough info to make a recommendation. Consider closing.</div>";
+    }
     
     html += "<div class='options' style='margin-top:24px'><div class='opt primary' onclick='showCloses()'>🎯 Close the deal</div><div class='opt' onclick='showObjections()'>🛡️ Objections</div><div class='opt secondary' onclick='showCompetitors()'>⚔️ Competitors</div></div>";
     html += "<br><span style='color:var(--gray-400);font-size:13px'>💬 Type what the merchant says for real-time help</span>";
     say(html, true);
 }
+
+function showProductDetail(name) {
+    var p = PRODUCTS[name];
+    if (!p) return;
+    say("Tell me about " + name, false);
+    updateDealScore(10);
+    var html = showProductHero(name, p);
+    html += "<div class='options'><div class='opt primary' onclick='showCloses()'>🎯 Close with " + name + "</div><div class='opt secondary' onclick='showRecommendation()'>← Back to all</div></div>";
+    say(html, true);
+}
+
 function showObjections() {
     say("🛡️ Objection handling", false);
     var html = "";
@@ -974,19 +1360,30 @@ function showObjections() {
         html += "<div class='scard obj'><h4>\"" + obj + "\"</h4><div class='sbox'>" + o.response + "</div>";
         html += "<div class='sfu'>↳ \"" + o.followup + "\"</div></div>";
     });
-    html += "<div class='options'><div class='opt primary' onclick='showCloses()'>Close the deal</div><div class='opt secondary' onclick='showCompetitors()'>Competitors</div></div>";
+    html += "<div class='options'><div class='opt primary' onclick='showCloses()'>🎯 Close the deal</div><div class='opt secondary' onclick='showCompetitors()'>Competitors</div></div>";
     say(html, true);
 }
+
 function showCloses() {
     say("🎯 Close the deal", false);
+    updateDealScore(10);
+    
     var html = "";
-    Object.keys(CLOSES).forEach(function(key) {
+    if (state.dealScore >= 70) {
+        html += "<div class='insight-banner hot'>🔥 <strong>Deal score: " + state.dealScore + "%</strong> - High probability of close. Go for the Assumptive Close!</div>";
+    }
+    
+    // Sort closes by power
+    var sortedCloses = Object.keys(CLOSES).sort(function(a,b) { return CLOSES[b].power - CLOSES[a].power; });
+    
+    sortedCloses.forEach(function(key) {
         var c = CLOSES[key];
         html += "<div class='scard cls'><h4>" + c.icon + " " + c.name + " Close</h4><div class='sbox'>\"" + c.script + "\"</div><div class='sfu'>Best when: " + c.when + "</div></div>";
     });
-    html += "<div class='options'><div class='opt' onclick='showObjections()'>Objections</div><div class='opt secondary' onclick='restart()'>New merchant</div></div>";
+    html += "<div class='options'><div class='opt' onclick='showObjections()'>🛡️ Objections</div><div class='opt secondary' onclick='restart()'>New merchant</div></div>";
     say(html, true);
 }
+
 function showCompetitors() {
     say("⚔️ Competitors", false);
     var html = "<div class='options'>";
@@ -994,9 +1391,11 @@ function showCompetitors() {
     html += "</div>";
     say(html, true);
 }
+
 function showBattlecard(key) {
     var c = COMPETITORS[key];
     say("⚔️ vs " + c.name, false);
+    updateDealScore(10);
     var html = "<span style='color:var(--gray-500)'>" + c.type + "</span>";
     html += "<div class='scard cmp'><h4>💰 Their pricing</h4><div class='sbox'>Hardware: " + c.hwPricing + "<br>Rates: " + c.rates + "</div></div>";
     html += "<div class='scard cmp'><h4>❌ Their weaknesses</h4><ul class='wlist' style='margin:0'>";
@@ -1006,10 +1405,13 @@ function showBattlecard(key) {
     c.wins.forEach(function(w) { html += "<li style='border:none;padding:8px 0 8px 32px'>" + w + "</li>"; });
     html += "</ul></div>";
     html += "<div class='scard cls'><h4>💬 Say this</h4><div class='sbox'>\"" + c.counter + "\"</div></div>";
-    html += "<div class='options'><div class='opt primary' onclick='showCloses()'>Close the deal</div><div class='opt secondary' onclick='showCompetitors()'>← Back</div></div>";
+    html += "<div class='options'><div class='opt primary' onclick='showCloses()'>🎯 Close the deal</div><div class='opt secondary' onclick='showCompetitors()'>← Back</div></div>";
     say(html, true);
 }
-document.addEventListener("keydown", function(e) { if (e.key === "Escape") closeVideo(); });
+
+document.addEventListener("keydown", function(e) { 
+    if (e.key === "Escape") { closeVideo(); closeZoom(); }
+});
 startConversation();
 </script>
 </body>
